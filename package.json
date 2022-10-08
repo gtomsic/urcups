@@ -1,0 +1,25 @@
+{
+   "name": "urcups",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "client": "npm start --prefix client",
+      "server": "npm run server --prefix server",
+      "dev": "concurrently \"npm run server\" \"npm run client\""
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/gtomsic/urcups.git"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/gtomsic/urcups/issues"
+   },
+   "homepage": "https://github.com/gtomsic/urcups#readme",
+   "devDependencies": {
+      "concurrently": "^7.4.0"
+   }
+}
