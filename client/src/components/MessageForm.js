@@ -6,10 +6,7 @@ const MessageForm = ({ user }) => {
       e.preventDefault()
    }
    return (
-      <form
-         onSubmit={submitHandler}
-         className=' lg:rounded-t-2xl overflow-hidden'
-      >
+      <form onSubmit={submitHandler} className=' overflow-hidden'>
          <textarea
             value={message}
             onChange={onChange}
@@ -20,11 +17,11 @@ const MessageForm = ({ user }) => {
             placeholder={`Send message to ${user.username}...`}
          ></textarea>
          <div className='grid mt-[-6px] grid-cols-2 items-center'>
-            <div className='bg-gradient-to-b from-primary hover:bg-secondary bg-dark duration-300 border border-primary lg:rounded-b-2xl py-5 cursor-pointer text-center'>
+            <div className='bg-gradient-to-tr from-primary hover:bg-secondary bg-dark duration-300 py-5 cursor-pointer text-center'>
                Attached Photo
             </div>
 
-            <button className='bg-gradient-to-b from-primary hover:bg-secondary bg-dark duration-300 border border-primary lg:rounded-b-2xl p-5 text-center'>
+            <button className='bg-gradient-to-tr from-primary hover:bg-secondary bg-dark duration-300 py-5 cursor-pointer text-center'>
                Send
             </button>
          </div>
