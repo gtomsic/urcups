@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { MdPhotoSizeSelectActual } from 'react-icons/md'
-import { FaUserAlt, FaCamera } from 'react-icons/fa'
+import { FaUserAlt, FaCamera, FaLock } from 'react-icons/fa'
 import { IoSettingsSharp, IoReader } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -10,9 +10,13 @@ import {
    updateWallpaper,
 } from '../../store/features/user/userSlice'
 import Loader from '../../components/loader/Loader'
+import ImageViewer from '../../components/ImageViewer'
+import Modal from '../../components/Modal'
 const ProfileHeader = ({ profile }) => {
+   const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
+   const [images, setImages] = useState([])
    const [avatar, setAvatar] = useState(profile?.avatar)
    const [wallpaper, setWallpaper] = useState(profile?.wallpaper)
    const location = useLocation()
@@ -35,9 +39,22 @@ const ProfileHeader = ({ profile }) => {
       setWallpaper(URL.createObjectURL(e.target.files[0]))
       dispatch(updateWallpaper({ data: data, token: user.token }))
    }
+   const viewProfilePhotoHandler = (e) => {
+      e.stopPropagation()
+      const newLink = profile.avatar.replace('avatar', 'public')
+      setImages([`${url + newLink}`])
+      setIsOpen(true)
+   }
+   const viewProfileWallpaper = (e) => {
+      e.stopPropagation()
+      const newLink = profile.wallpaper.replace('wallpaper', 'public')
+      setImages([`${url + newLink}`])
+      setIsOpen(true)
+   }
    return (
       <>
          <div
+            onClick={viewProfileWallpaper}
             style={{
                backgroundImage: `url(${url + wallpaper})`,
                backgroundRepeat: 'no-repeat',
@@ -49,7 +66,13 @@ const ProfileHeader = ({ profile }) => {
             {location.pathname !== `/profile/${user?.username}/edit` ? null : (
                <>
                   <div className='absolute text-3xl w-full h-full flex justify-end pr-8 pt-8 opacity-60 bg-gradient-to-bl bg-primary group-hover:opacity-95 group-hover:bg-gradient-to-bl from-secondary group-hover:bg-primary duration-300 lg:rounded-t-3xl'>
-                     {loadingWallpaper ? <Loader /> : <FaCamera />}
+                     {loadingWallpaper ? (
+                        <div className='inline-block'>
+                           <Loader />
+                        </div>
+                     ) : (
+                        <FaCamera />
+                     )}
                   </div>
                   <input
                      onChange={onWallpaperChange}
@@ -68,13 +91,14 @@ const ProfileHeader = ({ profile }) => {
 
                   {location.pathname !== `/profile/${user?.username}/edit` ? (
                      <div
+                        onClick={viewProfilePhotoHandler}
                         style={{
                            backgroundImage: `url(${url + avatar})`,
                            backgroundRepeat: 'no-repeat',
                            backgroundSize: 'cover',
                            backgroundPosition: 'center',
                         }}
-                        className='absolute lg:relative left-[50%] lg:left-0 translate-x-[-50%] lg:translate-x-0 top-[-210px] lg:top-0  w-[200px] h-[200px] aspect-square rounded-full border-4 border-white '
+                        className='absolute lg:relative left-[50%] lg:left-0 translate-x-[-50%] lg:translate-x-0 top-[-210px] lg:top-0  w-[200px] h-[200px] aspect-square rounded-full border-4 border-white cursor-pointer'
                      >
                         {profile.isOnline ? (
                            <>
@@ -195,7 +219,7 @@ const ProfileHeader = ({ profile }) => {
                                     }`}
                                  >
                                     <span className='text-md md:text-lg'>
-                                       <FaCamera />
+                                       <FaLock />
                                     </span>
                                     <span className='text-xs md:text-sm lg:text-md'>
                                        3 Private
@@ -230,6 +254,15 @@ const ProfileHeader = ({ profile }) => {
                </div>
             </div>
          </div>
+         {!isOpen ? null : (
+            <Modal onClose={() => setIsOpen(false)}>
+               <ImageViewer
+                  images={images}
+                  index={0}
+                  onClose={() => setIsOpen(false)}
+               />
+            </Modal>
+         )}
       </>
    )
 }

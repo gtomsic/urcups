@@ -23,8 +23,8 @@ const MenuItems = () => {
                <div
                   className={
                      location.pathname === '/'
-                        ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                        : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                        ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                        : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                   }
                >
                   <div className='relative'>
@@ -39,8 +39,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/notifications'
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -56,8 +56,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/messages'
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -73,8 +73,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/chats'
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -87,8 +87,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === `/profile/${user?.username}`
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -104,8 +104,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/auth'
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -118,8 +118,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/auth/register'
-                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-secondary bg-primary'
-                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-secondary hover:bg-primary duration-300'
+                              ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-gray hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
