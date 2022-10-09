@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
       membership: {
          type: DataTypes.STRING,
          allowNull: false,
-         defaultValue: '3',
+         defaultValue: 'a',
       },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   });
-   return access;
-};
+   })
+   return access
+}

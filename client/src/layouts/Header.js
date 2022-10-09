@@ -13,7 +13,9 @@ const Header = () => {
    return (
       <header className='fixed top-0 py-3 w-full z-40 backdrop-blur-xl backdrop-filter backdrop-opacity-95'>
          <div className='flex justify-between items-center mx-auto md:max-w-[98%] lg:max-w-[90%] xl:max-w-[80%] px-3'>
-            <Logo />
+            <Link to='/'>
+               <Logo />
+            </Link>
             <SearchInput />
             <div>
                {user?.id ? (
