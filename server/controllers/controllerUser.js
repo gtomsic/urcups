@@ -112,7 +112,7 @@ module.exports.controllerUpdateWallpaper = asyncHandler(async (req, res) => {
    })
    await db.photo.create({
       user_id: req.user.id,
-      fileName: fileName,
+      fileName: `/images/${req.user.id}/public/${fileName}.jpg`,
       isPrivate: false,
       album: 'public',
    })
@@ -166,7 +166,7 @@ module.exports.controllerUpdateAvatar = asyncHandler(async (req, res) => {
    })
    await db.photo.create({
       user_id: req.user.id,
-      fileName: fileName,
+      fileName: `/images/${req.user.id}/public/${fileName}.jpg`,
       isPrivate: false,
       album: 'public',
    })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaUserEdit } from 'react-icons/fa'
 import { IoLogOut } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,7 +13,6 @@ import { selectUsers } from '../../store/features/users/usersSlice'
 
 const ProfileSettings = () => {
    const dispatch = useDispatch()
-   const navigate = useNavigate()
    const { user } = useSelector(selectUser)
    const { users } = useSelector(selectUsers)
    const [status, setStatus] = useState(user?.status)
@@ -25,11 +24,6 @@ const ProfileSettings = () => {
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }
-   useEffect(() => {
-      if (!user?.id) {
-         navigate('/')
-      }
-   }, [user, navigate])
    return (
       <div className='flex flex-col gap-20'>
          <Card>

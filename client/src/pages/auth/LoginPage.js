@@ -15,15 +15,15 @@ const LoginPage = () => {
    const dispatch = useDispatch()
    useEffect(() => {
       const redirect = JSON.parse(localStorage.getItem('redirect'))
+      console.log(redirect)
       if (isSuccess) {
          if (redirect) {
             navigate(redirect)
             localStorage.removeItem('redirect')
-            dispatch(reset())
             return
+         } else {
+            navigate('/')
          }
-         navigate('/')
-         dispatch(reset())
       }
    }, [isSuccess, dispatch, navigate])
    const onSubmitHandler = (e) => {

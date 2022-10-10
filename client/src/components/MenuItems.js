@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { FaHome, FaBell, FaUserPlus, FaUser } from 'react-icons/fa'
+import { FaBell, FaUserPlus, FaUser } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
 import { MdMessage } from 'react-icons/md'
 import { IoMdChatboxes } from 'react-icons/io'
 import { IoLogOut } from 'react-icons/io5'
+import { HiUsers } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
@@ -28,9 +29,9 @@ const MenuItems = () => {
                   }
                >
                   <div className='relative'>
-                     <FaHome />
+                     <HiUsers />
                   </div>
-                  <div className='hidden xl:block'>Home</div>
+                  <div className='hidden xl:block'>Users</div>
                </div>
             </Link>
             {user?.id ? (

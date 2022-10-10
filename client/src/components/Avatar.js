@@ -6,11 +6,7 @@ const Avatar = ({ image, border, isOnline }) => {
    const url = useSelector((state) => state.url)
    return (
       <div
-         className={
-            border
-               ? `w-10 aspect-square rounded-full relative border-2 border-white`
-               : `w-10 aspect-square rounded-full relative `
-         }
+         className='w-10 aspect-square rounded-full relative border-2 border-white'
          style={{
             backgroundImage: `url(${url + image})`,
             backgroundSize: 'cover',

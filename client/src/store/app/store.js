@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import userReducer from '../features/user/userSlice'
 import usersReducers from '../features/users/usersSlice'
 import profileReducer from '../features/profile/profileSlice'
+import publicPhotosReducer from '../features/publicPhotos/publicPhotosSlice'
 
 export const store = configureStore({
    reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
       user: userReducer,
       users: usersReducers,
       profile: profileReducer,
+      publicPhotos: publicPhotosReducer,
    },
 })

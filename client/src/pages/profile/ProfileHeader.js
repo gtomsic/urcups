@@ -10,7 +10,7 @@ import {
    updateWallpaper,
 } from '../../store/features/user/userSlice'
 import Loader from '../../components/loader/Loader'
-import ImageViewer from '../../components/ImageViewer'
+import ImageViewer from '../../components/photos/ImageViewer'
 import Modal from '../../components/Modal'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
@@ -41,15 +41,22 @@ const ProfileHeader = ({ profile }) => {
    }
    const viewProfilePhotoHandler = (e) => {
       e.stopPropagation()
+      const isInclude = profile.avatar.includes('/avatar.jpg')
+      if (isInclude) return
       const newLink = profile.avatar.replace('avatar', 'public')
       setImages([`${url + newLink}`])
       setIsOpen(true)
    }
    const viewProfileWallpaper = (e) => {
       e.stopPropagation()
+      const isInclude = profile.wallpaper.includes('/wallpaper.jpg')
+      if (isInclude) return
       const newLink = profile.wallpaper.replace('wallpaper', 'public')
       setImages([`${url + newLink}`])
       setIsOpen(true)
+   }
+   const stopPropagationHandler = (e) => {
+      e.stopPropagation()
    }
    return (
       <>
@@ -65,7 +72,10 @@ const ProfileHeader = ({ profile }) => {
          >
             {location.pathname !== `/profile/${user?.username}/edit` ? null : (
                <>
-                  <div className='absolute text-3xl w-full h-full flex justify-end pr-8 pt-8 opacity-60 bg-gradient-to-bl bg-primary group-hover:opacity-95 group-hover:bg-gradient-to-bl from-secondary group-hover:bg-primary duration-300 lg:rounded-t-3xl'>
+                  <div
+                     onClick={stopPropagationHandler}
+                     className='absolute text-3xl w-full h-full flex justify-end pr-8 pt-8 opacity-60 bg-gradient-to-bl bg-primary group-hover:opacity-95 group-hover:bg-gradient-to-bl from-secondary group-hover:bg-primary duration-300 lg:rounded-t-3xl'
+                  >
                      {loadingWallpaper ? (
                         <div className='inline-block'>
                            <Loader />
@@ -75,6 +85,7 @@ const ProfileHeader = ({ profile }) => {
                      )}
                   </div>
                   <input
+                     onClick={stopPropagationHandler}
                      onChange={onWallpaperChange}
                      type='file'
                      name='image'
@@ -110,6 +121,7 @@ const ProfileHeader = ({ profile }) => {
                   ) : (
                      // For Editing View
                      <div
+                        onClick={stopPropagationHandler}
                         className='absolute group lg:relative left-[50%] lg:left-0 translate-x-[-50%] lg:translate-x-0 top-[-210px] lg:top-0  w-[200px] h-[200px] aspect-square rounded-full border-4 border-white '
                         style={{
                            backgroundImage: `url(${url + avatar})`,

@@ -27,9 +27,11 @@ const {
 
 const userRoutes = require('./routes/routeUsers')
 const publicRoutes = require('./routes/routeAllUser')
+const photos = require('./routes/routePhotos')
 
 app.use('/api/users', userRoutes)
 app.use('/api/public', publicRoutes)
+app.use('/api/photos', photos)
 
 app.use(errorHandler)
 app.use(notFound)
@@ -64,6 +66,7 @@ db.sequelize.sync().then(() =>
       )
       // for (let i = 0; i < 100; i++) {
       //    let id = uuid()
+      //    let randomValue = Math.floor(Math.random() * 2 + 1)
       //    await db.user.create({
       //       id,
       //       username: `user${i}`,
@@ -87,6 +90,11 @@ db.sequelize.sync().then(() =>
       //       user_id: id,
       //    })
       //    await db.info.create({
+      //       user_id: id,
+      //    })
+      //    await db.access.create({
+      //       granted: randomValue === 1 ? 'paid' : 'free',
+      //       membership: randomValue === 1 ? 'a' : 'f',
       //       user_id: id,
       //    })
       // }
