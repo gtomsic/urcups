@@ -5,7 +5,7 @@ import ErrorMessage from '../../components/ErrorMessage'
 import TextInput from '../../components/forms/TextInput'
 import Loader from '../../components/loader/Loader'
 import Modal from '../../components/Modal'
-import { login, reset, selectUser } from '../../store/features/user/userSlice'
+import { login, selectUser } from '../../store/features/user/userSlice'
 
 const LoginPage = () => {
    const [email, setEmail] = useState('')
@@ -15,7 +15,6 @@ const LoginPage = () => {
    const dispatch = useDispatch()
    useEffect(() => {
       const redirect = JSON.parse(localStorage.getItem('redirect'))
-      console.log(redirect)
       if (isSuccess) {
          if (redirect) {
             navigate(redirect)

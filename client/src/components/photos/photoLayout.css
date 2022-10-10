@@ -8,3 +8,9 @@
 .image-list img {
    width: 100%;
 }
+
+@media only screen and (max-width: 640px) {
+   .image-list {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+   }
+}

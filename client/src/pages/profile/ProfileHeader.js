@@ -12,6 +12,7 @@ import {
 import Loader from '../../components/loader/Loader'
 import ImageViewer from '../../components/photos/ImageViewer'
 import Modal from '../../components/Modal'
+import { check } from '../../utils/check'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
@@ -216,7 +217,7 @@ const ProfileHeader = ({ profile }) => {
                               </span>
                            </div>
                         </Link>
-                        {!user?.id || user?.id !== profile?.id ? null : (
+                        {check(user, profile) ? (
                            <>
                               <Link
                                  className='flex-1'
@@ -260,7 +261,7 @@ const ProfileHeader = ({ profile }) => {
                                  </div>
                               </Link>
                            </>
-                        )}
+                        ) : null}
                      </div>
                   </div>
                </div>

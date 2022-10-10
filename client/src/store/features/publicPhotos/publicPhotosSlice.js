@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { serviceGetPublicPhotos } from './servicePublicPhotos'
+import {
+   serviceDeletePublicPhotos,
+   serviceGetPublicPhotos,
+} from './servicePublicPhotos'
 
 const initialState = {
    publicPhotos: [],
@@ -7,7 +10,37 @@ const initialState = {
    isPublicPhotosSuccess: false,
    isPublicPhotosError: false,
    isPublicPhotosMessage: '',
+   publicPhotosLimit: 20,
+   publicPhotosOffset: 0,
 }
+
+export const deletePublicPhotos = createAsyncThunk(
+   'user/delete-public-photos',
+   async (data, thunkApi) => {
+      try {
+         const { publicPhotosLimit, publicPhotosOffset } =
+            thunkApi.getState().publicPhotos
+         const { user } = thunkApi.getState().user
+         await serviceDeletePublicPhotos(data)
+         return await thunkApi.dispatch(
+            getPublicPhotos({
+               user_id: user.id,
+               limit: publicPhotosLimit,
+               offset: publicPhotosOffset,
+               token: user.token,
+            })
+         )
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 
 export const getPublicPhotos = createAsyncThunk(
    'user/public-photos',
@@ -37,6 +70,9 @@ const publicPhotosSlice = createSlice({
          state.isPublicPhotosError = false
          state.isPublicPhotosMessage = ''
       },
+      setPublicPhotosOffset: (state, action) => {
+         state.publicPhotosOffset = action.payload
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -53,10 +89,23 @@ const publicPhotosSlice = createSlice({
             state.isPublicPhotosError = true
             state.isPublicPhotosMessage = action.payload
          })
+         .addCase(deletePublicPhotos.pending, (state) => {
+            state.isPublicPhotosLoading = true
+         })
+         .addCase(deletePublicPhotos.fulfilled, (state, action) => {
+            state.isPublicPhotosLoading = false
+            state.isPublicPhotosSuccess = true
+            state.isPublicPhotosMessage = action.payload
+         })
+         .addCase(deletePublicPhotos.rejected, (state, action) => {
+            state.isPublicPhotosLoading = false
+            state.isPublicPhotosError = true
+            state.isPublicPhotosMessage = action.payload
+         })
    },
 })
 
-export const { resetPhotos } = publicPhotosSlice.actions
+export const { resetPhotos, setPublicPhotosOffset } = publicPhotosSlice.actions
 export default publicPhotosSlice.reducer
 
 // SELECTORS
