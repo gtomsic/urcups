@@ -11,6 +11,7 @@ export const serviceUpdateProfileInfo = async (data) => {
       data,
       config
    )
+   localStorage.setItem('users', JSON.stringify(response.data))
    return response.data
 }
 export const serviceGetUser = async (username) => {

@@ -25,7 +25,7 @@ const EditSaveAdd = ({ select, onSave, cancel, onAddImages }) => {
                      select ? 'bg-secondary' : null
                   }`}
                >
-                  {select ? 'Save' : 'Edit'}
+                  {select ? 'Delete' : 'Edit'}
                </div>
                {select ? null : (
                   <div className='relative flex justify-center items-center bg-gradient-to-tr from-primary bg-secondary hover:bg-danger duration-300 rounded-md px-5 py-2 cursor-pointer'>

@@ -2,11 +2,11 @@ export const countries = [
    { name: '-', code: 'countries' },
    { name: 'USA', code: 'US' },
    {
-      name: 'United Kingdom of Great Britain and Northern Ireland',
-      code: 'GB',
+      name: 'United Kingdom',
+      code: 'UK',
    },
    { name: 'Albania', code: 'AL' },
-   { name: 'Åland Islands', code: 'AX' },
+   { name: 'Aland Islands', code: 'AX' },
    { name: 'Algeria', code: 'DZ' },
    { name: 'American Samoa', code: 'AS' },
    { name: 'Andorra', code: 'AD' },
@@ -239,8 +239,8 @@ export const countries = [
    { name: 'Ukraine', code: 'UA' },
    { name: 'United Arab Emirates', code: 'AE' },
    {
-      name: 'United Kingdom of Great Britain and Northern Ireland',
-      code: 'GB',
+      name: 'United Kingdom',
+      code: 'UK',
    },
    { name: 'United States Minor Outlying Islands', code: 'UM' },
    { name: 'USA', code: 'US' },
@@ -256,4 +256,4 @@ export const countries = [
    { name: 'Yemen', code: 'YE' },
    { name: 'Zambia', code: 'ZM' },
    { name: 'Zimbabwe', code: 'ZW' },
-];
+]

@@ -12,7 +12,6 @@ import {
 import { selectUser } from '../../store/features/user/userSlice'
 import AttentionMessage from '../../components/AttentionMessage'
 import PhotoLayout from '../../components/photos/PhotoLayout'
-import { check } from '../../utils/check'
 
 const ProfilePhotos = () => {
    const isFetch = useRef(false)
@@ -25,7 +24,6 @@ const ProfilePhotos = () => {
    const {
       publicPhotos,
       isPublicPhotosLoading,
-      isPublicPhotosMessage,
       isPublicPhotosError,
       publicPhotosOffset,
       publicPhotosLimit,
@@ -56,7 +54,7 @@ const ProfilePhotos = () => {
          const num = Math.ceil(publicPhotos?.count / publicPhotosLimit)
          setPages(num)
       }
-   }, [publicPhotos?.count])
+   }, [publicPhotos?.count, publicPhotosLimit])
 
    const onSaveHandler = () => {
       if (select) {
@@ -97,15 +95,6 @@ const ProfilePhotos = () => {
                <p>Sorry this page only availble for sponsored users.</p>
                <p>This site wouldn't run without your support.</p>
                <p>We thank you for your amazing support.</p>
-               <br />
-               <br />
-               <img
-                  src='/urcups256.png'
-                  alt='Urcups Logo'
-                  className='w-[130px]'
-               />
-               <p>Urcups Team</p>
-               <p>& Gabriel - Urcups President</p>
             </AttentionMessage>
          ) : null}
          {publicPhotos?.rows?.length > 0 ? (
@@ -121,8 +110,8 @@ const ProfilePhotos = () => {
                onAddImages={onAddImagesHandler}
             />
          ) : null}
-         <>
-            {check(user, profile) && !publicPhotos?.length ? (
+         {/* <>
+            {check(user, profile) ? (
                <AttentionMessage title='Suggestion for successful stories!'>
                   <p>To attract user please upload some of your photos.</p>
                   <p>
@@ -141,7 +130,7 @@ const ProfilePhotos = () => {
                   <p>& Gabriel - Urcups President</p>
                </AttentionMessage>
             ) : null}
-         </>
+         </> */}
       </div>
    )
 }

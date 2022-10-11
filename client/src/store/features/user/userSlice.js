@@ -133,6 +133,10 @@ const userSlice = createSlice({
          state.isError = false
          state.message = ''
       },
+      updateUserDetail: (state, action) => {
+         const { sex, city, stateProvince, country } = action.payload
+         state.user = { ...state.user, sex, city, stateProvince, country }
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -230,7 +234,7 @@ const userSlice = createSlice({
    },
 })
 
-export const { reset } = userSlice.actions
+export const { reset, updateUserDetail } = userSlice.actions
 export default userSlice.reducer
 
 // SELECTORS

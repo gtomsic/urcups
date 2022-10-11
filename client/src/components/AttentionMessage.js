@@ -6,7 +6,14 @@ const AttentionMessage = ({ title, children }) => {
          <div className='bg-gradient-to-tr from-primary bg-danger p-5'>
             <h3>{title}</h3>
          </div>
-         <div className='p-5'>{children}</div>
+         <div className='p-5'>
+            {children}
+            <br />
+            <br />
+            <img src='/urcups256.png' alt='Urcups Logo' className='w-[130px]' />
+            <p>Urcups Team &</p>
+            <p>Urcups President - Gabriel Tomsic</p>
+         </div>
       </div>
    )
 }

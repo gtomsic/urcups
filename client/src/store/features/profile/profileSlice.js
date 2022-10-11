@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { updateUserDetail } from '../user/userSlice'
 import { serviceGetUser, serviceUpdateProfileInfo } from './profileService'
 
 const initialState = {
@@ -14,6 +15,7 @@ export const updateProfileInfo = createAsyncThunk(
    'user/update-profile-info',
    async (data, thunkApi) => {
       try {
+         await thunkApi.dispatch(updateUserDetail(data))
          return await serviceUpdateProfileInfo(data)
       } catch (error) {
          const message =

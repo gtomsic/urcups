@@ -31,7 +31,7 @@ const PhotoLayout = ({
    }
    return (
       <>
-         <div className='sticky top-[50px] z-20 w-full p-5 flex justify-between'>
+         <div className='sticky top-[50px] z-20 w-full p-5 flex justify-between '>
             {/* EDIT AND SAVE HERE */}
             <PreviousNext pages={pages} />
             <EditSaveAdd

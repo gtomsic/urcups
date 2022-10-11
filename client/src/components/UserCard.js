@@ -18,8 +18,8 @@ function UserCard({ wallpaper, image, username, age, location, isOnline }) {
          <div
             className={
                !isOnline
-                  ? 'absolute bottom-0 pt-7 h-[150px] w-full flex flex-col items-center text-white bg-gradient-to-t from-secondary group-hover:from-warning duration-300'
-                  : 'absolute bottom-0 pt-7 h-[150px] w-full flex group-hover:from-warning duration-300 flex-col items-center text-white bg-gradient-to-t from-primary'
+                  ? 'absolute bottom-0 pt-7 h-[150px] w-full flex flex-col items-center text-white bg-gradient-to-t from-dark group-hover:from-warning duration-300'
+                  : 'absolute bottom-0 pt-7 h-[150px] w-full flex group-hover:from-warning duration-300 flex-col items-center text-white bg-gradient-to-t from-secondary'
             }
          >
             <h4>{age}</h4>

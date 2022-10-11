@@ -76,6 +76,7 @@ module.exports.controllerUpdateUserInfo = asyncHandler(async (req, res) => {
       ...user.dataValues.info.dataValues,
       id: req.user.id,
       info: null,
+      token: makeToken(user.id),
    })
 })
 // @ USER UPDATE WALLPAPER
