@@ -60,7 +60,11 @@ const ProfilePhotos = () => {
 
    const onSaveHandler = () => {
       if (select) {
-         dispatch(deletePublicPhotos({ photos: toDelete, token: user.token }))
+         if (toDelete?.length > 0) {
+            dispatch(
+               deletePublicPhotos({ photos: toDelete, token: user.token })
+            )
+         }
          return setSelect(false)
       }
       setSelect(true)
@@ -118,7 +122,7 @@ const ProfilePhotos = () => {
             />
          ) : null}
          <>
-            {check(user, profile) && publicPhotos?.row?.lenght < 2 ? (
+            {check(user, profile) && !publicPhotos?.length ? (
                <AttentionMessage title='Suggestion for successful stories!'>
                   <p>To attract user please upload some of your photos.</p>
                   <p>
