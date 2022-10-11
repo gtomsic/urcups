@@ -1,9 +1,52 @@
 const asyncHandler = require('express-async-handler')
 const db = require('../models')
 const fs = require('fs')
+const { v4: uuid } = require('uuid')
+const { imageResize } = require('../utils/middlewareSharp')
+
+module.exports.controllerAddPublicPhotos = asyncHandler(async (req, res) => {
+   const album = req.headers.album
+   const toPost = []
+   for (let i = 0; i < req.files.length; i++) {
+      const fileName = uuid()
+      const location = `users/${req.user.id}/${album}/${fileName}.jpg`
+      const path = req.files[i].path
+      await imageResize({
+         path,
+         with: 1080,
+         height: null,
+         quality: 100,
+         album,
+         location,
+         user_id: req.user.id,
+      })
+      toPost.push({
+         fileName: `/images/${req.user.id}/${album}/${fileName}.jpg`,
+         isPrivate: false,
+         album,
+         user_id: req.user.id,
+      })
+      fs.unlinkSync(path)
+   }
+   const createPhotos = await db.photo.bulkCreate(toPost)
+   res.status(201).json(createPhotos)
+})
 
 module.exports.controllerDeletePublicPhotos = asyncHandler(async (req, res) => {
-   console.log(req.body.photos)
+   const { photos } = req.body
+   const response = await db.photo.destroy({ where: { fileName: photos } })
+   if (response) {
+      photos.map((photo) => {
+         const changeFolder = photo.replace('/images', 'users')
+         ;['avatar', 'thumbnail', 'wallpaper', 'public'].map((item) => {
+            const toDelete = changeFolder.replace('public', item)
+            console.log(toDelete)
+            if (fs.existsSync(toDelete)) {
+               fs.unlinkSync(toDelete)
+            }
+         })
+      })
+   }
    res.status(200).send({ message: 'Okay' })
 })
 

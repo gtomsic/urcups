@@ -18,6 +18,7 @@ const PhotoLayout = ({
    addToDelete,
    removeToDelte,
    onCancelHandler,
+   onAddImages,
 }) => {
    const [isOpen, setIsOpen] = useState(false)
    const [photoIndex, setPhotoIndex] = useState(null)
@@ -37,6 +38,7 @@ const PhotoLayout = ({
                select={select}
                cancel={onCancelHandler}
                onSave={onSaveHandler}
+               onAddImages={onAddImages}
             />
          </div>
          <div className='image-list'>

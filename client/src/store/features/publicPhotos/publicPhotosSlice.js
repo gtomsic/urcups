@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {
+   serviceAddPublicPhotos,
    serviceDeletePublicPhotos,
    serviceGetPublicPhotos,
 } from './servicePublicPhotos'
@@ -14,19 +15,45 @@ const initialState = {
    publicPhotosOffset: 0,
 }
 
+export const addPublicPhotos = createAsyncThunk(
+   'user/add-public-photos',
+   async (data, thunkApi) => {
+      try {
+         const { publicPhotosLimit } = thunkApi.getState().publicPhotos
+         const { user } = thunkApi.getState().user
+         await serviceAddPublicPhotos(data)
+         return await thunkApi.dispatch(
+            getPublicPhotos({
+               user_id: user.id,
+               limit: publicPhotosLimit,
+               offset: 0,
+               token: user.token,
+            })
+         )
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
 export const deletePublicPhotos = createAsyncThunk(
    'user/delete-public-photos',
    async (data, thunkApi) => {
       try {
-         const { publicPhotosLimit, publicPhotosOffset } =
-            thunkApi.getState().publicPhotos
+         const { publicPhotosLimit } = thunkApi.getState().publicPhotos
          const { user } = thunkApi.getState().user
          await serviceDeletePublicPhotos(data)
          return await thunkApi.dispatch(
             getPublicPhotos({
                user_id: user.id,
                limit: publicPhotosLimit,
-               offset: publicPhotosOffset,
+               offset: 0,
                token: user.token,
             })
          )
@@ -98,6 +125,18 @@ const publicPhotosSlice = createSlice({
             state.isPublicPhotosMessage = action.payload
          })
          .addCase(deletePublicPhotos.rejected, (state, action) => {
+            state.isPublicPhotosLoading = false
+            state.isPublicPhotosError = true
+            state.isPublicPhotosMessage = action.payload
+         })
+         .addCase(addPublicPhotos.pending, (state) => {
+            state.isPublicPhotosLoading = true
+         })
+         .addCase(addPublicPhotos.fulfilled, (state) => {
+            state.isPublicPhotosLoading = false
+            state.isPublicPhotosSuccess = true
+         })
+         .addCase(addPublicPhotos.rejected, (state, action) => {
             state.isPublicPhotosLoading = false
             state.isPublicPhotosError = true
             state.isPublicPhotosMessage = action.payload

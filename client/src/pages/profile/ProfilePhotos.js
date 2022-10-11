@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
 import { selectProfile } from '../../store/features/profile/profileSlice'
 import {
+   addPublicPhotos,
    deletePublicPhotos,
    getPublicPhotos,
+   resetPhotos,
    selectPublicPhotos,
 } from '../../store/features/publicPhotos/publicPhotosSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import AttentionMessage from '../../components/AttentionMessage'
 import PhotoLayout from '../../components/photos/PhotoLayout'
+import { check } from '../../utils/check'
 
 const ProfilePhotos = () => {
+   const isFetch = useRef(false)
    const [pages, setPages] = useState(null)
    const [select, setSelect] = useState(false)
    const [toDelete, setToDelete] = useState([])
@@ -35,6 +39,10 @@ const ProfilePhotos = () => {
             limit: publicPhotosLimit,
          })
       )
+      return () => {
+         isFetch.current = true
+         dispatch(resetPhotos())
+      }
    }, [
       dispatch,
       publicPhotosOffset,
@@ -68,13 +76,32 @@ const ProfilePhotos = () => {
       setToDelete([])
       setSelect(false)
    }
+   const onAddImagesHandler = (e) => {
+      e.stopPropagation()
+      const data = new FormData()
+      for (let i = 0; i < e.target.files.length; i++) {
+         data.append('images', e.target.files[i])
+      }
+      dispatch(addPublicPhotos({ data, token: user.token }))
+   }
 
    return (
       <div>
-         {isPublicPhotosLoading ? <Loader>Checking photos...</Loader> : null}
+         {isPublicPhotosLoading ? <Loader>Loading photos...</Loader> : null}
          {isPublicPhotosError ? (
             <AttentionMessage title='Only for sponsored users!'>
-               {isPublicPhotosMessage}
+               <p>Sorry this page only availble for sponsored users.</p>
+               <p>This site wouldn't run without your support.</p>
+               <p>We thank you for your amazing support.</p>
+               <br />
+               <br />
+               <img
+                  src='/urcups256.png'
+                  alt='Urcups Logo'
+                  className='w-[130px]'
+               />
+               <p>Urcups Team</p>
+               <p>& Gabriel - Urcups President</p>
             </AttentionMessage>
          ) : null}
          {publicPhotos?.rows?.length > 0 ? (
@@ -87,8 +114,30 @@ const ProfilePhotos = () => {
                onSaveHandler={onSaveHandler}
                onCancelHandler={onCancelHandler}
                removeToDelte={removeToDelte}
+               onAddImages={onAddImagesHandler}
             />
          ) : null}
+         <>
+            {check(user, profile) && publicPhotos?.row?.lenght < 2 ? (
+               <AttentionMessage title='Suggestion for successful stories!'>
+                  <p>To attract user please upload some of your photos.</p>
+                  <p>
+                     Most users are attracted to profile who have few or more
+                     photos.
+                  </p>
+                  <p>We thank you for your amazing support.</p>
+                  <br />
+                  <br />
+                  <img
+                     src='/urcups256.png'
+                     alt='Urcups Logo'
+                     className='w-[130px]'
+                  />
+                  <p>Urcups Team</p>
+                  <p>& Gabriel - Urcups President</p>
+               </AttentionMessage>
+            ) : null}
+         </>
       </div>
    )
 }

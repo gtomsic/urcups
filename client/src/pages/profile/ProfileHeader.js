@@ -13,6 +13,7 @@ import Loader from '../../components/loader/Loader'
 import ImageViewer from '../../components/photos/ImageViewer'
 import Modal from '../../components/Modal'
 import { check } from '../../utils/check'
+import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
@@ -23,6 +24,7 @@ const ProfileHeader = ({ profile }) => {
    const location = useLocation()
    const dispatch = useDispatch()
    const { loadingAvatar, loadingWallpaper } = useSelector(selectUser)
+   const { publicPhotos } = useSelector(selectPublicPhotos)
 
    const onAvatarChange = (e) => {
       e.preventDefault()
@@ -156,7 +158,10 @@ const ProfileHeader = ({ profile }) => {
                         <h5>{profile.hugot}</h5>
                      </div>
                      {/* Profile Options */}
-                     <div className='flex-1 flex justify-between gap-1 md:gap-3'>
+                     <div
+                        onClick={stopPropagationHandler}
+                        className='flex-1 flex justify-between gap-1 md:gap-3'
+                     >
                         <Link
                            className='flex-1'
                            to={`/profile/${profile.username}`}
@@ -213,7 +218,10 @@ const ProfileHeader = ({ profile }) => {
                                  <MdPhotoSizeSelectActual />
                               </span>
                               <span className='text-xs md:text-sm lg:text-md'>
-                                 6 Photos
+                                 {publicPhotos?.count
+                                    ? publicPhotos?.count
+                                    : null}{' '}
+                                 Photos
                               </span>
                            </div>
                         </Link>
