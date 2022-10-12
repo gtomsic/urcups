@@ -71,13 +71,13 @@ const ProfileHeader = ({ profile }) => {
                backgroundSize: 'cover',
                backgroundPosition: 'center',
             }}
-            className='h-[380px] group relative lg:rounded-t-3xl mb-[100px]'
+            className='h-[380px] group relative lg:rounded-t-2xl mb-[100px]'
          >
             {location.pathname !== `/profile/${user?.username}/edit` ? null : (
                <>
                   <div
                      onClick={stopPropagationHandler}
-                     className='absolute text-3xl w-full h-full flex justify-end pr-8 pt-8 opacity-60 bg-gradient-to-bl bg-primary group-hover:opacity-95 group-hover:bg-gradient-to-bl from-secondary group-hover:bg-primary duration-300 lg:rounded-t-3xl'
+                     className='absolute text-3xl w-full h-full flex justify-end pr-8 pt-8 opacity-60 bg-gradient-to-bl bg-primary group-hover:opacity-95 group-hover:bg-gradient-to-bl from-secondary group-hover:bg-primary duration-300 lg:rounded-t-2xl'
                   >
                      {loadingWallpaper ? (
                         <div className='inline-block'>

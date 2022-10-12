@@ -8,10 +8,12 @@ import {
    getPublicPhotos,
    resetPhotos,
    selectPublicPhotos,
+   setPublicPhotosOffset,
 } from '../../store/features/publicPhotos/publicPhotosSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import AttentionMessage from '../../components/AttentionMessage'
 import PhotoLayout from '../../components/photos/PhotoLayout'
+import { useParams } from 'react-router-dom'
 
 const ProfilePhotos = () => {
    const isFetch = useRef(false)
@@ -21,6 +23,7 @@ const ProfilePhotos = () => {
    const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
    const dispatch = useDispatch()
+   const params = useParams()
    const {
       publicPhotos,
       isPublicPhotosLoading,
@@ -48,6 +51,10 @@ const ProfilePhotos = () => {
       profile?.id,
       user?.token,
    ])
+
+   useEffect(() => {
+      dispatch(setPublicPhotosOffset(0))
+   }, [params?.username])
 
    useEffect(() => {
       if (publicPhotos?.count) {

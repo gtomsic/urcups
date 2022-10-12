@@ -39,7 +39,10 @@ const ImageViewer = ({ images, index, onClose }) => {
          {images.length > 1 ? (
             <div className='h-full flex items-center justify-center'>
                <img
-                  src={url + images[imageIndex].fileName}
+                  src={
+                     url +
+                     images[imageIndex].fileName.replace('thumbnail', 'public')
+                  }
                   alt={images[imageIndex].fileName}
                   className='w-full h-auto xl:w-auto xl:h-full'
                />

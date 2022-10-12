@@ -89,8 +89,8 @@ module.exports.controllerUpdateWallpaper = asyncHandler(async (req, res) => {
 
    await imageResize({
       path,
-      width: 1080,
-      height: null,
+      width: null,
+      height: 800,
       quality: 100,
       album: 'wallpaper',
       location: `./users/${req.user.id}/wallpaper/${fileName}.jpg`,
@@ -104,8 +104,8 @@ module.exports.controllerUpdateWallpaper = asyncHandler(async (req, res) => {
    )
    await imageResize({
       path,
-      width: 1080,
-      height: null,
+      width: null,
+      height: 800,
       quality: 100,
       album: 'public',
       location: `./users/${req.user.id}/public/${fileName}.jpg`,
@@ -158,8 +158,8 @@ module.exports.controllerUpdateAvatar = asyncHandler(async (req, res) => {
    })
    await imageResize({
       path,
-      width: 1080,
-      height: null,
+      width: null,
+      height: 800,
       quality: 100,
       album: 'public',
       location: `./users/${req.user.id}/public/${fileName}.jpg`,

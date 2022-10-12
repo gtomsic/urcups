@@ -11,7 +11,7 @@ const initialState = {
    isPublicPhotosSuccess: false,
    isPublicPhotosError: false,
    isPublicPhotosMessage: '',
-   publicPhotosLimit: 20,
+   publicPhotosLimit: 30,
    publicPhotosOffset: 0,
 }
 
