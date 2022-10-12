@@ -62,11 +62,27 @@ const ImageViewer = ({ images, index, onClose }) => {
                </div>
             </div>
          ) : (
-            <img
-               src={images[index]}
-               alt={images[index]}
-               className='w-full h-auto xl:w-auto xl:h-full'
-            />
+            <>
+               {!images[imageIndex]?.fileName ? (
+                  <img
+                     src={images[index]}
+                     alt={images[index]}
+                     className='w-full h-auto xl:w-auto xl:h-full'
+                  />
+               ) : (
+                  <img
+                     src={
+                        url +
+                        images[imageIndex]?.fileName.replace(
+                           'thumbnail',
+                           'public'
+                        )
+                     }
+                     alt={images[imageIndex]?.fileName}
+                     className='w-full h-auto xl:w-auto xl:h-full'
+                  />
+               )}
+            </>
          )}
          <div
             onClick={onCloseHandler}

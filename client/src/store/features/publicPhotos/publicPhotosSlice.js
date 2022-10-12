@@ -70,7 +70,7 @@ export const deletePublicPhotos = createAsyncThunk(
 )
 
 export const getPublicPhotos = createAsyncThunk(
-   'user/public-photos',
+   'user/get-public-photos',
    async (data, thunkApi) => {
       try {
          return await serviceGetPublicPhotos(data)

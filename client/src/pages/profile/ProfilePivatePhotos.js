@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../../components/loader/Loader'
 import { selectProfile } from '../../store/features/profile/profileSlice'
 import {
-   addPublicPhotos,
-   deletePublicPhotos,
-   getPublicPhotos,
-   resetPhotos,
-   selectPublicPhotos,
-} from '../../store/features/publicPhotos/publicPhotosSlice'
+   selectPrivatePhotos,
+   getPrivatePhotos,
+   resetPrivatePhotos,
+   deletePrivatePhotos,
+   addPrivatePhotos,
+} from '../../store/features/privatePhotos/privatePhotosSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import AttentionMessage from '../../components/AttentionMessage'
 import PhotoLayout from '../../components/photos/PhotoLayout'
@@ -22,45 +22,45 @@ const ProfilePrivatePhotos = () => {
    const { profile } = useSelector(selectProfile)
    const dispatch = useDispatch()
    const {
-      publicPhotos,
-      isPublicPhotosLoading,
-      isPublicPhotosError,
-      publicPhotosOffset,
-      publicPhotosLimit,
-   } = useSelector(selectPublicPhotos)
+      privatePhotos,
+      privatePhotosLoading,
+      privatePhotosError,
+      privatePhotosOffset,
+      privatePhotosLimit,
+   } = useSelector(selectPrivatePhotos)
    useEffect(() => {
       dispatch(
-         getPublicPhotos({
+         getPrivatePhotos({
             user_id: profile?.id,
             token: user?.token,
-            offset: publicPhotosOffset,
-            limit: publicPhotosLimit,
+            offset: privatePhotosOffset,
+            limit: privatePhotosLimit,
          })
       )
       return () => {
          isFetch.current = true
-         dispatch(resetPhotos())
+         dispatch(resetPrivatePhotos())
       }
    }, [
       dispatch,
-      publicPhotosOffset,
-      publicPhotosLimit,
+      privatePhotosOffset,
+      privatePhotosLimit,
       profile?.id,
       user?.token,
    ])
 
    useEffect(() => {
-      if (publicPhotos?.count) {
-         const num = Math.ceil(publicPhotos?.count / publicPhotosLimit)
+      if (privatePhotos?.count) {
+         const num = Math.ceil(privatePhotos?.count / privatePhotosLimit)
          setPages(num)
       }
-   }, [publicPhotos?.count, publicPhotosLimit])
+   }, [privatePhotos?.count, privatePhotosLimit])
 
    const onSaveHandler = () => {
       if (select) {
          if (toDelete?.length > 0) {
             dispatch(
-               deletePublicPhotos({ photos: toDelete, token: user.token })
+               deletePrivatePhotos({ photos: toDelete, token: user.token })
             )
          }
          return setSelect(false)
@@ -84,32 +84,30 @@ const ProfilePrivatePhotos = () => {
       for (let i = 0; i < e.target.files.length; i++) {
          data.append('images', e.target.files[i])
       }
-      dispatch(addPublicPhotos({ data, token: user.token }))
+      dispatch(addPrivatePhotos({ data, token: user.token }))
    }
 
    return (
       <div>
-         {isPublicPhotosLoading ? <Loader>Loading photos...</Loader> : null}
-         {isPublicPhotosError ? (
+         {privatePhotosLoading ? <Loader>Loading photos...</Loader> : null}
+         {privatePhotosError ? (
             <AttentionMessage title='Only for sponsored users!'>
                <p>Sorry this page only availble for sponsored users.</p>
                <p>This site wouldn't run without your support.</p>
                <p>We thank you for your amazing support.</p>
             </AttentionMessage>
          ) : null}
-         {publicPhotos?.rows?.length > 0 ? (
-            <PhotoLayout
-               select={select}
-               images={publicPhotos?.rows}
-               pages={pages}
-               toDelete={toDelete}
-               addToDelete={addToDelete}
-               onSaveHandler={onSaveHandler}
-               onCancelHandler={onCancelHandler}
-               removeToDelte={removeToDelte}
-               onAddImages={onAddImagesHandler}
-            />
-         ) : null}
+         <PhotoLayout
+            select={select}
+            images={privatePhotos?.rows}
+            pages={pages}
+            toDelete={toDelete}
+            addToDelete={addToDelete}
+            onSaveHandler={onSaveHandler}
+            onCancelHandler={onCancelHandler}
+            removeToDelte={removeToDelte}
+            onAddImages={onAddImagesHandler}
+         />
          {/* <>
             {check(user, profile) ? (
                <AttentionMessage title='Suggestion for successful stories!'>

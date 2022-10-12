@@ -40,6 +40,48 @@ module.exports.controllerAddPrivatePhotos = asyncHandler(async (req, res) => {
    const createPhotos = await db.photo.bulkCreate(toPost)
    res.status(201).json(createPhotos)
 })
+
+module.exports.controllerDeletePrivatePhotos = asyncHandler(
+   async (req, res) => {
+      const { photos } = req.body
+      const response = await db.photo.destroy({ where: { fileName: photos } })
+      const folders = ['thumbnail', 'public']
+      if (response) {
+         photos.map((photo) => {
+            const changeFolder = photo.replace('/images', 'users')
+            if (fs.existsSync(changeFolder)) {
+               fs.unlinkSync(changeFolder)
+            }
+            folders.map((item) => {
+               const toDelete = changeFolder.replace('thumbnail', item)
+               if (fs.existsSync(toDelete)) {
+                  fs.unlinkSync(toDelete)
+               }
+            })
+         })
+      }
+      res.status(200).send({ message: 'Okay' })
+   }
+)
+
+module.exports.controllerGetPrivatePhotos = asyncHandler(async (req, res) => {
+   const { user_id, offset, limit } = req.params
+   const access = await db.access.findOne({ where: { user_id: req.user.id } })
+   if (req.user.id === user_id) {
+      const photos = await db.photo.findAndCountAll({
+         where: { user_id: user_id, album: 'public', isPrivate: true },
+         order: [['createdAt', 'DESC']],
+         offset: Number(offset) * Number(limit),
+         limit: Number(limit),
+         subQuery: false,
+      })
+      return res.status(200).json(photos)
+   }
+   throw new Error(
+      'This is a private router not other user is allowed except for the owner.'
+   )
+})
+
 module.exports.controllerAddPublicPhotos = asyncHandler(async (req, res) => {
    const album = req.headers.album
    const toPost = []

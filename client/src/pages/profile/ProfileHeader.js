@@ -14,6 +14,7 @@ import ImageViewer from '../../components/photos/ImageViewer'
 import Modal from '../../components/Modal'
 import { check } from '../../utils/check'
 import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
+import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
@@ -25,6 +26,7 @@ const ProfileHeader = ({ profile }) => {
    const dispatch = useDispatch()
    const { loadingAvatar, loadingWallpaper } = useSelector(selectUser)
    const { publicPhotos } = useSelector(selectPublicPhotos)
+   const { privatePhotos } = useSelector(selectPrivatePhotos)
 
    const onAvatarChange = (e) => {
       e.preventDefault()
@@ -243,7 +245,10 @@ const ProfileHeader = ({ profile }) => {
                                        <FaLock />
                                     </span>
                                     <span className='text-xs md:text-sm lg:text-md'>
-                                       3 Private
+                                       {privatePhotos?.count
+                                          ? privatePhotos?.count
+                                          : null}{' '}
+                                       Private
                                     </span>
                                  </div>
                               </Link>

@@ -1,6 +1,6 @@
 import axios from '../../../apis/axios'
 
-export const serviceAddPublicPhotos = async (data) => {
+export const serviceAddPrivatePhotos = async (data) => {
    const config = {
       headers: {
          'Content-Type': 'multipart/form-data',
@@ -9,14 +9,14 @@ export const serviceAddPublicPhotos = async (data) => {
       },
    }
    const response = await axios.post(
-      '/api/photos/public/add',
+      '/api/photos/private/add',
       data.data,
       config
    )
    return response.data
 }
 
-export const serviceDeletePublicPhotos = async (data) => {
+export const serviceDeletePrivatePhotos = async (data) => {
    const config = {
       headers: {
          'Content-Type': 'application/json',
@@ -24,11 +24,11 @@ export const serviceDeletePublicPhotos = async (data) => {
       },
    }
 
-   const response = await axios.post(`api/photos/public`, data, config)
+   const response = await axios.post(`api/photos/private`, data, config)
    return response.data
 }
 
-export const serviceGetPublicPhotos = async (data) => {
+export const serviceGetPrivatePhotos = async (data) => {
    const config = {
       headers: {
          'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const serviceGetPublicPhotos = async (data) => {
       },
    }
    const response = await axios.get(
-      `/api/photos/public/${data.user_id}/${data.limit}/${data.offset}`,
+      `/api/photos/private/${data.user_id}/${data.limit}/${data.offset}`,
       config
    )
 
