@@ -4,7 +4,7 @@ import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
 const Pagination = ({ offset, limit, onClick, count }) => {
    let [steps, setSteps] = useState(0)
    let [pages, setPages] = useState([])
-   let [stop] = useState(Math.floor((Math.floor(count / limit) + 1) / 5) + 1)
+   let [stop, setStop] = useState()
    useEffect(() => {
       const createArr = []
       let number = Math.floor(count / limit) + 1
@@ -14,6 +14,10 @@ const Pagination = ({ offset, limit, onClick, count }) => {
       const newArr = createArr.splice(steps * 5, 5)
       setPages(newArr)
    }, [count, offset, steps, limit])
+   useEffect(() => {
+      const num = Math.floor(Math.floor(count / limit) / 5) + 1
+      setStop(num)
+   }, [steps])
    const onPrevious = () => {
       if (steps === 0) return
       let num = steps - 1
@@ -26,12 +30,14 @@ const Pagination = ({ offset, limit, onClick, count }) => {
    }
    return (
       <div className='flex gap-2 mt-10 justify-center w-full'>
-         <div
-            onClick={onPrevious}
-            className='flex items-center p-3  border border-white rounded-md text-white cursor-pointer bg-gradient-to-tr from-danger bg-primary'
-         >
-            <IoChevronBack />
-         </div>
+         {steps === 0 ? null : (
+            <div
+               onClick={onPrevious}
+               className='flex items-center p-3  border border-white rounded-md text-white cursor-pointer bg-gradient-to-tr from-danger bg-primary'
+            >
+               <IoChevronBack />
+            </div>
+         )}
 
          {pages.map((item) => {
             return (
@@ -48,13 +54,14 @@ const Pagination = ({ offset, limit, onClick, count }) => {
                </div>
             )
          })}
-
-         <div
-            onClick={onNext}
-            className='flex items-center p-3  border border-white rounded-md text-white cursor-pointer bg-gradient-to-tr from-danger bg-primary'
-         >
-            <IoChevronForward />
-         </div>
+         {steps === stop || pages.length < 5 ? null : (
+            <div
+               onClick={onNext}
+               className='flex items-center p-3  border border-white rounded-md text-white cursor-pointer bg-gradient-to-tr from-danger bg-primary'
+            >
+               <IoChevronForward />
+            </div>
+         )}
       </div>
    )
 }

@@ -19,6 +19,7 @@ import SettingsPage from './pages/SettingsPage'
 import ProfileSettings from './pages/profile/ProfileSettings'
 import ProfileReader from './pages/profile/ProfileReader'
 import ProfileEdit from './pages/profile/ProfileEdit'
+import MessagePage from './pages/MessagePage'
 
 const App = () => {
    return (
@@ -28,6 +29,7 @@ const App = () => {
                <Route path='/' element={<HomePage />} />
                <Route path='/notifications' element={<NotificationsPage />} />
                <Route path='/messages' element={<MessagesPage />} />
+               <Route path='/messages/:user_id' element={<MessagePage />} />
                <Route path='/chats' element={<ChatsPage />} />
                <Route path='/settings' element={<SettingsPage />} />
             </Route>

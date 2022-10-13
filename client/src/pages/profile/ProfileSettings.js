@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaUserEdit } from 'react-icons/fa'
 import { IoLogOut } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,12 +8,16 @@ import Button from '../../components/Button'
 import Card from '../../components/Card'
 import SelectOptions from '../../components/forms/SelectOptions'
 import UserCard from '../../components/UserCard'
+import { selectProfile } from '../../store/features/profile/profileSlice'
 import { logout, selectUser } from '../../store/features/user/userSlice'
 import { selectUsers } from '../../store/features/users/usersSlice'
+import { isRightUser } from '../../utils/check'
 
 const ProfileSettings = () => {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const { user } = useSelector(selectUser)
+   const { profile } = useSelector(selectProfile)
    const { users } = useSelector(selectUsers)
    const [status, setStatus] = useState(user?.status)
    const price = [
@@ -21,6 +25,9 @@ const ProfileSettings = () => {
       { price: 30, label: '6 Months' },
       { price: 50, label: '1 year' },
    ]
+   useEffect(() => {
+      isRightUser(user, profile, navigate)
+   }, [user, profile, navigate])
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }

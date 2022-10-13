@@ -40,3 +40,13 @@ h5 {
 input[type='file'] {
    opacity: 0 !important;
 }
+
+*::-webkit-scrollbar {
+   display: none;
+   scroll-behavior: smooth;
+}
+* {
+   -ms-overflow-style: none;
+   scrollbar-width: none;
+   scroll-behavior: smooth;
+}

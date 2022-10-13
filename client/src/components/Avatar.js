@@ -23,7 +23,7 @@ const Avatar = ({ image, border, isOnline }) => {
 }
 
 Avatar.defaultProps = {
-   image: myAvatar,
+   image: '/avatar.jpg',
    border: false,
    isOnline: false,
 }

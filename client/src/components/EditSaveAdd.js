@@ -4,7 +4,7 @@ import { selectProfile } from '../store/features/profile/profileSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import { check } from '../utils/check'
 
-const EditSaveAdd = ({ select, onSave, cancel, onAddImages }) => {
+const EditSaveAdd = ({ select, onSave, cancel, onAddImages, images }) => {
    const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
    return (
@@ -19,14 +19,16 @@ const EditSaveAdd = ({ select, onSave, cancel, onAddImages }) => {
                      Cancel
                   </div>
                )}
-               <div
-                  onClick={onSave}
-                  className={`bg-gradient-to-tr from-primary bg-secondary hover:bg-danger duration-300 rounded-md px-5 py-2 cursor-pointer ${
-                     select ? 'bg-secondary' : null
-                  }`}
-               >
-                  {select ? 'Delete' : 'Edit'}
-               </div>
+               {images?.length <= 0 ? null : (
+                  <div
+                     onClick={onSave}
+                     className={`bg-gradient-to-tr from-primary bg-secondary hover:bg-danger duration-300 rounded-md px-5 py-2 cursor-pointer ${
+                        select ? 'bg-secondary' : null
+                     }`}
+                  >
+                     {select ? 'Delete' : 'Edit'}
+                  </div>
+               )}
                {select ? null : (
                   <div className='relative flex justify-center items-center bg-gradient-to-tr from-primary bg-secondary hover:bg-danger duration-300 rounded-md px-5 py-2 cursor-pointer'>
                      <span>Add</span>

@@ -88,17 +88,7 @@ const MenuItems = () => {
                   <Link to={`/profile/${user?.username}`}>
                      <div
                         className={
-                           location.pathname === `/profile/${user?.username}` ||
-                           location.pathname ===
-                              `/profile/${user?.username}/photos` ||
-                           location.pathname ===
-                              `/profile/${user?.username}/private` ||
-                           location.pathname ===
-                              `/profile/${user?.username}/reader` ||
-                           location.pathname ===
-                              `/profile/${user?.username}/private` ||
-                           location.pathname ===
-                              `/profile/${user?.username}/settings`
+                           location.pathname === `/profile/${user?.username}`
                               ? 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-danger'
                               : 'py-4 gap-3 px-4 md:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-danger duration-300'
                         }

@@ -3,31 +3,32 @@ import { countries } from '../data/countries'
 import Button from './Button'
 
 import SelectOptions from './forms/SelectOptions'
+import PrimaryButton from './PrimaryButton'
 
 const FilterSearch = ({ limit, onChange, onSaveFilter }) => {
    return (
-      <div className='grid grid-cols-4 gap-2 mb-5'>
+      <div className='grid grid-cols-4 gap-1'>
          <SelectOptions
             value={limit}
             onChange={onChange}
             data={[{ name: 18 }, { name: 42 }, { name: 60 }, { name: 78 }]}
-            bg='bg-dark border border-gray text-white'
+            bg='bg-white border border-gray text-dark py-0'
+            input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
             data={[{ name: 'All' }, { name: 'Online' }]}
-            bg='bg-dark border border-gray text-white'
+            bg='bg-white border border-gray text-dark py-0'
+            input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
             data={countries}
-            bg='bg-dark border border-gray text-white'
+            bg='bg-white border border-gray text-dark py-0'
+            input='py-[6px] md:py-[14px]'
          />
-         <div className='flex flex-col justify-center py-2'>
-            <Button
-               onClick={onSaveFilter}
-               color='flex-1 bg-primary hover:bg-secondary'
-            >
+         <div className='flex flex-col justify-center'>
+            <PrimaryButton onClick={onSaveFilter} add='p-5'>
                Close
-            </Button>
+            </PrimaryButton>
          </div>
       </div>
    )

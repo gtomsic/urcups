@@ -5,7 +5,7 @@ import { serviceGetUserByLimit } from './userService'
 const initialState = {
    users: [],
    count: 0,
-   filter: { offset: 0, limit: 18 },
+   filter: { offset: 0, limit: 42 },
    isLoading: false,
    isSuccess: false,
    isError: false,

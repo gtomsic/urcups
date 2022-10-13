@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-import urcups from '../assets/avatar.jpg';
+import urcups from '../assets/avatar.jpg'
 
 const MessageItem = ({
    image,
@@ -47,12 +47,12 @@ const MessageItem = ({
                   </h5>
                   <span className='text-[10px] '>{time}</span>
                </div>
-               <p className='text-sm'>{message}</p>
+               <p className='text-sm text-light'>{message}</p>
             </div>
          </div>
       </Link>
-   );
-};
+   )
+}
 
 MessageItem.defaultProps = {
    image: urcups,
@@ -62,6 +62,6 @@ MessageItem.defaultProps = {
    message: 'Hello there how are you',
    isOnline: false,
    isRead: true,
-};
+}
 
-export default MessageItem;
+export default MessageItem

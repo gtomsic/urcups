@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { selectProfile } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import EditSaveAdd from '../EditSaveAdd'
 import Modal from '../Modal'
@@ -24,6 +25,7 @@ const PhotoLayout = ({
    const [photoIndex, setPhotoIndex] = useState(null)
    const url = useSelector((state) => state.url)
    const { user } = useSelector(selectUser)
+   const { profile } = useSelector(selectProfile)
    const onClickHander = (e, index) => {
       e.stopPropagation()
       setPhotoIndex(index)
@@ -31,14 +33,21 @@ const PhotoLayout = ({
    }
    return (
       <>
-         <div className='sticky top-[50px] z-20 w-full p-5 flex justify-between '>
+         <div
+            className={
+               user?.id !== profile?.id || !user?.id
+                  ? `sticky mb-5 top-[130px] md:top-[170px] z-20 w-full px-3 flex justify-between overflow-hidden`
+                  : `sticky z-20 mb-5 top-[80px] md:top-[110px] w-full px-3 flex justify-between overflow-hidden`
+            }
+         >
             {/* EDIT AND SAVE HERE */}
-            <PreviousNext pages={pages} />
+            {images?.length <= 0 ? <div></div> : <PreviousNext pages={pages} />}
             <EditSaveAdd
                select={select}
                cancel={onCancelHandler}
                onSave={onSaveHandler}
                onAddImages={onAddImages}
+               images={images}
             />
          </div>
          <div className='image-list'>

@@ -15,6 +15,7 @@ import Modal from '../../components/Modal'
 import { check } from '../../utils/check'
 import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
 import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice'
+import MessageMenuHandler from '../../components/profile/MessageMenuHandler'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
@@ -164,6 +165,9 @@ const ProfileHeader = ({ profile }) => {
                         onClick={stopPropagationHandler}
                         className='flex-1 flex justify-between gap-1 md:gap-3'
                      >
+                        {check(user, profile) || !user?.id ? null : (
+                           <MessageMenuHandler />
+                        )}
                         <Link
                            className='flex-1'
                            to={`/profile/${profile.username}`}

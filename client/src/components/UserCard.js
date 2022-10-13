@@ -13,13 +13,13 @@ function UserCard({ wallpaper, image, username, age, location, isOnline }) {
             backgroundSize: 'cover',
             backgroundPosition: 'top',
          }}
-         className='w-full group gap-1 md:ga-3 min-h-[200px] max-w-[200px] relative rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary duration-300 cursor-pointer'
+         className='w-full group gap-1 md:ga-3 min-h-[200px] max-w-[200px] relative rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-secondary duration-300 cursor-pointer'
       >
          <div
             className={
                !isOnline
-                  ? 'absolute bottom-0 pt-7 h-[150px] w-full flex flex-col items-center text-white bg-gradient-to-t from-dark group-hover:from-primary duration-300'
-                  : 'absolute bottom-0 pt-7 h-[150px] w-full flex group-hover:from-primary duration-300 flex-col items-center text-white bg-gradient-to-t from-secondary'
+                  ? 'absolute bottom-0 pt-7 h-[150px] w-full flex flex-col items-center text-white bg-gradient-to-t from-dark group-hover:from-secondary duration-300'
+                  : 'absolute bottom-0 pt-7 h-[150px] w-full flex group-hover:from-secondary duration-300 flex-col items-center text-white bg-gradient-to-t from-dark'
             }
          >
             <h4>{age}</h4>

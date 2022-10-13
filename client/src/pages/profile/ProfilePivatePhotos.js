@@ -12,6 +12,8 @@ import {
 import { selectUser } from '../../store/features/user/userSlice'
 import AttentionMessage from '../../components/AttentionMessage'
 import PhotoLayout from '../../components/photos/PhotoLayout'
+import { useNavigate } from 'react-router-dom'
+import { isRightUser } from '../../utils/check'
 
 const ProfilePrivatePhotos = () => {
    const isFetch = useRef(false)
@@ -21,6 +23,7 @@ const ProfilePrivatePhotos = () => {
    const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const {
       privatePhotos,
       privatePhotosLoading,
@@ -28,6 +31,9 @@ const ProfilePrivatePhotos = () => {
       privatePhotosOffset,
       privatePhotosLimit,
    } = useSelector(selectPrivatePhotos)
+   useEffect(() => {
+      isRightUser(user, profile, navigate)
+   }, [user, profile, navigate])
    useEffect(() => {
       dispatch(
          getPrivatePhotos({

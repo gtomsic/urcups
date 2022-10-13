@@ -11,6 +11,7 @@ import {
    updateProfileInfo,
 } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
+import { isRightUser } from '../../utils/check'
 
 const ProfileEdit = () => {
    const navigate = useNavigate()
@@ -56,6 +57,9 @@ const ProfileEdit = () => {
    const [about, setAbout] = useState(
       profile?.about?.split('<br>').join('\n') || ''
    )
+   useEffect(() => {
+      isRightUser(user, profile, navigate)
+   }, [user, profile, navigate])
    useEffect(() => {
       if (!profile?.id) {
          navigate(`/profile/${params.username}`)

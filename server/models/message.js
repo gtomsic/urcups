@@ -8,6 +8,15 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.TEXT,
          allowNull: false,
       },
+      roomId: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+      },
+      isRead: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+         deafultValue: false,
+      },
       receiverId: {
          type: DataTypes.UUID,
          allowNull: false,

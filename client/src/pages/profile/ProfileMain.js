@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Card from '../../components/Card'
-import MessageForm from '../../components/MessageForm'
 import MoreInformation from './MoreInformation'
 import { selectProfile } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
@@ -12,10 +11,6 @@ const Profile = () => {
    if (!profile?.id) return
    return (
       <>
-         {!user?.id || user?.id === profile?.id ? null : (
-            <MessageForm user={profile} />
-         )}
-
          <Card>
             <MoreInformation user={profile} />
          </Card>
