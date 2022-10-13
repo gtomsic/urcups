@@ -1,6 +1,5 @@
 import React from 'react'
 import { countries } from '../data/countries'
-import Button from './Button'
 
 import SelectOptions from './forms/SelectOptions'
 import PrimaryButton from './PrimaryButton'

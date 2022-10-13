@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import ErrorMessage from '../../components/ErrorMessage'
 import TextInput from '../../components/forms/TextInput'
 import Loader from '../../components/loader/Loader'
-import { selectUser, verify } from '../../store/features/user/userSlice'
+import { reset, selectUser, verify } from '../../store/features/user/userSlice'
 
 const VerifyPage = () => {
    const isFetch = useRef(false)
@@ -17,6 +17,7 @@ const VerifyPage = () => {
       }
       return () => {
          isFetch.current = true
+         dispatch(reset())
       }
    }, [params, dispatch])
    return (

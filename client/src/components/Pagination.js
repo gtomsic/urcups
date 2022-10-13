@@ -17,7 +17,7 @@ const Pagination = ({ offset, limit, onClick, count }) => {
    useEffect(() => {
       const num = Math.floor(Math.floor(count / limit) / 5) + 1
       setStop(num)
-   }, [steps])
+   }, [steps, count, limit])
    const onPrevious = () => {
       if (steps === 0) return
       let num = steps - 1

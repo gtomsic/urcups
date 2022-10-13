@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import Button from '../components/Button'
 import FilterSearch from '../components/FilterSearch'
 import { BiFilterAlt } from 'react-icons/bi'
 

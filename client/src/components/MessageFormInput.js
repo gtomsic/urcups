@@ -8,7 +8,10 @@ const MessageFormInput = () => {
       e.stopPropagation()
    }
    return ReactDOM.createPortal(
-      <div className='fixed z-40 bottom-0 bg-gradient-to-tr from-secondary bg-primary lg:rounded-xl w-full left-0 translate-x-0 lg:max-w-[40%] px-2 py-3 lg:left-[50%] lg:translate-x-[-50%]'>
+      <div
+         onClick={onClickHandler}
+         className='fixed z-40 bottom-0 bg-gradient-to-tr from-secondary bg-primary lg:rounded-xl w-full left-0 translate-x-0 lg:max-w-[40%] px-2 py-3 lg:left-[50%] lg:translate-x-[-50%]'
+      >
          <form className='flex gap-1'>
             <div className='flex justify-center items-center text-4xl text-white cursor-pointer'>
                <AiFillCamera />

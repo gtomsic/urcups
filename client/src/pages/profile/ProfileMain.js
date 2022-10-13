@@ -3,11 +3,9 @@ import { useSelector } from 'react-redux'
 import Card from '../../components/Card'
 import MoreInformation from './MoreInformation'
 import { selectProfile } from '../../store/features/profile/profileSlice'
-import { selectUser } from '../../store/features/user/userSlice'
 
 const Profile = () => {
    const { profile } = useSelector(selectProfile)
-   const { user } = useSelector(selectUser)
    if (!profile?.id) return
    return (
       <>

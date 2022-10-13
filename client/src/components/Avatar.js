@@ -1,6 +1,5 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import myAvatar from '../assets/avatar.jpg'
 
 const Avatar = ({ image, border, isOnline }) => {
    const url = useSelector((state) => state.url)
