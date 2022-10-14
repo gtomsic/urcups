@@ -204,6 +204,21 @@ module.exports.controllerGetAllUser = asyncHandler(async (req, res) => {
    res.send(users)
 })
 // @ USER GET SINGLE USER
+// @ Private
+// @ GET
+module.exports.controllerGetUserWithId = asyncHandler(async (req, res) => {
+   const id = req.params.id
+   const user = await db.user.findOne({
+      where: { id },
+   })
+   if (user) {
+      return res.send(user)
+   }
+   throw new Error(
+      'Profile not not exist, go back home and select a valid user.'
+   )
+})
+// @ USER GET SINGLE USER
 // @ PUBLIC
 // @ GET
 module.exports.controllerGetSingleUser = asyncHandler(async (req, res) => {

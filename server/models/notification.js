@@ -1,26 +1,30 @@
 module.exports = (sequelize, DataTypes) => {
-   const message = sequelize.define('message', {
-      attachment: {
-         type: DataTypes.TEXT,
-         allowNull: true,
+   const notifcation = sequelize.define('notifcation', {
+      id: {
+         type: DataTypes.UUID,
+         allowNull: false,
+         primaryKey: true,
+      },
+      title: {
+         type: DataTypes.STRING,
+         allowNull: false,
       },
       body: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      roomId: {
+      receiver: {
          type: DataTypes.UUID,
          allowNull: false,
       },
-      isRead: {
-         type: DataTypes.BOOLEAN,
+      sender: {
+         type: DataTypes.UUID,
          allowNull: false,
-         deafultValue: false,
       },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
    })
-   return message
+   return notifcation
 }

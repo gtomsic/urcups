@@ -29,7 +29,7 @@ const App = () => {
                <Route path='/' element={<HomePage />} />
                <Route path='/notifications' element={<NotificationsPage />} />
                <Route path='/messages' element={<MessagesPage />} />
-               <Route path='/messages/:user_id' element={<MessagePage />} />
+               <Route path='/messages/:id' element={<MessagePage />} />
                <Route path='/chats' element={<ChatsPage />} />
                <Route path='/settings' element={<SettingsPage />} />
             </Route>

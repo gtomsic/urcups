@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const Avatar = ({ image, border, isOnline }) => {
+const Avatar = ({ image, isOnline }) => {
    const url = useSelector((state) => state.url)
    return (
       <div

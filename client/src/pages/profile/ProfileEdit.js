@@ -37,8 +37,8 @@ const ProfileEdit = () => {
    )
    const [children, setChildren] = useState(profile?.children || '')
    const [lookingFor, setLookingFor] = useState(profile?.lookingFor || '')
-   const [foot, setFoot] = useState(profile?.height?.split('/')[0] || '')
-   const [inches, setInches] = useState(profile?.height?.split('/')[1] || '')
+   const [foot, setFoot] = useState(profile?.height?.split("'")[0] + "'" || '')
+   const [inches, setInches] = useState(profile?.height?.split("'")[1] || '')
    const [race, setRace] = useState(profile?.race || '')
    const [bodyType, setBodyType] = useState(profile?.bodyType || '')
    const [education, setEducation] = useState(profile?.education || '')
@@ -79,7 +79,7 @@ const ProfileEdit = () => {
          sexualOrientation,
          children,
          lookingFor,
-         height: foot + '/' + inches,
+         height: `${foot}${inches}`,
          race,
          bodyType,
          education,
@@ -234,12 +234,12 @@ const ProfileEdit = () => {
                      label='Height Foot'
                      data={[
                         { name: '-' },
-                        { name: '3' },
-                        { name: '4' },
-                        { name: '5' },
-                        { name: '6' },
-                        { name: '7' },
-                        { name: '8' },
+                        { name: `3'` },
+                        { name: `4'` },
+                        { name: `5'` },
+                        { name: `6'` },
+                        { name: `7'` },
+                        { name: `8'` },
                      ]}
                   />
                   <SelectOptions
@@ -248,17 +248,17 @@ const ProfileEdit = () => {
                      label='Height Inches'
                      data={[
                         { name: '-' },
-                        { name: '1' },
-                        { name: '2' },
-                        { name: '3' },
-                        { name: '4' },
-                        { name: '5' },
-                        { name: '6' },
-                        { name: '7' },
-                        { name: '8' },
-                        { name: '9' },
-                        { name: '10' },
-                        { name: '11' },
+                        { name: `1"` },
+                        { name: `2"` },
+                        { name: `3"` },
+                        { name: `4"` },
+                        { name: `5"` },
+                        { name: `6"` },
+                        { name: `7"` },
+                        { name: `8"` },
+                        { name: `9"` },
+                        { name: `10"` },
+                        { name: `11"` },
                      ]}
                   />
                </div>

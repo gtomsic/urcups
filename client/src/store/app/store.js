@@ -5,6 +5,7 @@ import usersReducers from '../features/users/usersSlice'
 import profileReducer from '../features/profile/profileSlice'
 import publicPhotosReducer from '../features/publicPhotos/publicPhotosSlice'
 import privatePhotosReducer from '../features/privatePhotos/privatePhotosSlice'
+import messagesReducer from '../features/messages/messagesSlice'
 
 export const store = configureStore({
    reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
       profile: profileReducer,
       publicPhotos: publicPhotosReducer,
       privatePhotos: privatePhotosReducer,
+      messages: messagesReducer,
    },
 })

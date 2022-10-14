@@ -12,6 +12,7 @@ const {
    controllerUpdateAvatar,
    controllerUpdateWallpaper,
    controllerUpdateUserInfo,
+   controllerGetUserWithId,
 } = require('../controllers/controllerUser')
 
 router.put('/update-profile-info', auth, controllerUpdateUserInfo)
@@ -25,6 +26,7 @@ router.post(
    upload.single('wallpaper'),
    controllerUpdateWallpaper
 )
+router.get('/user/:id', auth, controllerGetUserWithId)
 router.get('/:username', controllerGetSingleUser)
 router.post('/', controllerRegisterUser)
 router.get('/', controllerGetAllUser)

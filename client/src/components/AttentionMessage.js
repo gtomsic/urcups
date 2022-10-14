@@ -4,9 +4,9 @@ const AttentionMessage = ({ title, children }) => {
    return (
       <div className='rounded-3xl overflow-hidden'>
          <div className='bg-gradient-to-tr from-primary bg-danger p-5'>
-            <h3>{title}</h3>
+            <h3 className='text-white'>{title}</h3>
          </div>
-         <div className='p-5'>
+         <div className='p-5 text-white'>
             {children}
             <br />
             <br />
