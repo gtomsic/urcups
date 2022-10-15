@@ -38,10 +38,10 @@ const ProfilePage = () => {
          isFetch.current = true
       }
    }, [params, dispatch, user?.id])
-   if (isLoading) {
-      return <Loader>Loading profile...</Loader>
-   }
-   if (!profile?.id || isError) {
+
+   if (isLoading) return <Loader>Loading profile...</Loader>
+
+   if (!profile?.id || isError)
       return (
          <AttentionMessage title='Profile not found!'>
             <p>{message}</p>
@@ -50,7 +50,7 @@ const ProfilePage = () => {
             </Link>
          </AttentionMessage>
       )
-   }
+
    return (
       <div className='grid grid-cols-1 gap-11 text-white'>
          {check(user, profile) ? null : (

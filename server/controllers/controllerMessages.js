@@ -2,7 +2,6 @@ const db = require('../models')
 const Op = require('sequelize').Op
 const { v4: uuid } = require('uuid')
 const asyncHandler = require('express-async-handler')
-const user = require('../models/user')
 
 module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
    const { user_id, limit, offset } = req.params
@@ -31,6 +30,7 @@ module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
    })
    res.status(200).json(messages)
 })
+
 module.exports.controllerGetRoomsWithMessage = asyncHandler(
    async (req, res) => {
       const id = req.user.id
@@ -75,7 +75,7 @@ module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
          user_id: sender,
       }
       const message = await db.message.create(data)
-      return res.status(201).json(message)
+      return res.status(201).json({ ...message.dataValues, receiver })
    }
    if (room) {
       const data = {
@@ -86,6 +86,6 @@ module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
          user_id: sender,
       }
       const message = await db.message.create(data)
-      return res.status(201).json(message)
+      return res.status(201).json({ ...message.dataValues, receiver })
    }
 })

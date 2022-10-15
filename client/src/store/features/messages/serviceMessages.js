@@ -1,5 +1,23 @@
 import axios from '../../../apis/axios'
 
+export const serviceGetAllMessages = async (data) => {
+   const { limit, offset, token } = data
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+      },
+   }
+   const response = await axios.get(`/api/messages/${limit}/${offset}`, config)
+   const newArray = []
+   response.data.filter((item) => {
+      if (Number(item.messages.length) === 1) {
+         return newArray.push(item.messages[0])
+      }
+   })
+   return newArray
+}
+
 export const serviceGetUserProfile = async (data) => {
    const { user_id, token } = data
    const config = {
@@ -12,6 +30,7 @@ export const serviceGetUserProfile = async (data) => {
    const response = await axios.get(`/api/users/user/${user_id}`, config)
    return response.data
 }
+
 export const serviceGetRoomMessages = async (data) => {
    const { user_id, limit, offset, token } = data
    const config = {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import MessageItem from '../components/MessageItem'
+import MessageItem from '../components/messages/MessageItem'
 import { selectUsers } from '../store/features/users/usersSlice'
 
 const MessagesPage = () => {

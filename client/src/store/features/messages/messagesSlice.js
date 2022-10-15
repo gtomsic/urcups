@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import _ from 'lodash'
+import { socket } from '../../../socket'
+
 import {
+   serviceGetAllMessages,
    serviceGetRoomMessages,
    serviceGetUserProfile,
    serviceSendMessage,
@@ -13,8 +16,8 @@ const initialState = {
       messagesSuccess: false,
       messagesError: false,
       messagesMessage: '',
-      limit: 30,
-      offset: 0,
+      messagesLimit: 30,
+      messagesOffset: 0,
    },
    message: {
       message: [],
@@ -22,8 +25,8 @@ const initialState = {
       messageSuccess: false,
       messageError: false,
       messageMessage: '',
-      limit: 30,
-      offset: 0,
+      messageLimit: 30,
+      messageOffset: 0,
    },
    userProfile: {
       userProfile: {},
@@ -33,6 +36,22 @@ const initialState = {
       userProfileMessage: '',
    },
 }
+export const getAllMessages = createAsyncThunk(
+   'user/getAllMessages',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetAllMessages(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getMessageUserProfile = createAsyncThunk(
    'user/getMessageUserProfile',
    async (data, thunkApi) => {
@@ -98,7 +117,13 @@ const messagesSlice = createSlice({
          }
       },
       insertMessage: (state, action) => {
-         state.message = [...state.message.message, action.payload]
+         const sortedMessage = _.orderBy(
+            [...state.message.message, action.payload],
+            'id',
+            'asc'
+         )
+         state.message.message = sortedMessage
+         // state.message = [...state.message.message, action.payload]
       },
       insertMessages: (state, action) => {
          state.messages = [...state.messages.messages, action.payload]
@@ -112,6 +137,7 @@ const messagesSlice = createSlice({
          .addCase(sendMessage.fulfilled, (state, action) => {
             state.message.messageLoading = false
             state.message.messageSuccess = true
+            socket.emit('sendMessage', action.payload)
             const sortedMessage = _.orderBy(
                [...state.message.message, action.payload],
                'id',
@@ -151,6 +177,20 @@ const messagesSlice = createSlice({
             state.userProfile.userProfileError = true
             state.userProfile.userProfileMessage = action.payload
          })
+         .addCase(getAllMessages.pending, (state) => {
+            state.messages.messagesLoading = true
+         })
+         .addCase(getAllMessages.fulfilled, (state, action) => {
+            state.messages.messagesLoading = false
+            state.messages.messagesSuccess = true
+            const sortedMessages = _.orderBy(action.payload, 'id', 'asc')
+            state.messages.messages = sortedMessages
+         })
+         .addCase(getAllMessages.rejected, (state, action) => {
+            state.messages.messagesLoading = false
+            state.messages.messagesError = true
+            state.messages.messagesMessage = action.payload
+         })
    },
 })
 
@@ -160,4 +200,5 @@ export default messagesSlice.reducer
 
 // SELECTOR
 export const selectMessage = (state) => state.messages.message
+export const selectAllMessages = (state) => state.messages.messages
 export const selectMessageUserProfile = (state) => state.messages.userProfile

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
@@ -20,8 +20,21 @@ import ProfileSettings from './pages/profile/ProfileSettings'
 import ProfileReader from './pages/profile/ProfileReader'
 import ProfileEdit from './pages/profile/ProfileEdit'
 import MessagePage from './pages/MessagePage'
+import { useSelector } from 'react-redux'
+import { selectUser } from './store/features/user/userSlice'
+import { socket } from './socket'
 
 const App = () => {
+   const isFetch = useRef(false)
+   const { user } = useSelector(selectUser)
+   useEffect(() => {
+      if (isFetch.current === false) {
+         socket.emit('user_joined', user)
+      }
+      return () => {
+         isFetch.current = true
+      }
+   }, [])
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>
          <Routes>

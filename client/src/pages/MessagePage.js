@@ -10,13 +10,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
    getMessageUserProfile,
    getRoomMessages,
-   resetMessage,
+   insertMessage,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
 } from '../store/features/messages/messagesSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import AttentionMessage from '../components/AttentionMessage'
+import { socket } from '../socket'
+import MessageProfileCard from '../components/messages/MessageProfileCard'
+import Messages from '../components/messages/Messages'
 
 const MessagePage = () => {
    const navigate = useNavigate()
@@ -25,13 +28,12 @@ const MessagePage = () => {
    const isFetch = useRef(false)
    const [onInputFocus, setOnInputFocus] = useState(false)
    const scrollEnd = useRef(null)
-   let [roomOffset, setRoomOffset] = useState(0)
    const [openInput, setOpenInput] = useState(false)
    const [body, setBody] = useState('')
    const [attachment, setAttachment] = useState([])
    const { user } = useSelector(selectUser)
    const { userProfile } = useSelector(selectMessageUserProfile)
-   const { message, messageLoading, messageError } = useSelector(selectMessage)
+   const { message, messageSuccess } = useSelector(selectMessage)
    useEffect(() => {
       setOpenInput(true)
       return () => {
@@ -41,6 +43,17 @@ const MessagePage = () => {
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
    }, [message, onInputFocus])
+   // MONITORING THE RECEIVE MESSAGES AN INSERT TO CHAT
+   useEffect(() => {
+      if (isFetch.current === false) {
+         socket.on(user?.id, (data) => {
+            dispatch(insertMessage(data))
+         })
+      }
+      return () => {
+         isFetch.current = true
+      }
+   }, [messageSuccess])
    useEffect(() => {
       const fetchMessagesWithProfile = async () => {
          await dispatch(
@@ -58,10 +71,7 @@ const MessagePage = () => {
       if (isFetch.current === false) {
          fetchMessagesWithProfile()
       }
-      return () => {
-         isFetch.current = true
-      }
-   }, [params?.id])
+   }, [params.id])
    const onBackHandler = (e) => {
       e.stopPropagation()
       navigate(-1)
@@ -79,7 +89,6 @@ const MessagePage = () => {
          attachment: attachment.length > 0 ? attachment.join(',') : '',
          receiver: params.id,
       }
-      console.log(data)
       dispatch(sendMessage({ data, token: user.token }))
       setBody('')
    }
@@ -130,8 +139,10 @@ const MessagePage = () => {
             )}
             <div ref={scrollEnd} />
          </div>
-         <div className='roundex-2xl w-[350px] max-h-[80vh] hidden lg:block bg-darker rounded-2xl p-5'>
+         <div className='roundex-2xl w-[350px] max-h-[80vh] hidden lg:block border border-darker rounded-2xl p-5'>
+            <MessageProfileCard />
             <h3>Messages</h3>
+            <Messages />
          </div>
          {!openInput ? null : (
             <MessageFormInput

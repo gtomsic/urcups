@@ -12,8 +12,8 @@ const RightMessage = ({ children, profile, message }) => {
                   {profile?.username}
                </h4>
                <div
-                  className='right-message relative p-4 text-white bg-primary rounded-2xl 
-                  before:content-[""] before:w-4 before:h-4 before:bg-primary before:absolute before:right-[-6px] before:origin-center before:rotate-45 before:top-5'
+                  className='right-message relative p-4 text-white bg-secondary rounded-2xl 
+                  before:content-[""] before:w-4 before:h-4 before:bg-secondary before:absolute before:right-[-6px] before:origin-center before:rotate-45 before:top-5'
                >
                   {children}
                </div>

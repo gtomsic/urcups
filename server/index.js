@@ -4,9 +4,6 @@ const cors = require('cors')
 const colors = require('colors')
 const db = require('./models')
 const path = require('path')
-const { v4: uuid } = require('uuid')
-const bcrypt = require('bcryptjs')
-const { Server } = require('socket.io')
 
 const app = express()
 app.use(cors())
@@ -66,13 +63,6 @@ const server = app.listen(PORT, async () => {
 })
 
 db.sequelize.sync().then(() => server)
-
-const io = new Server(server, {
-   cors: {
-      origin: 'http://10.0.0.50:3000',
-      methods: ['GET', 'POST', 'UPDATE', 'DELETE', 'PUT'],
-   },
-})
 
 // for (let i = 0; i < 100; i++) {
 //    let id = uuid()
