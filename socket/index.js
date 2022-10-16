@@ -56,14 +56,13 @@ io.on('connection', (socket) => {
       const sender = getUser(message.user_id)
       io.emit(message.receiver, {
          ...message,
-         avatar: sender.avatar,
-         thumbnail: sender.thumbnail,
-         age: sender.age,
-         sex: sender.sex,
-         city: sender.city,
-         stateProvince: sender.stateProvince,
-         country: sender.country,
-         isOnline: sender.isOnline,
+         thumbnail: sender?.thumbnail ? sender?.thumbnail : '/avatar.jpg',
+         age: sender?.age,
+         sex: sender?.sex,
+         city: sender?.city,
+         stateProvince: sender?.stateProvince,
+         country: sender?.country,
+         isOnline: sender?.isOnline,
       })
    })
    // When disconnect

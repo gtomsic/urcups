@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { socket } from '../../../socket'
 
 import {
+   serviceCountAllUnreadMessages,
    serviceGetAllMessages,
    serviceGetRoomMessages,
    serviceGetUserProfile,
@@ -10,6 +11,13 @@ import {
 } from './serviceMessages'
 
 const initialState = {
+   unreadMessages: {
+      unreadMessages: 0,
+      unreadLoading: false,
+      unreadSuccess: false,
+      unreadError: false,
+      unreadMessage: '',
+   },
    messages: {
       messages: [],
       messagesLoading: false,
@@ -36,6 +44,22 @@ const initialState = {
       userProfileMessage: '',
    },
 }
+export const countAllUnreadMessage = createAsyncThunk(
+   'user/countAllUnreadMessages',
+   async (token, thunkApi) => {
+      try {
+         return await serviceCountAllUnreadMessages(token)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getAllMessages = createAsyncThunk(
    'user/getAllMessages',
    async (data, thunkApi) => {
@@ -183,13 +207,26 @@ const messagesSlice = createSlice({
          .addCase(getAllMessages.fulfilled, (state, action) => {
             state.messages.messagesLoading = false
             state.messages.messagesSuccess = true
-            const sortedMessages = _.orderBy(action.payload, 'id', 'asc')
+            const sortedMessages = _.orderBy(action.payload, 'id', 'desc')
             state.messages.messages = sortedMessages
          })
          .addCase(getAllMessages.rejected, (state, action) => {
             state.messages.messagesLoading = false
             state.messages.messagesError = true
             state.messages.messagesMessage = action.payload
+         })
+         .addCase(countAllUnreadMessage.pending, (state) => {
+            state.unreadMessages.unreadLoading = true
+         })
+         .addCase(countAllUnreadMessage.fulfilled, (state, action) => {
+            state.unreadMessages.unreadLoading = false
+            state.unreadMessages.unreadSuccess = true
+            state.unreadMessages.unreadMessages = action.payload
+         })
+         .addCase(countAllUnreadMessage.rejected, (state, action) => {
+            state.unreadMessages.unreadLoading = false
+            state.unreadMessages.unreadError = true
+            state.unreadMessages.unreadMessage = action.payload
          })
    },
 })
@@ -199,6 +236,7 @@ export const { insertMessage, insertMessages, resetMessage } =
 export default messagesSlice.reducer
 
 // SELECTOR
+export const selectUnreadMessages = (state) => state.messages.unreadMessages
 export const selectMessage = (state) => state.messages.message
 export const selectAllMessages = (state) => state.messages.messages
 export const selectMessageUserProfile = (state) => state.messages.userProfile

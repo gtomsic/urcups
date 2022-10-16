@@ -3,14 +3,17 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { IoChevronBack } from 'react-icons/io5'
 
 import PrimaryButton from '../components/PrimaryButton'
-import MessageFormInput from '../components/MessageFormInput'
+import MessageFormInput from '../components/messages/MessageFormInput'
 import RightMessage from '../components/messages/RightMessage'
 import LeftMessage from '../components/messages/LeftMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+   countAllUnreadMessage,
+   getAllMessages,
    getMessageUserProfile,
    getRoomMessages,
    insertMessage,
+   selectAllMessages,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
@@ -33,7 +36,11 @@ const MessagePage = () => {
    const [attachment, setAttachment] = useState([])
    const { user } = useSelector(selectUser)
    const { userProfile } = useSelector(selectMessageUserProfile)
-   const { message, messageSuccess } = useSelector(selectMessage)
+   const { message, messageOffset, messageLimit } = useSelector(selectMessage)
+   const { messagesOffset, messagesLimit } = useSelector(selectAllMessages)
+   if (!user?.id) {
+      navigate('/')
+   }
    useEffect(() => {
       setOpenInput(true)
       return () => {
@@ -47,13 +54,24 @@ const MessagePage = () => {
    useEffect(() => {
       if (isFetch.current === false) {
          socket.on(user?.id, (data) => {
-            dispatch(insertMessage(data))
+            // console.log({ SenderId: data.user_id, openMessageID: params.id })
+            if (data.user_id === params.id) {
+               return dispatch(insertMessage(data))
+            }
+            dispatch(
+               getAllMessages({
+                  offset: messagesOffset,
+                  limit: messagesLimit,
+                  token: user.token,
+                  user_id: params.id,
+               })
+            )
          })
       }
       return () => {
          isFetch.current = true
       }
-   }, [messageSuccess])
+   }, [message, params])
    useEffect(() => {
       const fetchMessagesWithProfile = async () => {
          await dispatch(
@@ -61,17 +79,18 @@ const MessagePage = () => {
          )
          await dispatch(
             getRoomMessages({
-               offset: 0,
-               limit: 30,
+               offset: messageOffset,
+               limit: messageLimit,
                token: user.token,
                user_id: params.id,
             })
          )
+         await dispatch(countAllUnreadMessage(user?.token))
       }
-      if (isFetch.current === false) {
-         fetchMessagesWithProfile()
-      }
+
+      fetchMessagesWithProfile()
    }, [params.id])
+
    const onBackHandler = (e) => {
       e.stopPropagation()
       navigate(-1)
@@ -80,7 +99,7 @@ const MessagePage = () => {
       e.preventDefault()
       e.stopPropagation()
       const checkBody = Boolean(body.trim())
-      if (!checkBody) {
+      if (!checkBody && user.id !== params.id) {
          setBody('')
          return
       }
@@ -104,7 +123,9 @@ const MessagePage = () => {
                </PrimaryButton>
             </div>
             {message?.length <= 0 ? (
-               <AttentionMessage title='Are you interested with user (Blablah)'>
+               <AttentionMessage
+                  title={`Are you interested with ${userProfile?.userName}`}
+               >
                   <p>Send him/her your interested to the fullest.</p>
                   <p>
                      And connect maybe his/shes the one you you're waiting for.

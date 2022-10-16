@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBell, FaUserPlus } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
@@ -9,12 +9,29 @@ import { HiUsers } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
+import {
+   countAllUnreadMessage,
+   selectAllMessages,
+   selectMessage,
+   selectUnreadMessages,
+} from '../store/features/messages/messagesSlice'
+import { socket } from '../socket'
 
 const MenuItems = () => {
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
+   const { messages } = useSelector(selectAllMessages)
+   const { message } = useSelector(selectMessage)
+   const { unreadMessages } = useSelector(selectUnreadMessages)
+   useEffect(() => {
+      socket.on(user?.id, (msg) => {
+         if (user?.id && msg.user_id !== user?.id) {
+            dispatch(countAllUnreadMessage(user?.token))
+         }
+      })
+   }, [user, messages, message, socket])
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }
@@ -64,9 +81,11 @@ const MenuItems = () => {
                      >
                         <div className='relative'>
                            <MdMessage />
-                           <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
-                              3
-                           </span>
+                           {unreadMessages > 0 ? (
+                              <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
+                                 {unreadMessages}
+                              </span>
+                           ) : null}
                         </div>
                         <div className='hidden xl:block'>Messages</div>
                      </div>

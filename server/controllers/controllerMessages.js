@@ -3,6 +3,22 @@ const Op = require('sequelize').Op
 const { v4: uuid } = require('uuid')
 const asyncHandler = require('express-async-handler')
 
+module.exports.controllerCountAllMessages = asyncHandler(async (req, res) => {
+   let rooms = await db.room.findAll({
+      where: {
+         [Op.or]: [{ receiver: req.user.id }, { sender: req.user.id }],
+      },
+   })
+   const newRooms = []
+   rooms.map((item) => {
+      newRooms.push(item.id)
+   })
+   const messages = await db.message.count({
+      where: { roomId: newRooms, isRead: false },
+   })
+   res.status(200).json(messages)
+})
+
 module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
    const { user_id, limit, offset } = req.params
    let room = await db.room.findOne({
@@ -14,13 +30,9 @@ module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
       },
    })
    if (!room) {
-      room = await db.room.create({
-         id: uuid(),
-         sender: req.user.id,
-         receiver: user_id,
-         user_id: req.user.id,
-      })
+      throw new Error('You have no communication with this user yet!')
    }
+   await db.message.update({ isRead: true }, { where: { roomId: room.id } })
    const messages = await db.message.findAll({
       where: { roomId: room.id },
       order: [['createdAt', 'DESC']],
@@ -45,6 +57,7 @@ module.exports.controllerGetRoomsWithMessage = asyncHandler(
             { model: db.message, limit: 1, order: [['createdAt', 'DESC']] },
          ],
       })
+
       res.status(200).json(rooms)
    }
 )
@@ -52,6 +65,8 @@ module.exports.controllerGetRoomsWithMessage = asyncHandler(
 module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
    const { body, attachment, receiver } = req.body
    const sender = req.user.id
+   if (receiver === req.user.id)
+      throw new Error('Receiver should not be the sender.')
    let room = await db.room.findOne({
       where: {
          [Op.or]: [

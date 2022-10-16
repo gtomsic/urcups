@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { serviceGetUserProfile } from '../../store/features/messages/serviceMessages'
 import { selectUser } from '../../store/features/user/userSlice'
 
-const MessageItem = ({ message, body, time, isOnline, isRead }) => {
+const MessageItem = ({ message, body, time }) => {
    const isFetch = useRef(false)
    const [profile, setProfile] = useState({})
    const { user } = useSelector(selectUser)
@@ -31,9 +31,9 @@ const MessageItem = ({ message, body, time, isOnline, isRead }) => {
       <Link to={`/messages/${message.user_id}`}>
          <div
             className={
-               isRead
-                  ? 'rounded-xl z-10 relative bg-grayer flex gap-3 items-center overflow-hidden'
-                  : 'rounded-xl z-10 relative bg-primary flex gap-3 items-center overflow-hidden text-white'
+               message.isRead
+                  ? 'rounded-xl z-10 relative bg-gradient-to-tr from-gray  bg-dark flex gap-3 items-center overflow-hidden text-white'
+                  : 'rounded-xl z-10 relative bg-gradient-to-tr from-secondary  bg-primary flex gap-3 items-center overflow-hidden text-white'
             }
          >
             <div
@@ -44,11 +44,11 @@ const MessageItem = ({ message, body, time, isOnline, isRead }) => {
                   backgroundRepeat: 'no-repeat',
                }}
             >
-               {isOnline ? (
+               {profile?.isOnline ? (
                   <>
                      <span
                         className={`z-10 absolute bottom-3 right-[-4px] w-3 h-3 border-2 border-white rounded-full ${
-                           isOnline ? 'bg-secondary' : 'bg-gray'
+                           profile?.isOnline ? 'bg-secondary' : 'bg-gray'
                         }`}
                      ></span>
                      <span className='z-0 animate-ping absolute bottom-3 right-[-4px] w-3 h-3 inline-flex rounded-full bg-white opacity-95'></span>
@@ -62,7 +62,11 @@ const MessageItem = ({ message, body, time, isOnline, isRead }) => {
                   </h5>
                   <span className='text-[10px] '>{moment(time).fromNow()}</span>
                </div>
-               <p className='text-sm text-light'>{body}</p>
+               <p className='text-sm text-light'>
+                  {body.split('').length > 20
+                     ? body.split('').splice(0, 20).join('') + '...'
+                     : body}
+               </p>
             </div>
          </div>
       </Link>

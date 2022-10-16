@@ -37,7 +37,9 @@ const ProfileEdit = () => {
    )
    const [children, setChildren] = useState(profile?.children || '')
    const [lookingFor, setLookingFor] = useState(profile?.lookingFor || '')
-   const [foot, setFoot] = useState(profile?.height?.split("'")[0] + "'" || '')
+   const [foot, setFoot] = useState(
+      profile?.height?.split("'")[0] ? profile.height.split("'")[0] + "'" : ''
+   )
    const [inches, setInches] = useState(profile?.height?.split("'")[1] || '')
    const [race, setRace] = useState(profile?.race || '')
    const [bodyType, setBodyType] = useState(profile?.bodyType || '')
@@ -79,7 +81,7 @@ const ProfileEdit = () => {
          sexualOrientation,
          children,
          lookingFor,
-         height: `${foot}${inches}`,
+         height: `${foot?.split("'")[0] ? foot : ''}${inches}`,
          race,
          bodyType,
          education,

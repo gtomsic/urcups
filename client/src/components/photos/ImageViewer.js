@@ -44,7 +44,7 @@ const ImageViewer = ({ images, index, onClose }) => {
                      images[imageIndex].fileName.replace('thumbnail', 'public')
                   }
                   alt={images[imageIndex].fileName}
-                  className='w-full h-auto xl:w-auto xl:h-full'
+                  className='w-full h-auto xl:w-auto xl:max-h-full'
                />
                {/* Previous Button */}
                <div

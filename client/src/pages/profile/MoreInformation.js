@@ -23,7 +23,7 @@ const MoreInformation = ({ user }) => {
             </div>
             <div className='grid grid-cols-2'>
                <span>Height:</span>
-               <span>{user.height}</span>
+               <span>{user?.height}</span>
             </div>
             <div className='grid grid-cols-2'>
                <span>Race:</span>

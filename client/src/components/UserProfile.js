@@ -8,7 +8,7 @@ const MessageItem = ({ user }) => {
    const url = useSelector((state) => state.url)
    return (
       <Link to={`/profile/${user?.username}`}>
-         <div className='rounded-xl z-10 py-5 xl:py-0 relative xl:bg-gradient-to-tl from-danger bg-primary flex justify-center  gap-3  text-white'>
+         <div className='rounded-xl z-10 py-5 xl:py-0 relative xl:bg-gradient-to-tr from-secondary bg-primary flex justify-center  gap-3  text-white'>
             <div
                className='relative w-11 h-11 xl:w-[70px] xl:h-[70px] rounded-full xl:rounded-r-full xl:rounded-b-full xl:mt-[-15px] xl:ml-[-15px] xl:border-4 border-white mr-1'
                style={{
