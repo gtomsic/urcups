@@ -10,11 +10,16 @@ import MessageItem from './MessageItem'
 
 const Messages = () => {
    const isFetch = useRef(false)
+   const scrollView = useRef(null)
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const { message } = useSelector(selectMessage)
    const { messages, messagesSuccess, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
+
+   useEffect(() => {
+      scrollView.current?.scrollIntoView()
+   }, [messages])
 
    useEffect(() => {
       dispatch(
@@ -43,11 +48,14 @@ const Messages = () => {
       }
    }, [dispatch, messagesLimit, messagesOffset, user])
    return (
-      <div className='flex flex-col sticky top-[85px] gap-3'>
-         <div className='flex flex-col gap-2 max-h-[400px] hover:overflow-y-scroll'>
-            {messages?.map((message) => (
+      <div className='h-[400px] overflow-scroll'>
+         <div ref={scrollView} />
+         {messages?.map((message) => (
+            <div
+               key={message.id}
+               className='my-2 shadow-md hover:shadow-secondary rounded-2xl'
+            >
                <MessageItem
-                  key={message.id}
                   image={message.avatar}
                   isRead={message.isRead}
                   isOnline={message.isOnline}
@@ -55,8 +63,8 @@ const Messages = () => {
                   time={message.createdAt}
                   message={message}
                />
-            ))}
-         </div>
+            </div>
+         ))}
       </div>
    )
 }

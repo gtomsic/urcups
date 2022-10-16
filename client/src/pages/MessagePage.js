@@ -38,7 +38,8 @@ const MessagePage = () => {
    const { userProfile } = useSelector(selectMessageUserProfile)
    const { message, messageOffset, messageLimit, messageError } =
       useSelector(selectMessage)
-   const { messagesOffset, messagesLimit } = useSelector(selectAllMessages)
+   const { messagesOffset, messagesLimit, messages } =
+      useSelector(selectAllMessages)
    if (!user?.id) {
       navigate('/')
    }
@@ -92,7 +93,7 @@ const MessagePage = () => {
       e.stopPropagation()
       navigate(-1)
    }
-   const onSendHandler = (e) => {
+   const onSendHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
       const checkBody = Boolean(body.trim())
@@ -105,8 +106,18 @@ const MessagePage = () => {
          attachment: attachment.length > 0 ? attachment.join(',') : '',
          receiver: params.id,
       }
-      dispatch(sendMessage({ data, token: user.token }))
+      await dispatch(sendMessage({ data, token: user.token }))
       setBody('')
+      if (message.length < 1) {
+         await dispatch(
+            getRoomMessages({
+               offset: messageOffset,
+               limit: messageLimit,
+               token: user.token,
+               user_id: params.id,
+            })
+         )
+      }
    }
    return (
       <div className='flex gap-11'>
@@ -157,13 +168,15 @@ const MessagePage = () => {
             )}
             <div ref={scrollEnd} />
          </div>
-         <div className='roundex-2xl w-[350px] max-h-[80vh] hidden lg:block border border-darker rounded-2xl p-5'>
+         <div className='hidden lg:block'>
             <MessageProfileCard />
-            <div className='flex justify-between p-3'>
-               <h3 className='text-light'>Messages</h3>
-               <h3 className='text-light'>View All</h3>
+            <div className='roundex-2xl w-[350px] h-auto  border border-darker rounded-2xl p-5'>
+               <div className='flex justify-between p-3'>
+                  <h3 className='text-light'>Messages</h3>
+                  <h3 className='text-light'>View All</h3>
+               </div>
+               <Messages />
             </div>
-            <Messages />
          </div>
          {!openInput ? null : (
             <MessageFormInput

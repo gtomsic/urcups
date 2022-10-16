@@ -54,11 +54,11 @@ const MessageItem = ({ message, body, time }) => {
    return (
       <div
          onClick={onClickHandler}
-         className={
+         className={`h-[50px] ${
             message.isRead
                ? 'rounded-xl z-10 relative bg-gradient-to-tr from-gray  bg-dark flex gap-3 items-center overflow-hidden text-white cursor-pointer'
                : 'rounded-xl z-10 relative bg-gradient-to-tr from-secondary  bg-primary flex gap-3 items-center overflow-hidden text-white cursor-pointer'
-         }
+         }`}
       >
          <div
             className='relative w-[70px] h-[70px] rounded-r-full m-[-10px] border-2 border-white mr-1'
