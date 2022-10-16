@@ -36,7 +36,8 @@ const MessagePage = () => {
    const [attachment, setAttachment] = useState([])
    const { user } = useSelector(selectUser)
    const { userProfile } = useSelector(selectMessageUserProfile)
-   const { message, messageOffset, messageLimit } = useSelector(selectMessage)
+   const { message, messageOffset, messageLimit, messageError } =
+      useSelector(selectMessage)
    const { messagesOffset, messagesLimit } = useSelector(selectAllMessages)
    if (!user?.id) {
       navigate('/')
@@ -49,15 +50,12 @@ const MessagePage = () => {
    }, [])
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
-   }, [message, onInputFocus])
+   }, [message, onInputFocus, socket])
    // MONITORING THE RECEIVE MESSAGES AN INSERT TO CHAT
    useEffect(() => {
       if (isFetch.current === false) {
          socket.on(user?.id, (data) => {
-            console.log(userProfile)
-            if (data.user_id === params.id) {
-               return dispatch(insertMessage(data))
-            }
+            dispatch(insertMessage(data))
             dispatch(
                getAllMessages({
                   offset: messagesOffset,
@@ -71,7 +69,7 @@ const MessagePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [message, params, dispatch, messagesOffset, messagesLimit, user])
+   }, [])
    useEffect(() => {
       const fetchSync = async () => {
          await dispatch(
@@ -88,7 +86,7 @@ const MessagePage = () => {
          await dispatch(countAllUnreadMessage(user?.token))
       }
       fetchSync()
-   }, [params, messageLimit, messageOffset, user, dispatch])
+   }, [params?.id, messageLimit, messageOffset, user, dispatch])
 
    const onBackHandler = (e) => {
       e.stopPropagation()
@@ -114,14 +112,14 @@ const MessagePage = () => {
       <div className='flex gap-11'>
          <div
             id='messages'
-            className='flex-1 max-h-[80vh] overflow-y-auto py-[80px]'
+            className='flex-1 max-h-[82vh] overflow-y-auto pt-[80px]'
          >
             <div className='fixed z-20 top-[80px] md:top-[110px] ml-3 inline-block'>
                <PrimaryButton onClick={onBackHandler}>
                   <IoChevronBack /> BACK
                </PrimaryButton>
             </div>
-            {message?.length <= 0 ? (
+            {messageError || message?.length < 1 ? (
                <AttentionMessage
                   title={`Are you interested with ${userProfile?.userName}`}
                >

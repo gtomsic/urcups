@@ -24,7 +24,7 @@ const initialState = {
       messagesSuccess: false,
       messagesError: false,
       messagesMessage: '',
-      messagesLimit: 30,
+      messagesLimit: 15,
       messagesOffset: 0,
    },
    message: {
@@ -141,6 +141,8 @@ const messagesSlice = createSlice({
          }
       },
       insertMessage: (state, action) => {
+         const profileId = state.userProfile.userProfile.id
+         if (profileId !== action.payload.user_id) return
          const sortedMessage = _.orderBy(
             [...state.message.message, action.payload],
             'id',
@@ -171,6 +173,7 @@ const messagesSlice = createSlice({
          })
          .addCase(sendMessage.rejected, (state, action) => {
             state.message.messageLoading = false
+            state.message.messageSuccess = false
             state.message.messageError = true
             state.message.messageMessage = action.payload
          })
@@ -180,12 +183,15 @@ const messagesSlice = createSlice({
          .addCase(getRoomMessages.fulfilled, (state, action) => {
             state.message.messageLoading = false
             state.message.messageSuccess = true
+            state.message.messageError = false
             const sortedMessages = _.orderBy(action.payload, 'id', 'asc')
             state.message.message = sortedMessages
          })
          .addCase(getRoomMessages.rejected, (state, action) => {
             state.message.messageLoading = false
+            state.message.messageSuccess = false
             state.message.messageError = true
+            state.message.message = []
             state.message.messageMessage = action.payload
          })
          .addCase(getMessageUserProfile.pending, (state) => {
@@ -194,10 +200,12 @@ const messagesSlice = createSlice({
          .addCase(getMessageUserProfile.fulfilled, (state, action) => {
             state.userProfile.userProfileLoading = false
             state.userProfile.userProfileSuccess = true
+            state.userProfile.userProfileError = false
             state.userProfile.userProfile = action.payload
          })
          .addCase(getMessageUserProfile.rejected, (state, action) => {
             state.userProfile.userProfileLoading = false
+            state.userProfile.userProfileSuccess = false
             state.userProfile.userProfileError = true
             state.userProfile.userProfileMessage = action.payload
          })
@@ -207,11 +215,13 @@ const messagesSlice = createSlice({
          .addCase(getAllMessages.fulfilled, (state, action) => {
             state.messages.messagesLoading = false
             state.messages.messagesSuccess = true
+            state.messages.messagesError = false
             const sortedMessages = _.orderBy(action.payload, 'id', 'desc')
             state.messages.messages = sortedMessages
          })
          .addCase(getAllMessages.rejected, (state, action) => {
             state.messages.messagesLoading = false
+            state.messages.messagesSuccess = false
             state.messages.messagesError = true
             state.messages.messagesMessage = action.payload
          })
@@ -221,10 +231,12 @@ const messagesSlice = createSlice({
          .addCase(countAllUnreadMessage.fulfilled, (state, action) => {
             state.unreadMessages.unreadLoading = false
             state.unreadMessages.unreadSuccess = true
+            state.unreadMessages.unreadError = false
             state.unreadMessages.unreadMessages = action.payload
          })
          .addCase(countAllUnreadMessage.rejected, (state, action) => {
             state.unreadMessages.unreadLoading = false
+            state.unreadMessages.unreadSuccess = false
             state.unreadMessages.unreadError = true
             state.unreadMessages.unreadMessage = action.payload
          })

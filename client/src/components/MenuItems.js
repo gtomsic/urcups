@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBell, FaUserPlus } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
@@ -11,14 +11,11 @@ import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
 import {
    countAllUnreadMessage,
-   selectAllMessages,
-   selectMessage,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
 import { socket } from '../socket'
 
 const MenuItems = () => {
-   const isFetch = useRef(false)
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
