@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBell, FaUserPlus } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
@@ -18,12 +18,11 @@ import {
 import { socket } from '../socket'
 
 const MenuItems = () => {
+   const isFetch = useRef(false)
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
-   const { messages } = useSelector(selectAllMessages)
-   const { message } = useSelector(selectMessage)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    useEffect(() => {
       socket.on(user?.id, (msg) => {
@@ -31,7 +30,7 @@ const MenuItems = () => {
             dispatch(countAllUnreadMessage(user?.token))
          }
       })
-   }, [user, messages, message, socket])
+   }, [user, socket])
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }

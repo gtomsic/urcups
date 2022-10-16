@@ -64,44 +64,44 @@ const PORT = process.env.PORT || 8000
 //    console.log(`Server running on http://localhost:${PORT}`.yellow.bold.inverse)
 // })
 
-db.sequelize.sync({ force: true }).then(() =>
+db.sequelize.sync().then(() =>
    app.listen(PORT, async () => {
       console.log(
          `Server running on http://10.0.0.50:${PORT}`.yellow.bold.inverse
       )
-      for (let i = 0; i < 100; i++) {
-         let id = uuid()
-         let randomValue = Math.floor(Math.random() * 2 + 1)
-         await db.user.create({
-            id,
-            username: `user${i}`,
-            avatar: '/avatar.jpg',
-            thumbnail: '/avatar.jpg',
-            wallpaper: '/wallpaper.jpg',
-            age: i,
-            sex: Math.floor(Math.random() * 2 + 1) === 1 ? 'Male' : 'Female',
-            dateOfBirth: '1983-08-23',
-            city: 'Saratoga Springs',
-            stateProvince: 'Utah',
-            country: 'USA',
-            isOnline: Math.floor(Math.random() * 2 + 1) === 1 ? true : false,
-            password: 'R@mlec28',
-            confirmPassword: 'R@mlec28',
-         })
-         await db.config.create({
-            password: bcrypt.hashSync('R@mlec28', 10),
-            email: `gabriel${i}@gmail.com`,
-            isActivated: true,
-            user_id: id,
-         })
-         await db.info.create({
-            user_id: id,
-         })
-         await db.access.create({
-            granted: randomValue === 1 ? 'paid' : 'free',
-            membership: randomValue === 1 ? 'a' : 'f',
-            user_id: id,
-         })
-      }
+      // for (let i = 0; i < 100; i++) {
+      //    let id = uuid()
+      //    let randomValue = Math.floor(Math.random() * 2 + 1)
+      //    await db.user.create({
+      //       id,
+      //       username: `user${i}`,
+      //       avatar: '/avatar.jpg',
+      //       thumbnail: '/avatar.jpg',
+      //       wallpaper: '/wallpaper.jpg',
+      //       age: i,
+      //       sex: Math.floor(Math.random() * 2 + 1) === 1 ? 'Male' : 'Female',
+      //       dateOfBirth: '1983-08-23',
+      //       city: 'Saratoga Springs',
+      //       stateProvince: 'Utah',
+      //       country: 'USA',
+      //       isOnline: Math.floor(Math.random() * 2 + 1) === 1 ? true : false,
+      //       password: 'R@mlec28',
+      //       confirmPassword: 'R@mlec28',
+      //    })
+      //    await db.config.create({
+      //       password: bcrypt.hashSync('R@mlec28', 10),
+      //       email: `gabriel${i}@gmail.com`,
+      //       isActivated: true,
+      //       user_id: id,
+      //    })
+      //    await db.info.create({
+      //       user_id: id,
+      //    })
+      //    await db.access.create({
+      //       granted: randomValue === 1 ? 'paid' : 'free',
+      //       membership: randomValue === 1 ? 'a' : 'f',
+      //       user_id: id,
+      //    })
+      // }
    })
 )

@@ -54,7 +54,7 @@ const MessagePage = () => {
    useEffect(() => {
       if (isFetch.current === false) {
          socket.on(user?.id, (data) => {
-            // console.log({ SenderId: data.user_id, openMessageID: params.id })
+            console.log(userProfile)
             if (data.user_id === params.id) {
                return dispatch(insertMessage(data))
             }
@@ -71,9 +71,9 @@ const MessagePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [message, params])
+   }, [message, params, dispatch, messagesOffset, messagesLimit, user])
    useEffect(() => {
-      const fetchMessagesWithProfile = async () => {
+      const fetchSync = async () => {
          await dispatch(
             getMessageUserProfile({ user_id: params.id, token: user.token })
          )
@@ -87,9 +87,8 @@ const MessagePage = () => {
          )
          await dispatch(countAllUnreadMessage(user?.token))
       }
-
-      fetchMessagesWithProfile()
-   }, [params.id])
+      fetchSync()
+   }, [params, messageLimit, messageOffset, user, dispatch])
 
    const onBackHandler = (e) => {
       e.stopPropagation()
@@ -162,7 +161,10 @@ const MessagePage = () => {
          </div>
          <div className='roundex-2xl w-[350px] max-h-[80vh] hidden lg:block border border-darker rounded-2xl p-5'>
             <MessageProfileCard />
-            <h3>Messages</h3>
+            <div className='flex justify-between p-3'>
+               <h3 className='text-light'>Messages</h3>
+               <h3 className='text-light'>View All</h3>
+            </div>
             <Messages />
          </div>
          {!openInput ? null : (

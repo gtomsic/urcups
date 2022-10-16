@@ -130,7 +130,7 @@ const messagesSlice = createSlice({
    initialState,
    reducers: {
       resetMessage: (state) => {
-         state.message.message = {
+         state.message = {
             message: [],
             messageLoading: false,
             messageSuccess: false,

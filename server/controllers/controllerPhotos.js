@@ -23,7 +23,7 @@ module.exports.controllerAddPrivatePhotos = asyncHandler(async (req, res) => {
       await imageResize({
          path,
          with: null,
-         height: 800,
+         height: 1000,
          quality: 100,
          album,
          location,
@@ -66,7 +66,7 @@ module.exports.controllerDeletePrivatePhotos = asyncHandler(
 
 module.exports.controllerGetPrivatePhotos = asyncHandler(async (req, res) => {
    const { user_id, offset, limit } = req.params
-   const access = await db.access.findOne({ where: { user_id: req.user.id } })
+   // const access = await db.access.findOne({ where: { user_id: req.user.id } })
    if (req.user.id === user_id) {
       const photos = await db.photo.findAndCountAll({
          where: { user_id: user_id, album: 'public', isPrivate: true },
@@ -101,7 +101,7 @@ module.exports.controllerAddPublicPhotos = asyncHandler(async (req, res) => {
       await imageResize({
          path,
          with: null,
-         height: 800,
+         height: 1000,
          quality: 100,
          album,
          location,
