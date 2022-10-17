@@ -31,16 +31,17 @@ const MessagePage = () => {
    const params = useParams()
    const dispatch = useDispatch()
    const isFetch = useRef(false)
-   const [onInputFocus, setOnInputFocus] = useState(false)
    const scrollEnd = useRef(null)
+   const [onInputFocus, setOnInputFocus] = useState(false)
    const [openInput, setOpenInput] = useState(false)
    const [body, setBody] = useState('')
    const [attachment, setAttachment] = useState([])
    const { user } = useSelector(selectUser)
-   const { isTyping } = useSelector(selectIsTyping)
+   const { userTyping } = useSelector(selectIsTyping)
    const { userProfile } = useSelector(selectMessageUserProfile)
    const { message, messageOffset, messageLimit, messageError } =
       useSelector(selectMessage)
+
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    useEffect(() => {
       if (!user?.id) {
@@ -71,7 +72,20 @@ const MessagePage = () => {
          isFetch.current = true
       }
    }, [])
-
+   // USE EFFECT THE LISTENING TO SOCKET WHEN WE RECEIVE
+   // WAITING FOR DATA TO UPDATE THE SOCKET ISTYPING DATA
+   useEffect(() => {
+      socket.on(`${user.id}/isTyping`, (data) => {
+         if (data.isTyping) {
+            dispatch(setIsTypingToTrue(data))
+         } else {
+            setTimeout(() => {
+               dispatch(setIsTypingToFalse(data))
+            }, 5000)
+         }
+         scrollEnd.current?.scrollIntoView()
+      })
+   }, [socket])
    // USE EFFECT THAT UPDATE AND SENDING SOCKET IS TYPING MESSAGE
    // SENDING DATA TO VIA SOCKET.IO TO UPDATE THE REDUX IS TYPING STATE
    useEffect(() => {
@@ -81,26 +95,18 @@ const MessagePage = () => {
             user_id: user.id,
             receiverId: userProfile.id,
          })
-      }, 500)
+         setTimeout(() => {
+            socket.emit('isTyping', {
+               isTyping: false,
+               user_id: user.id,
+               receiverId: userProfile.id,
+            })
+         }, 1000)
+      }, 1000)
       return () => {
          clearTimeout(timerId)
       }
    }, [body])
-   // USE EFFECT THAT UPDATE SEND BACK ISTYPING TO FALSE
-   // VIA SOCKET.IO TO THE RECEIVER END
-   // useEffect(() => {
-   //    if (isTyping) {
-   //       scrollEnd.current?.scrollIntoView()
-   //       setTimeout(() => {
-   //          console.log('Time is out')
-   //          socket.emit('isTyping', {
-   //             isTyping: false,
-   //             user_id: user.id,
-   //             receiverId: userProfile.id,
-   //          })
-   //       }, 2000)
-   //    }
-   // }, [socket, isTyping])
    // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
    // AND GETTING THE ROOM MESSAGES
    // COUNTING THE UNREAD MESSAGES DYNAMITICALLY
@@ -214,11 +220,15 @@ const MessagePage = () => {
                   })}
                </>
             )}
-            {isTyping ? (
-               <LeftMessage profile={userProfile}>
-                  <p>Typing... {isTyping}</p>
-               </LeftMessage>
+            {userTyping ? (
+               <div className='animate-bounce'>
+                  <LeftMessage profile={userProfile}>
+                     <p>Typing... </p>
+                  </LeftMessage>
+               </div>
             ) : null}
+            {/* Just for added */}
+            {userTyping ? <div className={`relative h-[100px]`}></div> : null}
             <div ref={scrollEnd} />
          </div>
          <div className='hidden lg:block '>

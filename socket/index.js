@@ -67,7 +67,6 @@ io.on('connection', (socket) => {
    })
    // When the user is typing message
    socket.on('isTyping', (data) => {
-      console.log(data)
       io.emit(`${data.receiverId}/isTyping`, data)
    })
    // When disconnect

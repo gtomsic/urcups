@@ -212,15 +212,13 @@ const messagesSlice = createSlice({
       },
       setIsTypingToFalse: (state, action) => {
          const profileId = state.userProfile.userProfile.id
-         if (profileId === action.payload.user_id) {
-            console.log(action.payload)
-            state.userTyping = false
-         }
+         if (profileId !== action.payload.user_id) return
+         state.userTyping = action.payload.isTyping
       },
       setIsTypingToTrue: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
-         state.userTyping = true
+         state.userTyping = action.payload.isTyping
       },
    },
    extraReducers: (builder) => {

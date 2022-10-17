@@ -38,13 +38,7 @@ const App = () => {
          isFetch.current = true
       }
    }, [])
-   // USE EFFECT THE LISTENING TO SOCKET WHEN WE RECEIVE
-   // WAITING FOR DATA TO UPDATE THE SOCKET ISTYPING DATA
-   useEffect(() => {
-      socket.on(`${user.id}/isTyping`, (data) => {
-         dispatch(setIsTypingToTrue(data))
-      })
-   }, [socket])
+
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>
          <Routes>
