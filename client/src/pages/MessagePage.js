@@ -75,16 +75,20 @@ const MessagePage = () => {
    // USE EFFECT THE LISTENING TO SOCKET WHEN WE RECEIVE
    // WAITING FOR DATA TO UPDATE THE SOCKET ISTYPING DATA
    useEffect(() => {
+      let debounceId = null
       socket.on(`${user.id}/isTyping`, (data) => {
          if (data.isTyping) {
             dispatch(setIsTypingToTrue(data))
          } else {
-            setTimeout(() => {
+            debounceId = setTimeout(() => {
                dispatch(setIsTypingToFalse(data))
             }, 5000)
          }
          scrollEnd.current?.scrollIntoView()
       })
+      return () => {
+         clearTimeout(debounceId)
+      }
    }, [socket])
    // USE EFFECT THAT UPDATE AND SENDING SOCKET IS TYPING MESSAGE
    // SENDING DATA TO VIA SOCKET.IO TO UPDATE THE REDUX IS TYPING STATE
@@ -228,7 +232,7 @@ const MessagePage = () => {
                </div>
             ) : null}
             {/* Just for added */}
-            {userTyping ? <div className={`relative h-[100px]`}></div> : null}
+            {/* {userTyping ? <div className={`relative h-[50px]`}></div> : null} */}
             <div ref={scrollEnd} />
          </div>
          <div className='hidden lg:block '>
