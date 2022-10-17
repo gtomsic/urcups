@@ -16,6 +16,9 @@ const MessagesPage = () => {
    const { user } = useSelector(selectUser)
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
+   if (!user?.id) {
+      navigate('/')
+   }
 
    useEffect(() => {
       if (isFetch.current === false && location.pathname === '/messages') {
@@ -38,7 +41,7 @@ const MessagesPage = () => {
       navigate(`/messages/${user_id}`)
    }
    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:gap-4 relative'>
          {messages?.map((message) => (
             <div
                onClick={(e) => onClickHandler(e, message.user_id)}

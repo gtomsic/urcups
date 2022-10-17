@@ -23,7 +23,7 @@ import MessagePage from './pages/MessagePage'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from './store/features/user/userSlice'
 import { socket } from './socket'
-import { setIsTypingToTrue } from './store/features/messages/messagesSlice'
+import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
 
 const App = () => {
    const isFetch = useRef(false)
@@ -31,13 +31,18 @@ const App = () => {
    const { user } = useSelector(selectUser)
 
    useEffect(() => {
+      if (user?.id) {
+         dispatch(
+            countAllUnreadMessages({ token: user?.token, user_id: user.id })
+         )
+      }
       if (isFetch.current === false) {
          socket.emit('user_joined', user)
       }
       return () => {
          isFetch.current = true
       }
-   }, [])
+   }, [socket])
 
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>

@@ -24,7 +24,11 @@ module.exports.controllerCountAllMessages = asyncHandler(async (req, res) => {
       newRooms.push(item.id)
    })
    const messages = await db.message.count({
-      where: { roomId: newRooms, isRead: false },
+      where: {
+         roomId: newRooms,
+         isRead: false,
+         user_id: { [Op.ne]: req.user.id },
+      },
    })
    res.status(200).json(messages)
 })

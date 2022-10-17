@@ -7,7 +7,9 @@ import RightMessage from '../components/messages/RightMessage'
 import LeftMessage from '../components/messages/LeftMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+   clearRoomProfile,
    countAllUnreadMessage,
+   countAllUnreadMessages,
    getMessageUserProfile,
    getRoomMessages,
    insertMessage,
@@ -53,6 +55,7 @@ const MessagePage = () => {
       setOpenInput(true)
       return () => {
          setOpenInput(false)
+         dispatch(clearRoomProfile())
       }
    }, [])
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
@@ -66,6 +69,9 @@ const MessagePage = () => {
          socket.on(user?.id, (data) => {
             dispatch(insertMessage(data))
             dispatch(insertMessages(data))
+            dispatch(
+               countAllUnreadMessages({ token: user.token, user_id: user.id })
+            )
          })
       }
       return () => {
@@ -77,12 +83,11 @@ const MessagePage = () => {
    useEffect(() => {
       let debounceId = null
       socket.on(`${user.id}/isTyping`, (data) => {
+         console.log(userProfile)
          if (data.isTyping) {
             dispatch(setIsTypingToTrue(data))
          } else {
-            debounceId = setTimeout(() => {
-               dispatch(setIsTypingToFalse(data))
-            }, 5000)
+            dispatch(setIsTypingToFalse(data))
          }
          scrollEnd.current?.scrollIntoView()
       })
@@ -93,22 +98,24 @@ const MessagePage = () => {
    // USE EFFECT THAT UPDATE AND SENDING SOCKET IS TYPING MESSAGE
    // SENDING DATA TO VIA SOCKET.IO TO UPDATE THE REDUX IS TYPING STATE
    useEffect(() => {
+      let debounceId
       const timerId = setTimeout(() => {
          socket.emit('isTyping', {
-            isTyping: true,
+            isTyping: body ? true : false,
             user_id: user.id,
             receiverId: userProfile.id,
          })
-         setTimeout(() => {
+         debounceId = setTimeout(() => {
             socket.emit('isTyping', {
                isTyping: false,
                user_id: user.id,
                receiverId: userProfile.id,
             })
-         }, 1000)
-      }, 1000)
+         }, 3000)
+      }, 500)
       return () => {
          clearTimeout(timerId)
+         clearTimeout(debounceId)
       }
    }, [body])
    // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
@@ -128,8 +135,10 @@ const MessagePage = () => {
                   user_id: params.id,
                })
             )
+            await dispatch(
+               countAllUnreadMessages({ token: user.token, user_id: user.id })
+            )
          }
-         await dispatch(countAllUnreadMessage({ token: user?.token }))
       }
       fetchSync()
       return () => {
@@ -153,22 +162,12 @@ const MessagePage = () => {
       }
       await dispatch(sendMessage({ data, token: user.token }))
       setBody('')
-      if (message.length < 1) {
-         await dispatch(
-            getRoomMessages({
-               offset: messageOffset,
-               limit: messageLimit,
-               token: user.token,
-               user_id: params.id,
-            })
-         )
-      }
    }
    return (
       <div className='flex gap-11'>
          <div
             id='messages'
-            className='flex-1 max-h-[82vh] overflow-y-auto pt-[80px]'
+            className='flex-1 max-h-[80vh] overflow-y-auto pt-[80px]'
          >
             {messageError || message?.length < 1 ? (
                <AttentionMessage
@@ -226,13 +225,12 @@ const MessagePage = () => {
             )}
             {userTyping ? (
                <LeftMessage profile={userProfile}>
-                  <div className='relative h-6 w-[70px] flex justify-center'>
+                  <div className='relative h-6 min-w-[90px] flex justify-between pr-4'>
+                     <small>Typing</small>
                      <span className='typing'></span>
                   </div>
                </LeftMessage>
             ) : null}
-            {/* Just for added */}
-            {/* {userTyping ? <div className={`relative h-[50px]`}></div> : null} */}
             <div ref={scrollEnd} />
          </div>
          <div className='hidden lg:block '>

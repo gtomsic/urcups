@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBell, FaUserPlus } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
@@ -10,23 +10,27 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
 import {
-   countAllUnreadMessage,
+   countAllUnreadMessages,
+   getAllMessages,
    readRoomMessages,
+   selectAllMessages,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
 import { socket } from '../socket'
 
 const MenuItems = () => {
+   const isFetch = useRef(false)
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
+   const { messagesLimit, messagesOffset } = useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    useEffect(() => {
       socket.on(user?.id, (msg) => {
          if (user?.id && msg.user_id !== user?.id) {
             dispatch(
-               countAllUnreadMessage({
+               countAllUnreadMessages({
                   token: user?.token,
                   user_id: msg.user_id,
                })
@@ -38,8 +42,19 @@ const MenuItems = () => {
                   roomId: msg.roomId,
                })
             )
+            dispatch(
+               getAllMessages({
+                  offset: messagesOffset,
+                  limit: messagesLimit,
+                  token: user.token,
+                  user_id: user.id,
+               })
+            )
          }
       })
+      return () => {
+         isFetch.current = true
+      }
    }, [user, socket])
    const logoutHandler = () => {
       dispatch(logout(user.id))

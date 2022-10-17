@@ -71,7 +71,7 @@ export const readRoomMessages = createAsyncThunk(
       }
    }
 )
-export const countAllUnreadMessage = createAsyncThunk(
+export const countAllUnreadMessages = createAsyncThunk(
    'user/countAllUnreadMessages',
    async (data, thunkApi) => {
       try {
@@ -213,12 +213,23 @@ const messagesSlice = createSlice({
       setIsTypingToFalse: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
+         if (!state.userTyping) return
          state.userTyping = action.payload.isTyping
       },
       setIsTypingToTrue: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
+         if (state.userTyping) return
          state.userTyping = action.payload.isTyping
+      },
+      clearRoomProfile: (state) => {
+         state.userProfile = {
+            userProfile: {},
+            userProfileLoading: false,
+            userProfileSuccess: false,
+            userProfileError: false,
+            userProfileMessage: '',
+         }
       },
    },
    extraReducers: (builder) => {
@@ -291,16 +302,16 @@ const messagesSlice = createSlice({
             state.messages.messagesError = true
             state.messages.messagesMessage = action.payload
          })
-         .addCase(countAllUnreadMessage.pending, (state) => {
+         .addCase(countAllUnreadMessages.pending, (state) => {
             state.unreadMessages.unreadLoading = true
          })
-         .addCase(countAllUnreadMessage.fulfilled, (state, action) => {
+         .addCase(countAllUnreadMessages.fulfilled, (state, action) => {
             state.unreadMessages.unreadLoading = false
             state.unreadMessages.unreadSuccess = true
             state.unreadMessages.unreadError = false
             state.unreadMessages.unreadMessages = action.payload
          })
-         .addCase(countAllUnreadMessage.rejected, (state, action) => {
+         .addCase(countAllUnreadMessages.rejected, (state, action) => {
             state.unreadMessages.unreadLoading = false
             state.unreadMessages.unreadSuccess = false
             state.unreadMessages.unreadError = true
@@ -331,6 +342,7 @@ export const {
    updateIsReadMessage,
    setIsTypingToTrue,
    setIsTypingToFalse,
+   clearRoomProfile,
 } = messagesSlice.actions
 export default messagesSlice.reducer
 

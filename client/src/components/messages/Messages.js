@@ -18,7 +18,7 @@ const Messages = () => {
       if (isFetch.current === false) {
          dispatch(
             getAllMessages({
-               offset: messagesOffset,
+               offset: 0,
                limit: messagesLimit,
                token: user.token,
                user_id: user.id,

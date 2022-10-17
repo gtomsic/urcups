@@ -64,7 +64,7 @@ const MessageItem = ({ message, body, time }) => {
          <div
             className='relative w-[90px] h-[90px] rounded-r-full m-[-10px] border-2 border-white mr-1'
             style={{
-               backgroundImage: `url(${url + profile?.thumbnail})`,
+               backgroundImage: `url(${url + profile?.avatar})`,
                backgroundSize: 'cover',
                backgroundRepeat: 'no-repeat',
             }}
