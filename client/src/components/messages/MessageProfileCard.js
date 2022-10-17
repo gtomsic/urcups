@@ -8,9 +8,9 @@ const MessageProfileCard = () => {
    const { userProfile } = useSelector(selectMessageUserProfile)
    return (
       <Link to={`/profile/${userProfile?.username}`}>
-         <div className='flex gap-3  items-center bg-gradient-to-tr from-primary bg-danger p-5 rounded-xl mb-5'>
+         <div className='flex gap-3  items-center bg-gradient-to-tr from-primary  to-danger p-5 rounded-xl mb-5'>
             <div
-               className='relative w-[70px] h-[70px] rounded-full  border-white mr-1'
+               className='relative w-[70px] h-[70px] rounded-full border-4 border-white mr-1'
                style={{
                   backgroundImage: `url(${url + userProfile.avatar})`,
                   backgroundSize: 'cover',
@@ -19,8 +19,8 @@ const MessageProfileCard = () => {
             >
                {userProfile.isOnline ? (
                   <>
-                     <span className='z-10 absolute bottom-[7px] right-[-1px] w-4 h-4 border-2 border-white rounded-full bg-secondary'></span>
-                     <span className='animate-ping z-0 absolute bottom-[7px] right-[-1px] w-4 h-4  inline-flex rounded-full bg-white opacity-75'></span>
+                     <span className='z-10 absolute bottom-[7px] right-[-4px] w-4 h-4 border-4 border-white rounded-full bg-secondary'></span>
+                     <span className='animate-ping z-0 absolute bottom-[7px] right-[-4px] w-4 h-4  inline-flex rounded-full bg-white opacity-75'></span>
                   </>
                ) : null}
             </div>

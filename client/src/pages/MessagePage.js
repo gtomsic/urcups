@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { IoChevronBack } from 'react-icons/io5'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import PrimaryButton from '../components/PrimaryButton'
 import MessageFormInput from '../components/messages/MessageFormInput'
@@ -9,20 +8,23 @@ import LeftMessage from '../components/messages/LeftMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import {
    countAllUnreadMessage,
-   getAllMessages,
    getMessageUserProfile,
    getRoomMessages,
    insertMessage,
-   selectAllMessages,
+   insertMessages,
+   selectIsTyping,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
+   setIsTypingToFalse,
+   setIsTypingToTrue,
 } from '../store/features/messages/messagesSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import AttentionMessage from '../components/AttentionMessage'
 import { socket } from '../socket'
 import MessageProfileCard from '../components/messages/MessageProfileCard'
 import Messages from '../components/messages/Messages'
+import Avatar from '../components/Avatar'
 
 const MessagePage = () => {
    const navigate = useNavigate()
@@ -35,64 +37,97 @@ const MessagePage = () => {
    const [body, setBody] = useState('')
    const [attachment, setAttachment] = useState([])
    const { user } = useSelector(selectUser)
+   const { isTyping } = useSelector(selectIsTyping)
    const { userProfile } = useSelector(selectMessageUserProfile)
    const { message, messageOffset, messageLimit, messageError } =
       useSelector(selectMessage)
-   const { messagesOffset, messagesLimit, messages } =
-      useSelector(selectAllMessages)
-   if (!user?.id) {
-      navigate('/')
-   }
+   // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
+   useEffect(() => {
+      if (!user?.id) {
+         navigate('/')
+      }
+   }, [user])
+   // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)
       return () => {
          setOpenInput(false)
       }
    }, [])
+   // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
    }, [message, onInputFocus, socket])
    // MONITORING THE RECEIVE MESSAGES AN INSERT TO CHAT
    useEffect(() => {
       if (isFetch.current === false) {
+         // USING SOCKET TO INSERT MESSAGES
          socket.on(user?.id, (data) => {
             dispatch(insertMessage(data))
-            dispatch(
-               getAllMessages({
-                  offset: messagesOffset,
-                  limit: messagesLimit,
-                  token: user.token,
-                  user_id: params.id,
-               })
-            )
+            dispatch(insertMessages(data))
          })
       }
       return () => {
          isFetch.current = true
       }
    }, [])
+
+   // USE EFFECT THAT UPDATE AND SENDING SOCKET IS TYPING MESSAGE
+   // SENDING DATA TO VIA SOCKET.IO TO UPDATE THE REDUX IS TYPING STATE
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         socket.emit('isTyping', {
+            isTyping: true,
+            user_id: user.id,
+            receiverId: userProfile.id,
+         })
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [body])
+   // USE EFFECT THAT UPDATE SEND BACK ISTYPING TO FALSE
+   // VIA SOCKET.IO TO THE RECEIVER END
+   // useEffect(() => {
+   //    if (isTyping) {
+   //       scrollEnd.current?.scrollIntoView()
+   //       setTimeout(() => {
+   //          console.log('Time is out')
+   //          socket.emit('isTyping', {
+   //             isTyping: false,
+   //             user_id: user.id,
+   //             receiverId: userProfile.id,
+   //          })
+   //       }, 2000)
+   //    }
+   // }, [socket, isTyping])
+   // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
+   // AND GETTING THE ROOM MESSAGES
+   // COUNTING THE UNREAD MESSAGES DYNAMITICALLY
    useEffect(() => {
       const fetchSync = async () => {
-         await dispatch(
-            getMessageUserProfile({ user_id: params.id, token: user.token })
-         )
-         await dispatch(
-            getRoomMessages({
-               offset: messageOffset,
-               limit: messageLimit,
-               token: user.token,
-               user_id: params.id,
-            })
-         )
-         await dispatch(countAllUnreadMessage(user?.token))
+         if (isFetch.current === true) {
+            await dispatch(
+               getMessageUserProfile({ user_id: params.id, token: user.token })
+            )
+            await dispatch(
+               getRoomMessages({
+                  offset: messageOffset,
+                  limit: messageLimit,
+                  token: user.token,
+                  user_id: params.id,
+               })
+            )
+         }
+         await dispatch(countAllUnreadMessage({ token: user?.token }))
       }
       fetchSync()
-   }, [params?.id, messageLimit, messageOffset, user, dispatch])
+      return () => {
+         isFetch.current = true
+      }
+   }, [params?.id, messageLimit, messageOffset, user])
 
-   const onBackHandler = (e) => {
-      e.stopPropagation()
-      navigate(-1)
-   }
+   // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
@@ -125,19 +160,32 @@ const MessagePage = () => {
             id='messages'
             className='flex-1 max-h-[82vh] overflow-y-auto pt-[80px]'
          >
-            <div className='fixed z-20 top-[80px] md:top-[110px] ml-3 inline-block'>
-               <PrimaryButton onClick={onBackHandler}>
-                  <IoChevronBack /> BACK
-               </PrimaryButton>
-            </div>
             {messageError || message?.length < 1 ? (
                <AttentionMessage
-                  title={`Are you interested with ${userProfile?.userName}`}
+                  title={`Are you interested to ${userProfile?.username}`}
                >
-                  <p>Send him/her your interested to the fullest.</p>
                   <p>
-                     And connect maybe his/shes the one you you're waiting for.
+                     Send {userProfile?.sex === 'Male' ? 'him' : 'her'} your
+                     message that interested to connect.
                   </p>
+                  <p>
+                     And connect maybe{' '}
+                     {userProfile?.sex === 'Male' ? 'his' : 'shes'} the one you
+                     you're waiting for.
+                  </p>
+                  <p>
+                     For more info view{' '}
+                     {userProfile?.sex === 'Male' ? 'his' : 'her'} profile.
+                  </p>
+                  <div className='mt-5'>
+                     <Link to={`/profile/${userProfile?.username}`}>
+                        <PrimaryButton add='from-secondary bg-primary'>
+                           <h3>View</h3>
+                           <Avatar image={userProfile?.avatar} />{' '}
+                           <h3>{userProfile?.username}</h3>
+                        </PrimaryButton>
+                     </Link>
+                  </div>
                </AttentionMessage>
             ) : (
                <>
@@ -166,14 +214,23 @@ const MessagePage = () => {
                   })}
                </>
             )}
+            {isTyping ? (
+               <LeftMessage profile={userProfile}>
+                  <p>Typing... {isTyping}</p>
+               </LeftMessage>
+            ) : null}
             <div ref={scrollEnd} />
          </div>
-         <div className='hidden lg:block'>
+         <div className='hidden lg:block '>
             <MessageProfileCard />
-            <div className='roundex-2xl w-[350px] h-auto  border border-darker rounded-2xl p-5'>
+            <div className='roundex-2xl w-[350px] h-auto rounded-2xl p-5 border border-darker'>
                <div className='flex justify-between p-3'>
                   <h3 className='text-light'>Messages</h3>
-                  <h3 className='text-light'>View All</h3>
+                  <Link to='/messages'>
+                     <h3 className='text-light hover:text-secondary'>
+                        View All
+                     </h3>
+                  </Link>
                </div>
                <Messages />
             </div>

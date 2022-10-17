@@ -1,7 +1,6 @@
 import React from 'react'
 import Avatar from '../Avatar'
 import moment from 'moment'
-
 const LeftMessage = ({ children, profile, message }) => {
    return (
       <div className='flex justify-start overflow-hidden w-full z-0'>
@@ -24,7 +23,9 @@ const LeftMessage = ({ children, profile, message }) => {
                </div>
                <div className='flex justify-end'>
                   <small className='text-gray mr-3 text-right'>
-                     {moment(message?.createdAt).fromNow()}
+                     {message?.createdAt
+                        ? moment(message?.createdAt).fromNow()
+                        : null}
                   </small>
                </div>
             </div>

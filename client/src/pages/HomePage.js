@@ -45,7 +45,7 @@ const HomePage = () => {
                />
             </div>
          ) : (
-            <div className='fixed z-20 top-[80px] md:top-[110px] ml-3 inline-block'>
+            <div className='sticky z-20 top-[70px] ml-3 inline-block mb-5'>
                <PrimaryButton onClick={() => setIsShowFilter(true)}>
                   <BiFilterAlt /> Filter
                </PrimaryButton>

@@ -65,6 +65,11 @@ io.on('connection', (socket) => {
          isOnline: sender?.isOnline,
       })
    })
+   // When the user is typing message
+   socket.on('isTyping', (data) => {
+      console.log(data)
+      io.emit(`${data.receiverId}/isTyping`, data)
+   })
    // When disconnect
    socket.on('disconnected', () => {
       console.log('User is disconnected')

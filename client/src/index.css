@@ -41,6 +41,10 @@ input[type='file'] {
    opacity: 0 !important;
 }
 
+body {
+   background: #111;
+}
+
 *::-webkit-scrollbar {
    display: none;
    scroll-behavior: smooth;

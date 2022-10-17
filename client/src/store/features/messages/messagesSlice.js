@@ -7,10 +7,12 @@ import {
    serviceGetAllMessages,
    serviceGetRoomMessages,
    serviceGetUserProfile,
+   serviceReadRoomMessages,
    serviceSendMessage,
 } from './serviceMessages'
 
 const initialState = {
+   userTyping: false,
    unreadMessages: {
       unreadMessages: 0,
       unreadLoading: false,
@@ -43,12 +45,39 @@ const initialState = {
       userProfileError: false,
       userProfileMessage: '',
    },
+   readRoomMessages: {
+      isRead: null,
+      isLoading: false,
+      isSucess: false,
+      isError: false,
+      isMessage: '',
+   },
 }
+export const readRoomMessages = createAsyncThunk(
+   'user/readRoomMessages',
+   async (data, thunkApi) => {
+      try {
+         const id = thunkApi.getState().messages.userProfile.userProfile.id
+         if (id !== data.user_id) return
+         return await serviceReadRoomMessages(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const countAllUnreadMessage = createAsyncThunk(
    'user/countAllUnreadMessages',
-   async (token, thunkApi) => {
+   async (data, thunkApi) => {
       try {
-         return await serviceCountAllUnreadMessages(token)
+         const id = thunkApi.getState().messages.userProfile.userProfile.id
+         if (id === data.user_id) return
+         return await serviceCountAllUnreadMessages(data.token)
       } catch (error) {
          const message =
             (error.response &&
@@ -124,7 +153,6 @@ export const sendMessage = createAsyncThunk(
       }
    }
 )
-
 const messagesSlice = createSlice({
    name: 'messages',
    initialState,
@@ -144,15 +172,55 @@ const messagesSlice = createSlice({
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
          const sortedMessage = _.orderBy(
-            [...state.message.message, action.payload],
+            [...state.message.message, { ...action.payload, isRead: true }],
             'id',
             'asc'
          )
          state.message.message = sortedMessage
-         // state.message = [...state.message.message, action.payload]
       },
       insertMessages: (state, action) => {
-         state.messages = [...state.messages.messages, action.payload]
+         const profileId = state.userProfile.userProfile.id
+         if (profileId === action.payload.user_id) return
+         const filteredMessages = state.messages.messages.filter(
+            (message) => message.user_id !== action.payload.user_id
+         )
+         state.messages.messages = [
+            { ...action.payload, isRead: false },
+            ...filteredMessages,
+         ]
+      },
+      updateIsReadMessage: (state, action) => {
+         const updated = state.messages.messages.filter(
+            (message) => message.user_id === action.payload
+         )
+         const filteredMessages = state.messages.messages.filter(
+            (message) => message.user_id !== action.payload
+         )
+         state.messages.messages = [
+            {
+               id: updated[0].id,
+               attachment: updated[0].attachment,
+               body: updated[0].body,
+               roomId: updated[0].roomId,
+               isRead: true,
+               user_id: updated[0].user_id,
+               createdAt: updated[0].createdAt,
+               updatedAt: updated[0].updatedAt,
+            },
+            ...filteredMessages,
+         ]
+      },
+      setIsTypingToFalse: (state, action) => {
+         const profileId = state.userProfile.userProfile.id
+         if (profileId === action.payload.user_id) {
+            console.log(action.payload)
+            state.userTyping = false
+         }
+      },
+      setIsTypingToTrue: (state, action) => {
+         const profileId = state.userProfile.userProfile.id
+         if (profileId !== action.payload.user_id) return
+         state.userTyping = true
       },
    },
    extraReducers: (builder) => {
@@ -238,16 +306,38 @@ const messagesSlice = createSlice({
             state.unreadMessages.unreadLoading = false
             state.unreadMessages.unreadSuccess = false
             state.unreadMessages.unreadError = true
-            state.unreadMessages.unreadMessage = action.payload
+            state.unreadMessages.unreadMessages = action.payload
+         })
+         .addCase(readRoomMessages.pending, (state) => {
+            state.readRoomMessages.isLoading = true
+         })
+         .addCase(readRoomMessages.fulfilled, (state, action) => {
+            state.readRoomMessages.isLoading = false
+            state.readRoomMessages.isSucess = true
+            state.readRoomMessages.isError = false
+            state.readRoomMessages.isMessage = action.payload
+         })
+         .addCase(readRoomMessages.rejected, (state, action) => {
+            state.readRoomMessages.unreadLoading = false
+            state.readRoomMessages.isSucess = false
+            state.readRoomMessages.isError = true
+            state.readRoomMessages.isMessage = action.payload
          })
    },
 })
 
-export const { insertMessage, insertMessages, resetMessage } =
-   messagesSlice.actions
+export const {
+   insertMessage,
+   insertMessages,
+   resetMessage,
+   updateIsReadMessage,
+   setIsTypingToTrue,
+   setIsTypingToFalse,
+} = messagesSlice.actions
 export default messagesSlice.reducer
 
 // SELECTOR
+export const selectIsTyping = (state) => state.messages
 export const selectUnreadMessages = (state) => state.messages.unreadMessages
 export const selectMessage = (state) => state.messages.message
 export const selectAllMessages = (state) => state.messages.messages

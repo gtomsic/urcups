@@ -25,7 +25,10 @@ const FilterSearch = ({ limit, onChange, onSaveFilter }) => {
             input='py-[6px] md:py-[14px]'
          />
          <div className='flex flex-col justify-center'>
-            <PrimaryButton onClick={onSaveFilter} add='p-5'>
+            <PrimaryButton
+               onClick={onSaveFilter}
+               add='py-[15px] md:p-[13px] from-dark bg-primary'
+            >
                Close
             </PrimaryButton>
          </div>

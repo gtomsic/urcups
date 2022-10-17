@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import MessageItem from '../components/messages/MessageItem'
 import {
    getAllMessages,
@@ -10,14 +10,15 @@ import { selectUser } from '../store/features/user/userSlice'
 
 const MessagesPage = () => {
    const isFetch = useRef(false)
-   const url = useSelector((state) => state.url)
    const navigate = useNavigate()
    const dispatch = useDispatch()
+   const location = useLocation()
    const { user } = useSelector(selectUser)
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
+
    useEffect(() => {
-      if (isFetch.current === false) {
+      if (isFetch.current === false && location.pathname === '/messages') {
          dispatch(
             getAllMessages({
                offset: messagesOffset,
@@ -31,12 +32,13 @@ const MessagesPage = () => {
          isFetch.current = true
       }
    }, [dispatch, messagesLimit, messagesOffset, user])
+
    const onClickHandler = (e, user_id) => {
       e.stopPropagation()
       navigate(`/messages/${user_id}`)
    }
    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:gap-4'>
          {messages?.map((message) => (
             <div
                onClick={(e) => onClickHandler(e, message.user_id)}

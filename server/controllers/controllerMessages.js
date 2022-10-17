@@ -3,10 +3,13 @@ const Op = require('sequelize').Op
 const { v4: uuid } = require('uuid')
 const asyncHandler = require('express-async-handler')
 
-module.exports.controllerReadMessages = asyncHandler(async (req, res) => {
-   const messages = await db.message.update({
-      where: { roomId: req.body.roomId, isRead: false },
-   })
+module.exports.controllerReadRoomMessages = asyncHandler(async (req, res) => {
+   const messages = await db.message.update(
+      { isRead: true },
+      {
+         where: { roomId: req.body.roomId, isRead: false },
+      }
+   )
    res.status(200).json(messages)
 })
 

@@ -20,13 +20,16 @@ import ProfileSettings from './pages/profile/ProfileSettings'
 import ProfileReader from './pages/profile/ProfileReader'
 import ProfileEdit from './pages/profile/ProfileEdit'
 import MessagePage from './pages/MessagePage'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from './store/features/user/userSlice'
 import { socket } from './socket'
+import { setIsTypingToTrue } from './store/features/messages/messagesSlice'
 
 const App = () => {
    const isFetch = useRef(false)
+   const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
+
    useEffect(() => {
       if (isFetch.current === false) {
          socket.emit('user_joined', user)
@@ -35,6 +38,13 @@ const App = () => {
          isFetch.current = true
       }
    }, [])
+   // USE EFFECT THE LISTENING TO SOCKET WHEN WE RECEIVE
+   // WAITING FOR DATA TO UPDATE THE SOCKET ISTYPING DATA
+   useEffect(() => {
+      socket.on(`${user.id}/isTyping`, (data) => {
+         dispatch(setIsTypingToTrue(data))
+      })
+   }, [socket])
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>
          <Routes>

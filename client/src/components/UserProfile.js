@@ -19,7 +19,7 @@ const MessageItem = ({ user }) => {
             >
                {user.isOnline ? (
                   <>
-                     <span className='z-10 absolute bottom-[7px] right-[-4px] w-4 h-4 border-2 border-white rounded-full bg-secondary'></span>
+                     <span className='z-10 absolute bottom-[7px] right-[-4px] w-4 h-4 border-4 border-white rounded-full bg-secondary'></span>
                      <span className='animate-ping z-0 absolute bottom-[7px] right-[-4px] w-4 h-4  inline-flex rounded-full bg-white opacity-75'></span>
                   </>
                ) : null}

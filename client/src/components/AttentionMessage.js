@@ -1,9 +1,9 @@
 import React from 'react'
 
-const AttentionMessage = ({ title, children }) => {
+const AttentionMessage = ({ title, children, profile }) => {
    return (
       <div className='rounded-3xl overflow-hidden'>
-         <div className='bg-gradient-to-tr from-primary bg-danger p-5'>
+         <div className='bg-gradient-to-tr from-secondary to-primary p-5'>
             <h3 className='text-white'>{title}</h3>
          </div>
          <div className='p-5 text-white'>

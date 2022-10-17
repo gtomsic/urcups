@@ -11,6 +11,7 @@ import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
 import {
    countAllUnreadMessage,
+   readRoomMessages,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
 import { socket } from '../socket'
@@ -24,7 +25,19 @@ const MenuItems = () => {
    useEffect(() => {
       socket.on(user?.id, (msg) => {
          if (user?.id && msg.user_id !== user?.id) {
-            dispatch(countAllUnreadMessage(user?.token))
+            dispatch(
+               countAllUnreadMessage({
+                  token: user?.token,
+                  user_id: msg.user_id,
+               })
+            )
+            dispatch(
+               readRoomMessages({
+                  token: user?.token,
+                  user_id: msg.user_id,
+                  roomId: msg.roomId,
+               })
+            )
          }
       })
    }, [user, socket])
