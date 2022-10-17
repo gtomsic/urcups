@@ -225,11 +225,11 @@ const MessagePage = () => {
                </>
             )}
             {userTyping ? (
-               <div className='animate-bounce'>
-                  <LeftMessage profile={userProfile}>
-                     <p>Typing... </p>
-                  </LeftMessage>
-               </div>
+               <LeftMessage profile={userProfile}>
+                  <div className='relative h-6 w-[70px] flex justify-center'>
+                     <span className='typing'></span>
+                  </div>
+               </LeftMessage>
             ) : null}
             {/* Just for added */}
             {/* {userTyping ? <div className={`relative h-[50px]`}></div> : null} */}

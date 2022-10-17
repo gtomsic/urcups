@@ -1,6 +1,7 @@
 import React from 'react'
 import Avatar from '../Avatar'
 import moment from 'moment'
+import './leftMessage.css'
 const LeftMessage = ({ children, profile, message }) => {
    return (
       <div className='flex justify-start overflow-hidden w-full z-0'>
