@@ -110,17 +110,9 @@ const ProfileSettings = () => {
                <h3>Favorite Users</h3>
                <h3 className='text-white'>View All 89</h3>
             </div>
-            <div className='grid grid-cols-3 gap-1 md:gap-3 sm:grid-cols-4 md:grid-cols-6 lg-grid-cols-3 xl:grid-cols-6'>
+            <div className='gap-1 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
                {users?.map((user) => (
-                  <UserCard
-                     key={user.id}
-                     wallpaper={user.wallpaper}
-                     image={user.thumbnail}
-                     age={user.age}
-                     username={user.username}
-                     location={user.location}
-                     isOnline={user.isOnline}
-                  />
+                  <UserCard key={user.id} user={user} />
                ))}
             </div>
          </Card>
@@ -129,17 +121,9 @@ const ProfileSettings = () => {
                <h3>Block Users</h3>
                <h3 className='text-white'>View All 128</h3>
             </div>
-            <div className='grid grid-cols-3 gap-1 md:gap-3 sm:grid-cols-4 md:grid-cols-6 lg-grid-cols-3 xl:grid-cols-6'>
+            <div className='gap-1 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
                {users?.map((user) => (
-                  <UserCard
-                     key={user.id}
-                     wallpaper={user.wallpaper}
-                     image={user.thumbnail}
-                     age={user.age}
-                     username={user.username}
-                     location={user.location}
-                     isOnline={user.isOnline}
-                  />
+                  <UserCard key={user.id} user={user} />
                ))}
             </div>
          </Card>

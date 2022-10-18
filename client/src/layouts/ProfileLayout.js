@@ -15,7 +15,7 @@ const ProfileLayout = () => {
                <MenuItems />
             </LeftBar>
 
-            <div className='lg:col-span-11 xl:col-span-9 pb-[100px]'>
+            <div className='lg:col-span-10 xl:col-span-9 pb-[100px]'>
                <Outlet />
             </div>
          </MainContainer>

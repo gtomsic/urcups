@@ -11,8 +11,9 @@ const Logo = () => {
    const isTrue =
       location.pathname.includes('/messages') ||
       location.pathname.includes('/profile') ||
-      location.pathname.includes('/notifications') ||
-      location.pathname.includes('/chat')
+      location.pathname.includes('/bells') ||
+      location.pathname.includes('/favorites') ||
+      location.pathname.includes('/stories')
 
    return (
       <>
@@ -20,7 +21,7 @@ const Logo = () => {
             {isTrue ? (
                <PrimaryButton
                   onClick={() => navigate(-1)}
-                  add='from-secondary hover:from-danger'
+                  add='bg-secondary hover:from-primary'
                >
                   <IoChevronBack />
                </PrimaryButton>

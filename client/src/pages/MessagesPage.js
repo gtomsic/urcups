@@ -34,14 +34,14 @@ const MessagesPage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [dispatch, messagesLimit, messagesOffset, user])
+   }, [dispatch, messagesLimit, messagesOffset, user, location])
 
    const onClickHandler = (e, user_id) => {
       e.stopPropagation()
       navigate(`/messages/${user_id}`)
    }
    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:gap-4 relative'>
+      <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-2 lg:gap-4 relative'>
          {messages?.map((message) => (
             <div
                onClick={(e) => onClickHandler(e, message.user_id)}

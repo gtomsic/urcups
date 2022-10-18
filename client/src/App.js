@@ -7,10 +7,9 @@ import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import RegisterSuccessPage from './pages/auth/RegisterSuccessPage'
 import VerifyPage from './pages/auth/VerifyPage'
-import ChatsPage from './pages/ChatsPage'
 import HomePage from './pages/HomePage'
 import MessagesPage from './pages/MessagesPage'
-import NotificationsPage from './pages/NotificationsPage'
+import BellsPage from './pages/BellsPage'
 import ProfileMain from './pages/profile/ProfileMain'
 import ProfilePage from './pages/ProfilePage'
 import ProfilePhotos from './pages/profile/ProfilePhotos'
@@ -24,11 +23,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from './store/features/user/userSlice'
 import { socket } from './socket'
 import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
+import FavoritesPage from './pages/FavoritesPage'
+import StoriesPage from './pages/StoriesPage'
 
 const App = () => {
    const isFetch = useRef(false)
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
+   useEffect(() => {
+      if (!user?.id) return
+      dispatch(
+         countAllUnreadMessages({ token: user?.token, user_id: user?.id })
+      )
+   }, [user, dispatch])
 
    useEffect(() => {
       if (user?.id) {
@@ -49,10 +56,11 @@ const App = () => {
          <Routes>
             <Route path='/' element={<MainLayout />}>
                <Route path='/' element={<HomePage />} />
-               <Route path='/notifications' element={<NotificationsPage />} />
+               <Route path='/bells' element={<BellsPage />} />
                <Route path='/messages' element={<MessagesPage />} />
                <Route path='/messages/:id' element={<MessagePage />} />
-               <Route path='/chats' element={<ChatsPage />} />
+               <Route path='/favorites' element={<FavoritesPage />} />
+               <Route path='/stories' element={<StoriesPage />} />
                <Route path='/settings' element={<SettingsPage />} />
             </Route>
             <Route path='/profile' element={<ProfileLayout />}>

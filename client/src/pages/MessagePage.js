@@ -8,7 +8,6 @@ import LeftMessage from '../components/messages/LeftMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import {
    clearRoomProfile,
-   countAllUnreadMessage,
    countAllUnreadMessages,
    getMessageUserProfile,
    getRoomMessages,
@@ -45,11 +44,9 @@ const MessagePage = () => {
       useSelector(selectMessage)
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
-   useEffect(() => {
-      if (!user?.id) {
-         navigate('/')
-      }
-   }, [user])
+   if (!user?.id) {
+      navigate('/')
+   }
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)
@@ -61,7 +58,7 @@ const MessagePage = () => {
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
-   }, [message, onInputFocus, socket])
+   }, [message, onInputFocus])
    // MONITORING THE RECEIVE MESSAGES AN INSERT TO CHAT
    useEffect(() => {
       if (isFetch.current === false) {
@@ -83,7 +80,6 @@ const MessagePage = () => {
    useEffect(() => {
       let debounceId = null
       socket.on(`${user.id}/isTyping`, (data) => {
-         console.log(userProfile)
          if (data.isTyping) {
             dispatch(setIsTypingToTrue(data))
          } else {
@@ -144,7 +140,7 @@ const MessagePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [params?.id, messageLimit, messageOffset, user])
+   }, [params?.id, messageLimit, messageOffset, user, dispatch])
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {

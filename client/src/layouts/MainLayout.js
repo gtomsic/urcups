@@ -14,7 +14,7 @@ const MainLayout = () => {
             <LeftBar>
                <MenuItems />
             </LeftBar>
-            <div className='px-3 lg:col-span-11 xl:col-span-9 pb-[100px]'>
+            <div className='px-3 lg:col-span-10 xl:col-span-9 pb-[100px]'>
                <Outlet />
             </div>
          </MainContainer>

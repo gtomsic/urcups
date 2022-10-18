@@ -29,11 +29,13 @@ const userRoutes = require('./routes/routeUsers')
 const publicRoutes = require('./routes/routeAllUsers')
 const photosRoutes = require('./routes/routePhotos')
 const messageRoutes = require('./routes/routeMessages')
+const favoriteRoutes = require('./routes/routeFavorites')
 
 app.use('/api/users', userRoutes)
 app.use('/api/public', publicRoutes)
 app.use('/api/photos', photosRoutes)
 app.use('/api/messages', messageRoutes)
+app.use('/api/favorites', favoriteRoutes)
 
 app.use(errorHandler)
 app.use(notFound)

@@ -2,15 +2,18 @@ import React from 'react'
 import Avatar from '../Avatar'
 import moment from 'moment'
 import './leftMessage.css'
+import { Link } from 'react-router-dom'
 const LeftMessage = ({ children, profile, message }) => {
    return (
       <div className='flex justify-start overflow-hidden w-full z-0'>
          <div className='flex gap-3 my-2 max-w-[90%]'>
             <div className='pt-9'>
-               <Avatar
-                  isOnline={profile?.isOnline}
-                  image={profile?.thumbnail}
-               />
+               <Link to={`/profile/${profile.username}`}>
+                  <Avatar
+                     isOnline={profile?.isOnline}
+                     image={profile?.thumbnail}
+                  />
+               </Link>
             </div>
             <div className='flex flex-col'>
                <h4 className='text-white text-left ml-3'>

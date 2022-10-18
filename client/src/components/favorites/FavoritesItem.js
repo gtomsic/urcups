@@ -1,18 +1,21 @@
 import React from 'react'
+import {
+   BsBookmarkStarFill,
+   BsBookmarkPlusFill,
+   BsBookmarkXFill,
+} from 'react-icons/bs'
 
-import { BsBookmarkStarFill } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 
-function UserCard({ user }) {
+const FavoritesItem = ({ user }) => {
    const url = useSelector((state) => state.url)
-   const image = user?.avatar.includes('/avatar.jpg')
-      ? user?.avatar
-      : user.avatar.replace('avatar', 'public')
    return (
       <div
          className='relative bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[250px] cursor-pointer overflow-hidden'
          style={{
-            backgroundImage: `url(${url + image})`,
+            backgroundImage: `url(${
+               url + user.avatar.replace('avatar', 'public')
+            })`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -51,9 +54,9 @@ function UserCard({ user }) {
             </div>
          </div>
          {/* Favorite Tags */}
-         {/* <div className='absolute top-0 bg-gradient-to-b from-primary text-3xl pt-5 px-1 h-full'>
+         <div className='absolute top-0 bg-gradient-to-b from-secondary text-3xl pt-5 px-1 h-full'>
             <BsBookmarkStarFill />
-         </div> */}
+         </div>
          {user?.isOnline ? (
             <>
                <span className='z-10 absolute top-5 right-5 w-6 h-6 border-4 border-white rounded-full bg-secondary'></span>
@@ -64,4 +67,4 @@ function UserCard({ user }) {
    )
 }
 
-export default UserCard
+export default FavoritesItem

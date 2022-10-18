@@ -1,3 +1,4 @@
+const router = require('express').Router()
 const {
    controllerSendMessage,
    controllerGetMessages,
@@ -6,8 +7,6 @@ const {
    controllerReadRoomMessages,
 } = require('../controllers/controllerMessages')
 const { auth } = require('../middlewares/middlewareAuth')
-
-const router = require('express').Router()
 
 router.post('/', auth, controllerSendMessage)
 router.post('/read', auth, controllerReadRoomMessages)

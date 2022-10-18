@@ -19,21 +19,17 @@ const HomePage = () => {
    const { users, isLoading, filter, count } = useSelector(selectUsers)
    const { offset, limit } = filter
    const [isShowFilter, setIsShowFilter] = useState(false)
-
-   const isSet = useRef(false)
+   const isFetch = useRef(false)
    const dispatch = useDispatch()
 
    useEffect(() => {
-      if (isSet.current === false) {
-         dispatch(getUsersByLimit({ offset, limit }))
-      }
-      if (limit) {
-         dispatch(getUsersByLimit({ offset, limit }))
-      }
+      if (limit) dispatch(getUsersByLimit({ offset, limit }))
+      if (isFetch.current === false) return
+      dispatch(getUsersByLimit({ offset, limit }))
       return () => {
-         isSet.current = true
+         isFetch.current = true
       }
-   }, [isSet, limit, offset, dispatch, count])
+   }, [isFetch, limit, offset, dispatch, count])
    return (
       <div className='relative'>
          {isShowFilter ? (
@@ -56,18 +52,11 @@ const HomePage = () => {
                <Loader>Searching...</Loader>
             ) : (
                <>
-                  <div className='gap-1 md:gap-4 grid grid-cols-3  sm:grid-cols-5 md:grid-cols-6'>
+                  <div className='gap-1 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
                      {users.map((user) => {
                         return (
                            <Link key={user.id} to={`profile/${user.username}`}>
-                              <UserCard
-                                 wallpaper={user.wallpaper}
-                                 image={user.thumbnail}
-                                 age={user.age}
-                                 username={user.username}
-                                 location={user.country}
-                                 isOnline={user.isOnline}
-                              />
+                              <UserCard user={user} />
                            </Link>
                         )
                      })}

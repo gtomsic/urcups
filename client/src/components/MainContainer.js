@@ -3,7 +3,7 @@ import React from 'react'
 const MainContainer = ({ children }) => {
    return (
       <>
-         <main className='grid grid-cols-1 lg:grid-cols-12 mt-[67px] md:mt-[100px] gap-10 mx-auto w-full md:max-w-[98%] lg:max-w-[95%] xl:max-w-[80%]'>
+         <main className='grid grid-cols-1 lg:grid-cols-12 mt-[100px] md:mt-[130px] gap-10 mx-auto w-full md:max-w-[98%] lg:max-w-[95%] xl:max-w-[80%]'>
             {children}
          </main>
       </>

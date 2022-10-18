@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { BsBookmarkStarFill } from 'react-icons/bs'
 import { MdPhotoSizeSelectActual } from 'react-icons/md'
 import { FaUserAlt, FaCamera, FaLock } from 'react-icons/fa'
 import { IoSettingsSharp, IoReader } from 'react-icons/io5'
@@ -283,6 +284,12 @@ const ProfileHeader = ({ profile }) => {
                   </div>
                </div>
             </div>
+            {/* BOOKMARK PROFILE */}
+            {user?.id === profile?.id ? null : (
+               <div className='absolute top-0 bg-gradient-to-b from-secondary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full'>
+                  <BsBookmarkStarFill />
+               </div>
+            )}
          </div>
          {!isOpen ? null : (
             <Modal onClose={() => setIsOpen(false)}>
