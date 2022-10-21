@@ -23,7 +23,7 @@ const Profile = () => {
                           <div
                              key={index}
                              className='py-5 text-center 
-               text-white rounded-sm shadow-sm shadow-primary'
+               text-white rounded-sm shadow-sm shadow-light'
                           >
                              {hoby}
                           </div>

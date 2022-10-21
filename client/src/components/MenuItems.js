@@ -69,28 +69,28 @@ const MenuItems = () => {
                <div
                   className={
                      location.pathname === '/'
-                        ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                        ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                   }
                >
                   <div className='relative'>
                      <HiUsers />
                   </div>
-                  <div className='hidden lg:block'>Users</div>
+                  <div className='hidden xl:block'>Users</div>
                </div>
             </Link>
             <Link to={`/stories`}>
                <div
                   className={
                      location.pathname === `/stories`
-                        ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                        ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                   }
                >
                   <div className='relative '>
                      <MdAutoStories />
                   </div>
-                  <div className='hidden lg:block'>Stories</div>
+                  <div className='hidden xl:block'>Stories</div>
                </div>
             </Link>
             {user?.id ? (
@@ -99,8 +99,8 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/bells'
-                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -109,15 +109,15 @@ const MenuItems = () => {
                               17
                            </span>
                         </div>
-                        <div className='hidden lg:block'>Bells</div>
+                        <div className='hidden xl:block'>Bells</div>
                      </div>
                   </Link>
                   <Link to='/messages'>
                      <div
                         className={
                            location.pathname === '/messages'
-                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -128,21 +128,21 @@ const MenuItems = () => {
                               </span>
                            ) : null}
                         </div>
-                        <div className='hidden lg:block'>Messages</div>
+                        <div className='hidden xl:block'>Messages</div>
                      </div>
                   </Link>
                   <Link to='/favorites'>
                      <div
                         className={
                            location.pathname === '/favorites'
-                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                         }
                      >
                         <div className='relative'>
                            <BsBookmarkStarFill />
                         </div>
-                        <div className='hidden lg:block'>Favorites</div>
+                        <div className='hidden xl:block'>Favorites</div>
                      </div>
                   </Link>
                </>
@@ -152,28 +152,28 @@ const MenuItems = () => {
                      <div
                         className={
                            location.pathname === '/auth'
-                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                         }
                      >
                         <div className='relative'>
                            <BsShieldLockFill />
                         </div>
-                        <div className='hidden lg:block'>Login</div>
+                        <div className='hidden xl:block'>Login</div>
                      </div>
                   </Link>
                   <Link to='/auth/register'>
                      <div
                         className={
                            location.pathname === '/auth/register'
-                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
                         }
                      >
                         <div className='relative'>
                            <FaUserPlus />
                         </div>
-                        <div className='hidden lg:block'>Signup</div>
+                        <div className='hidden xl:block'>Signup</div>
                      </div>
                   </Link>
                </>
@@ -185,7 +185,7 @@ const MenuItems = () => {
                onClick={logoutHandler}
                color='bg-gradient-to-bl from-primary bg-danger hover:from-warning hidden mt-5 lg:flex'
             >
-               <IoLogOut /> <div className='hidden lg:block'>Logout</div>
+               <IoLogOut /> <div className='hidden xl:block'>Logout</div>
             </Button>
          ) : null}
       </div>

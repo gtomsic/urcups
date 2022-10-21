@@ -1,14 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { data } from 'autoprefixer'
+import {
+   serviceAddRemoveFavorites,
+   serviceCheckFavorites,
+   serviceGetAllFavorites,
+} from './serviceFavorites'
 
 const initialState = {
    isFavorite: {
-      favorite: {},
+      favorite: false,
       favIsLoading: false,
       favIsSuccess: false,
       favIsError: false,
       favIsMessage: '',
    },
    favorites: {
+      favsCount: 0,
       favorites: [],
       favsIsLoading: false,
       favsIsSuccess: false,
@@ -19,13 +26,45 @@ const initialState = {
    },
 }
 
+export const getAllUserFavorites = createAsyncThunk(
+   'user/getAllUserFavorites',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetAllFavorites(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
+export const checkIsFavorite = createAsyncThunk(
+   'user/checkIsFavorite',
+   async (data, thunkApi) => {
+      try {
+         return await serviceCheckFavorites(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
 export const addRemoveFavorites = createAsyncThunk(
    'user/addRemoveFavorites',
    async (data, thunkApi) => {
       try {
-         const id = thunkApi.getState().messages.userProfile.userProfile.id
-         if (id !== data.user_id) return
-         return await serviceReadRoomMessages(data)
+         return await serviceAddRemoveFavorites(data)
       } catch (error) {
          const message =
             (error.response &&
@@ -52,7 +91,55 @@ const favoriteSlice = createSlice({
          }
       },
    },
-   extraReducers: (builder) => {},
+   extraReducers: (builder) => {
+      builder
+         .addCase(addRemoveFavorites.pending, (state) => {
+            state.isFavorite.favIsLoading = true
+         })
+         .addCase(addRemoveFavorites.fulfilled, (state, action) => {
+            state.isFavorite.favIsLoading = false
+            state.isFavorite.favIsSuccess = true
+            state.isFavorite.favorite = action.payload
+         })
+         .addCase(addRemoveFavorites.rejected, (state, action) => {
+            state.isFavorite.favIsLoading = false
+            state.isFavorite.favIsSuccess = false
+            state.isFavorite.favorite = false
+            state.isFavorite.favIsError = true
+            state.isFavorite.favIsMessage = action.payload
+         })
+         .addCase(checkIsFavorite.pending, (state) => {
+            state.isFavorite.favIsLoading = true
+         })
+         .addCase(checkIsFavorite.fulfilled, (state, action) => {
+            state.isFavorite.favIsLoading = false
+            state.isFavorite.favIsSuccess = true
+            state.isFavorite.favorite = action.payload
+         })
+         .addCase(checkIsFavorite.rejected, (state, action) => {
+            state.isFavorite.favIsLoading = false
+            state.isFavorite.favIsSuccess = false
+            state.isFavorite.favorite = false
+            state.isFavorite.favIsError = true
+            state.isFavorite.favIsMessage = action.payload
+         })
+         .addCase(getAllUserFavorites.pending, (state) => {
+            state.favorites.favsIsLoading = true
+         })
+         .addCase(getAllUserFavorites.fulfilled, (state, action) => {
+            state.favorites.favsIsLoading = false
+            state.favorites.favsIsSuccess = true
+            state.favorites.favsCount = action.payload.count
+            state.favorites.favorites = action.payload.data
+         })
+         .addCase(getAllUserFavorites.rejected, (state, action) => {
+            state.favorites.favsIsLoading = false
+            state.favorites.favsIsSuccess = false
+            state.favorites.favorites = false
+            state.favorites.favsIsError = true
+            state.favorites.favsIsMessage = action.payload
+         })
+   },
 })
 
 export const { favoriteClear } = favoriteSlice.actions

@@ -89,8 +89,8 @@ const MessageItem = ({ message, body, time }) => {
                </p>
             </div>
             <p className='text-lg lg:text-lg text-light'>
-               {body.split('').length > 20
-                  ? body.split('').splice(0, 20).join('') + '...'
+               {body.split('').length > 15
+                  ? body.split('').splice(0, 15).join('') + '...'
                   : body}
             </p>
             <small>{moment(time).fromNow()}</small>

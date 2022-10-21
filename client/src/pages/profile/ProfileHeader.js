@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { BsBookmarkStarFill } from 'react-icons/bs'
 import { MdPhotoSizeSelectActual } from 'react-icons/md'
@@ -17,6 +17,12 @@ import { check } from '../../utils/check'
 import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
 import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice'
 import MessageMenuHandler from '../../components/profile/MessageMenuHandler'
+import { selectMessageUserProfile } from '../../store/features/messages/messagesSlice'
+import {
+   addRemoveFavorites,
+   checkIsFavorite,
+   selectFavorite,
+} from '../../store/features/favorites/favoritesSlice'
 const ProfileHeader = ({ profile }) => {
    const [isOpen, setIsOpen] = useState(false)
    const { user } = useSelector(selectUser)
@@ -29,6 +35,28 @@ const ProfileHeader = ({ profile }) => {
    const { loadingAvatar, loadingWallpaper } = useSelector(selectUser)
    const { publicPhotos } = useSelector(selectPublicPhotos)
    const { privatePhotos } = useSelector(selectPrivatePhotos)
+   const { favorite } = useSelector(selectFavorite)
+
+   useEffect(() => {
+      if (user?.id) {
+         const data = {
+            token: user?.token,
+            profileId: profile?.id,
+         }
+         dispatch(checkIsFavorite(data))
+      }
+   }, [profile])
+
+   const addRemoveFavoritesHandler = (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      dispatch(
+         addRemoveFavorites({
+            token: user?.token,
+            profileId: profile?.id,
+         })
+      )
+   }
 
    const onAvatarChange = (e) => {
       e.preventDefault()
@@ -191,11 +219,11 @@ const ProfileHeader = ({ profile }) => {
                         </Link>
                         <Link
                            className='flex-1'
-                           to={`/profile/${profile.username}/reader`}
+                           to={`/profile/${profile.username}/stories`}
                         >
                            <div
                               className={`w-full flex flex-col items-center justify-center h-[100px] bg-gradient-to-b from-primary rounded-b-3xl hover:bg-secondary duration-300 cursor-pointer ${
-                                 `/profile/${profile.username}/reader` ===
+                                 `/profile/${profile.username}/stories` ===
                                  location.pathname
                                     ? 'bg-secondary'
                                     : null
@@ -205,7 +233,7 @@ const ProfileHeader = ({ profile }) => {
                                  <IoReader />
                               </span>
                               <span className='text-xs md:text-sm lg:text-md'>
-                                 Readers
+                                 Stories
                               </span>
                            </div>
                         </Link>
@@ -286,7 +314,14 @@ const ProfileHeader = ({ profile }) => {
             </div>
             {/* BOOKMARK PROFILE */}
             {user?.id === profile?.id ? null : (
-               <div className='absolute top-0 bg-gradient-to-b from-secondary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full'>
+               <div
+                  onClick={addRemoveFavoritesHandler}
+                  className={
+                     !favorite
+                        ? 'absolute top-0 bg-gradient-to-b from-dark lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
+                        : 'absolute top-0 bg-gradient-to-b from-secondary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
+                  }
+               >
                   <BsBookmarkStarFill />
                </div>
             )}

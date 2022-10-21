@@ -158,6 +158,16 @@ const MessagePage = () => {
       }
       await dispatch(sendMessage({ data, token: user.token }))
       setBody('')
+      if (message.length < 1) {
+         await dispatch(
+            getRoomMessages({
+               offset: messageOffset,
+               limit: messageLimit,
+               token: user.token,
+               user_id: params.id,
+            })
+         )
+      }
    }
    return (
       <div className='flex gap-11'>

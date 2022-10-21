@@ -16,7 +16,7 @@ import ProfilePhotos from './pages/profile/ProfilePhotos'
 import ProfilePrivatePhotos from './pages/profile/ProfilePivatePhotos'
 import SettingsPage from './pages/SettingsPage'
 import ProfileSettings from './pages/profile/ProfileSettings'
-import ProfileReader from './pages/profile/ProfileReader'
+import ProfileStories from './pages/profile/ProfileStories'
 import ProfileEdit from './pages/profile/ProfileEdit'
 import MessagePage from './pages/MessagePage'
 import { useDispatch, useSelector } from 'react-redux'
@@ -75,8 +75,8 @@ const App = () => {
                      element={<ProfilePrivatePhotos />}
                   />
                   <Route
-                     path='/profile/:username/reader'
-                     element={<ProfileReader />}
+                     path='/profile/:username/stories'
+                     element={<ProfileStories />}
                   />
                   <Route
                      path='/profile/:username/settings'

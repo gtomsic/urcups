@@ -6,6 +6,14 @@ import urcups from '../assets/avatar.jpg'
 
 const MessageItem = ({ user }) => {
    const url = useSelector((state) => state.url)
+   const address =
+      `${user?.city}, ${user?.stateProvince}, ${user?.country}`.split('')
+         .length > 30
+         ? `${user?.city}, ${user?.stateProvince}, ${user?.country}`
+              .split('')
+              .splice(0, 30)
+              .join('') + '...'
+         : `${user?.city}, ${user?.stateProvince}, ${user?.country}`
    return (
       <Link to={`/profile/${user?.username}`}>
          <div className='flex  gap-3  items-center justify-center bg-gradient-to-tr from-secondary  to-primary p-5 rounded-xl mb-5'>
@@ -30,7 +38,7 @@ const MessageItem = ({ user }) => {
                <small>
                   {user?.age} / {user?.sex}
                </small>
-               <small>{`${user?.city} ${user?.stateProvince} ${user?.country}`}</small>
+               <small>{address}</small>
             </div>
          </div>
       </Link>

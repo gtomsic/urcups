@@ -2,6 +2,7 @@ const express = require('express')
 const http = require('http')
 const cors = require('cors')
 const socketio = require('socket.io')
+const { profileJoinNamespace } = require('./profileSocket')
 
 const app = express()
 app.use(cors())

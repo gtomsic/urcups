@@ -1,6 +1,7 @@
 import axios from '../../../apis/axios'
 
 export const serviceAddRemoveFavorites = async (data) => {
+   console.log(data)
    const config = {
       headers: {
          'Content-Type': 'application/json',
@@ -32,9 +33,9 @@ export const serviceGetAllFavorites = async (data) => {
       },
    }
    const response = await axios.get(
-      `/api/favorites/all/${data.profileId}/${data.offset}/${data.limit}`,
+      `/api/favorites/all/${data.offset}/${data.limit}`,
       config
    )
 
-   return response.data
+   return { data: response.data.rows, count: response.data.count }
 }
