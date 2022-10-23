@@ -3,6 +3,7 @@ const http = require('http')
 const cors = require('cors')
 const socketio = require('socket.io')
 const { profileJoinNamespace } = require('./profileSocket')
+const Namespaces = require('./namespaces/namespaces')
 
 const app = express()
 app.use(cors())
@@ -21,6 +22,19 @@ const io = socketio(server, {
 
 const addUser = (data, socketId) => {
    if (!users.some((user) => user.user_id === data?.id)) {
+      const ns = new Namespaces(
+         data?.id,
+         socketId,
+         data?.username,
+         data?.age,
+         data?.sexualOrientation,
+         data?.city,
+         data?.stateProvince,
+         data?.country,
+         data?.hugot
+      )
+      console.log(ns)
+
       users.push({
          user_id: data?.id,
          socketId,

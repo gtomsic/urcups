@@ -2,6 +2,6 @@ import axios from '../../../apis/axios'
 
 // Users services here
 export const serviceGetUserByLimit = async (data) => {
-   const response = await axios.get(`/api/public/${data.limit}/${data.offset}`)
+   const response = await axios.post(`/api/public`, data)
    return response.data
 }

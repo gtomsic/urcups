@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BsBookmarkStarFill } from 'react-icons/bs'
 import { MdPhotoSizeSelectActual } from 'react-icons/md'
 import { FaUserAlt, FaCamera, FaLock } from 'react-icons/fa'
@@ -17,45 +17,52 @@ import { check } from '../../utils/check'
 import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
 import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice'
 import MessageMenuHandler from '../../components/profile/MessageMenuHandler'
-import { selectMessageUserProfile } from '../../store/features/messages/messagesSlice'
 import {
    addRemoveFavorites,
    checkIsFavorite,
    selectFavorite,
 } from '../../store/features/favorites/favoritesSlice'
 const ProfileHeader = ({ profile }) => {
-   const [isOpen, setIsOpen] = useState(false)
-   const { user } = useSelector(selectUser)
+   const isFetch = useRef(false)
+   const location = useLocation()
    const url = useSelector((state) => state.url)
+   const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const [isOpen, setIsOpen] = useState(false)
    const [images, setImages] = useState([])
    const [avatar, setAvatar] = useState(profile?.avatar)
    const [wallpaper, setWallpaper] = useState(profile?.wallpaper)
-   const location = useLocation()
-   const dispatch = useDispatch()
+   const { user } = useSelector(selectUser)
    const { loadingAvatar, loadingWallpaper } = useSelector(selectUser)
    const { publicPhotos } = useSelector(selectPublicPhotos)
    const { privatePhotos } = useSelector(selectPrivatePhotos)
    const { favorite } = useSelector(selectFavorite)
 
    useEffect(() => {
-      if (user?.id) {
-         const data = {
-            token: user?.token,
-            profileId: profile?.id,
+      if (isFetch.current === false) {
+         if (user?.id && user?.id !== profile?.id) {
+            const data = {
+               token: user?.token,
+               profileId: profile?.id,
+            }
+            dispatch(checkIsFavorite(data))
          }
-         dispatch(checkIsFavorite(data))
+      }
+      return () => {
+         isFetch.current = true
       }
    }, [profile])
 
-   const addRemoveFavoritesHandler = (e) => {
+   const addRemoveFavoritesHandler = async (e) => {
       e.stopPropagation()
       e.preventDefault()
-      dispatch(
+      await dispatch(
          addRemoveFavorites({
             token: user?.token,
             profileId: profile?.id,
          })
       )
+      navigate('/favorites')
    }
 
    const onAvatarChange = (e) => {
@@ -182,7 +189,8 @@ const ProfileHeader = ({ profile }) => {
                   <div className='flex-1 flex flex-col text-white'>
                      <div className='flex-1 flex  flex-col justify-end pl-3 lg:pl-0 pb-3'>
                         <h3>
-                           {profile.username} / {profile.age} / {profile.sex}
+                           {profile.username} / {profile.age} /{' '}
+                           {profile.sexualOrientation}
                         </h3>
                         <h5>
                            {`${profile.city}, ${profile.stateProvince}, ${profile.country}`}

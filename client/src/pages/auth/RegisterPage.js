@@ -26,6 +26,8 @@ const RegisterPage = () => {
       email: '',
       dateOfBirth: '',
       sex: '',
+      sexualOrientation: '',
+      hugot: '',
       city: '',
       stateProvince: '',
       country: '',
@@ -97,10 +99,11 @@ const RegisterPage = () => {
          return
       }
       if (
-         Boolean(!data.username.trim()) ||
-         Boolean(!data.email.trim()) ||
-         Boolean(!data.dateOfBirth.trim()) ||
-         Boolean(!data.sex.trim())
+         (Boolean(!data.username.trim()) ||
+            Boolean(!data.email.trim()) ||
+            Boolean(!data.dateOfBirth.trim()) ||
+            Boolean(!data.sex.trim()),
+         Boolean(!data.sexualOrientation.trim()))
       ) {
          setMessage('All fields are required.')
          return
@@ -112,6 +115,7 @@ const RegisterPage = () => {
    const submitHandler = (e) => {
       e.preventDefault()
       if (
+         Boolean(!data.hugot.trim()) ||
          Boolean(!data.city.trim()) ||
          Boolean(!data.stateProvince.trim()) ||
          Boolean(!data.country.trim()) ||
@@ -173,6 +177,21 @@ const RegisterPage = () => {
                      onChange={(e) => setData({ ...data, sex: e.target.value })}
                      label='Sex'
                   />
+                  <SelectOptions
+                     value={data.sexualOrientation}
+                     onChange={(e) =>
+                        setData({ ...data, sexualOrientation: e.target.value })
+                     }
+                     label='Sexual Orientation'
+                     data={[
+                        { name: '-' },
+                        { name: 'Straight' },
+                        { name: 'Gay' },
+                        { name: 'Bi' },
+                        { name: 'Lesbian' },
+                        { name: 'Transgender' },
+                     ]}
+                  />
 
                   <div className='p-4'>
                      <p className='text-light'>
@@ -196,6 +215,16 @@ const RegisterPage = () => {
                </div>
             ) : (
                <div>
+                  <TextInput
+                     value={data.hugot}
+                     onChange={(e) =>
+                        setData({ ...data, hugot: e.target.value })
+                     }
+                     type='text'
+                     name='hugot'
+                     label='Hugot'
+                     title='Hugot'
+                  />
                   <TextInput
                      value={data.city}
                      onChange={(e) =>

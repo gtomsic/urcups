@@ -159,14 +159,8 @@ const MessagePage = () => {
       await dispatch(sendMessage({ data, token: user.token }))
       setBody('')
       if (message.length < 1) {
-         await dispatch(
-            getRoomMessages({
-               offset: messageOffset,
-               limit: messageLimit,
-               token: user.token,
-               user_id: params.id,
-            })
-         )
+         dispatch(insertMessage({ ...data, user_id: userProfile.id }))
+         dispatch(insertMessages({ ...data, user_id: userProfile.id }))
       }
    }
    return (

@@ -17,7 +17,6 @@ const VerifyPage = () => {
       }
       return () => {
          isFetch.current = true
-         dispatch(reset())
       }
    }, [params, dispatch])
    return (

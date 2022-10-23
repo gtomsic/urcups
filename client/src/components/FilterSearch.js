@@ -1,10 +1,17 @@
 import React from 'react'
-import { countries } from '../data/countries'
 
 import SelectOptions from './forms/SelectOptions'
 import PrimaryButton from './PrimaryButton'
 
-const FilterSearch = ({ limit, onChange, onSaveFilter }) => {
+const FilterSearch = ({
+   limit,
+   onChange,
+   onSaveFilter,
+   online,
+   setOnline,
+   sexualOrientation,
+   setSexualOrientation,
+}) => {
    return (
       <div className='grid grid-cols-4 gap-1'>
          <SelectOptions
@@ -15,12 +22,25 @@ const FilterSearch = ({ limit, onChange, onSaveFilter }) => {
             input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
+            value={online ? 'Online' : 'All'}
             data={[{ name: 'All' }, { name: 'Online' }]}
+            onChange={(e) =>
+               setOnline(e.target.value === 'Online' ? true : false)
+            }
             bg='bg-white border border-gray text-dark py-0'
             input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
-            data={countries}
+            data={[
+               { name: 'All' },
+               { name: 'Straight', value: 'Straight' },
+               { name: 'Gay', value: 'Gay' },
+               { name: 'Bi', value: 'Bi' },
+               { name: 'Lesbian', value: 'Lesbian' },
+               { name: 'Transgender', value: 'Transgender' },
+            ]}
+            value={sexualOrientation ? sexualOrientation : 'All'}
+            onChange={(e) => setSexualOrientation(e.target.value)}
             bg='bg-white border border-gray text-dark py-0'
             input='py-[6px] md:py-[14px]'
          />

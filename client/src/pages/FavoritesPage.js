@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import AttentionMessage from '../components/AttentionMessage'
 
 import FavoritesItem from '../components/favorites/FavoritesItem'
+import PrimaryButton from '../components/PrimaryButton'
 import {
    getAllUserFavorites,
    selectFavorites,
@@ -23,7 +25,18 @@ const FavoritesPage = () => {
          })
       )
    }, [])
-   if (favorites?.length <= 0) return
+   if (favorites?.length <= 0) {
+      return (
+         <AttentionMessage title={`No favorites profile`}>
+            <p>Add some favorite user to start.</p>
+            <p>Browse user and make them your favorites.</p>
+            <br />
+            <Link to='/'>
+               <PrimaryButton>Browse Profiles</PrimaryButton>
+            </Link>
+         </AttentionMessage>
+      )
+   }
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8'>
          {favorites?.map((item) => (

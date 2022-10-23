@@ -34,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.STRING,
          allowNull: false,
       },
+      sexualOrientation: {
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      hugot: {
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
       city: {
          type: DataTypes.STRING,
          allowNull: false,

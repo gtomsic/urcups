@@ -36,7 +36,7 @@ const MessageItem = ({ user }) => {
             <div className='flex-1 hidden xl:flex flex-col text-white'>
                <h4 className='text-white'>{user?.username}</h4>
                <small>
-                  {user?.age} / {user?.sex}
+                  {user?.age} / {user?.sexualOrientation}
                </small>
                <small>{address}</small>
             </div>

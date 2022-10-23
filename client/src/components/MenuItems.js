@@ -27,7 +27,8 @@ const MenuItems = () => {
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
-   const { messagesLimit, messagesOffset } = useSelector(selectAllMessages)
+   const { messages, messagesLimit, messagesOffset } =
+      useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    useEffect(() => {
       socket.on(user?.id, (msg) => {
@@ -58,7 +59,7 @@ const MenuItems = () => {
       return () => {
          isFetch.current = true
       }
-   }, [user, socket])
+   }, [user, socket, messages])
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }

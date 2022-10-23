@@ -10,32 +10,42 @@ import {
    selectUsers,
    setLimit,
    setOffset,
+   setOnline,
+   setSexualOrientation,
 } from '../store/features/users/usersSlice'
 import Loader from '../components/loader/Loader'
 import Pagination from '../components/Pagination'
 import PrimaryButton from '../components/PrimaryButton'
 
 const HomePage = () => {
-   const { users, isLoading, filter, count } = useSelector(selectUsers)
-   const { offset, limit } = filter
-   const [isShowFilter, setIsShowFilter] = useState(false)
    const isFetch = useRef(false)
    const dispatch = useDispatch()
+   const [isShowFilter, setIsShowFilter] = useState(false)
+   const { users, isLoading, filter, count } = useSelector(selectUsers)
+   const { offset, limit, online, sexualOrientation } = filter
 
    useEffect(() => {
-      if (limit) dispatch(getUsersByLimit({ offset, limit }))
-      if (isFetch.current === false) return
-      dispatch(getUsersByLimit({ offset, limit }))
+      if (limit)
+         dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
+      if (isFetch.current === false) {
+         dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
+      }
       return () => {
          isFetch.current = true
       }
-   }, [isFetch, limit, offset, dispatch, count])
+   }, [isFetch, limit, offset, dispatch, count, online, sexualOrientation])
    return (
       <div className='relative'>
          {isShowFilter ? (
             <div className=' z-20 sticky top-[70px] rounded-2xl mb-5 px-2 py-0 m-2 bg-gradient-to-tr from-secondary bg-primary'>
                <FilterSearch
                   limit={limit}
+                  online={online}
+                  sexualOrientation={sexualOrientation}
+                  setOnline={(value) => dispatch(setOnline(value))}
+                  setSexualOrientation={(value) =>
+                     dispatch(setSexualOrientation(value))
+                  }
                   onChange={(e) => dispatch(setLimit(e.target.value))}
                   onSaveFilter={() => setIsShowFilter(false)}
                />

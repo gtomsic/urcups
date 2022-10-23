@@ -5,7 +5,7 @@ import { serviceGetUserByLimit } from './userService'
 const initialState = {
    users: [],
    count: 0,
-   filter: { offset: 0, limit: 42 },
+   filter: { offset: 0, limit: 18, online: false, sexualOrientation: 'All' },
    isLoading: false,
    isSuccess: false,
    isError: false,
@@ -45,6 +45,12 @@ const usersSlice = createSlice({
       setOffset: (state, action) => {
          state.filter.offset = action.payload
       },
+      setOnline: (state, action) => {
+         state.filter.online = action.payload
+      },
+      setSexualOrientation: (state, action) => {
+         state.filter.sexualOrientation = action.payload
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -64,7 +70,8 @@ const usersSlice = createSlice({
    },
 })
 
-export const { reset, setOffset, setLimit } = usersSlice.actions
+export const { reset, setOffset, setLimit, setOnline, setSexualOrientation } =
+   usersSlice.actions
 export default usersSlice.reducer
 
 // SELECTORS

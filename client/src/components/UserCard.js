@@ -31,7 +31,7 @@ function UserCard({ user }) {
                   </div>
                   <div className='flex gap-2'>
                      <small>Sex:</small>
-                     <small>{user?.sex}</small>
+                     <small>{user?.sexualOrientation}</small>
                   </div>
                </div>
                <div className='flex flex-col'>

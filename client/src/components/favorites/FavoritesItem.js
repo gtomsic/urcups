@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-   BsBookmarkStarFill,
-   BsBookmarkPlusFill,
-   BsBookmarkXFill,
-} from 'react-icons/bs'
+import { BsBookmarkStarFill } from 'react-icons/bs'
 
 import { useSelector } from 'react-redux'
 

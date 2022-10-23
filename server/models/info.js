@@ -1,14 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
    const info = sequelize.define('info', {
-      hugot: {
-         type: DataTypes.STRING,
-         allowNull: true,
-      },
       maritalStatus: {
-         type: DataTypes.STRING,
-         allowNull: true,
-      },
-      sexualOrientation: {
          type: DataTypes.STRING,
          allowNull: true,
       },
@@ -20,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.STRING,
          allowNull: true,
       },
-
       height: {
          type: DataTypes.STRING,
          allowNull: true,

@@ -118,7 +118,7 @@ const ProfileEdit = () => {
                      label='Username'
                      title='Username'
                      disabled={true}
-                     bg='text-white border border-white'
+                     bg='text-white bg-dark'
                   />
 
                   <TextInput
@@ -127,7 +127,7 @@ const ProfileEdit = () => {
                      label='Age'
                      title='Age'
                      disabled={true}
-                     bg='text-white border border-white'
+                     bg='text-white bg-dark'
                   />
                   <TextInput
                      value={dateOfBirth}
@@ -135,7 +135,7 @@ const ProfileEdit = () => {
                      label='Date of Birth'
                      title='Date of Birth'
                      disabled={true}
-                     bg='text-white border border-white'
+                     bg='text-white bg-dark'
                   />
                   <SelectOptions
                      value={sex}
@@ -165,13 +165,20 @@ const ProfileEdit = () => {
                      label='Country'
                      data={countries}
                   />
+                  <SelectOptions
+                     value={sexualOrientation}
+                     onChange={(e) => setSexualOrientation(e.target.value)}
+                     label='Sexual Orientation'
+                     data={[
+                        { name: '-' },
+                        { name: 'Straight' },
+                        { name: 'Gay' },
+                        { name: 'Bi' },
+                        { name: 'Lesbian' },
+                        { name: 'Transgender' },
+                     ]}
+                  />
                </div>
-            </div>
-         </Card>
-         <Card>
-            <h4>More Info</h4>
-
-            <div className='grid grid-cols-1 gap-x-0 lg:gap-x-5 lg:grid-cols-2'>
                <div className='lg:col-span-2'>
                   <TextInput
                      value={hugot}
@@ -181,6 +188,12 @@ const ProfileEdit = () => {
                      bg='text-dark bg-white'
                   />
                </div>
+            </div>
+         </Card>
+         <Card>
+            <h4>More Info</h4>
+
+            <div className='grid grid-cols-1 gap-x-0 lg:gap-x-5 lg:grid-cols-2'>
                <SelectOptions
                   value={maritalStatus}
                   onChange={(e) => setMaritalStatus(e.target.value)}
@@ -194,19 +207,7 @@ const ProfileEdit = () => {
                      { name: 'Complicated' },
                   ]}
                />
-               <SelectOptions
-                  value={sexualOrientation}
-                  onChange={(e) => setSexualOrientation(e.target.value)}
-                  label='Sexual Orientation'
-                  data={[
-                     { name: '-' },
-                     { name: 'Straight' },
-                     { name: 'Gay' },
-                     { name: 'Bi' },
-                     { name: 'Lesbian' },
-                     { name: 'Transgender' },
-                  ]}
-               />
+
                <SelectOptions
                   value={children}
                   onChange={(e) => setChildren(e.target.value)}

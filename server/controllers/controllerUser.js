@@ -37,14 +37,12 @@ module.exports.controllerUpdateUserInfo = asyncHandler(async (req, res) => {
       about,
    } = req.body
    await db.user.update(
-      { isOnline, sex, city, stateProvince, country },
+      { isOnline, sex, hugot, sexualOrientation, city, stateProvince, country },
       { where: { id: req.user.id } }
    )
    await db.info.update(
       {
-         hugot,
          maritalStatus,
-         sexualOrientation,
          children,
          lookingFor,
          height,
@@ -292,13 +290,14 @@ module.exports.controllerLoginUser = asyncHandler(async (req, res) => {
 // @ PUBLIC
 // @ POST
 module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
-   console.log(req.body)
    const id = uuid()
    const {
       username,
       email,
       dateOfBirth,
       sex,
+      hugot,
+      sexualOrientation,
       city,
       stateProvince,
       country,
@@ -311,6 +310,8 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       !Boolean(email.trim()) ||
       !Boolean(dateOfBirth.trim()) ||
       !Boolean(sex.trim()) ||
+      !Boolean(hugot.trim()) ||
+      !Boolean(sexualOrientation.trim()) ||
       !Boolean(password.trim()) ||
       !Boolean(confirmPassword.trim()) ||
       !Boolean(city.trim()) ||
@@ -333,6 +334,8 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       }`,
       dateOfBirth,
       sex,
+      hugot,
+      sexualOrientation,
       thumbnail: `/avatar.jpg`,
       avatar: `/avatar.jpg`,
       wallpaper: `/wallpaper.jpg`,

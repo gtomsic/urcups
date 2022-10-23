@@ -72,6 +72,7 @@ db.sequelize.sync().then(() =>
       console.log(
          `Server running on http://10.0.0.50:${PORT}`.yellow.bold.inverse
       )
+      // const orientation = ['Straight', 'Gay', 'Bi', 'Lesbian', 'Transgender']
       // for (let i = 0; i < 100; i++) {
       //    let id = uuid()
       //    let randomValue = Math.floor(Math.random() * 2 + 1)
@@ -83,6 +84,8 @@ db.sequelize.sync().then(() =>
       //       wallpaper: '/wallpaper.jpg',
       //       age: i,
       //       sex: Math.floor(Math.random() * 2 + 1) === 1 ? 'Male' : 'Female',
+      //       sexualOrientation: orientation[Math.floor(Math.random() * 5)],
+      //       hugot: 'Wake me up when september ends!',
       //       dateOfBirth: '1983-08-23',
       //       city: 'Saratoga Springs',
       //       stateProvince: 'Utah',
