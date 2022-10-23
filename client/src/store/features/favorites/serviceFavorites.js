@@ -1,7 +1,6 @@
 import axios from '../../../apis/axios'
 
 export const serviceAddRemoveFavorites = async (data) => {
-   console.log(data)
    const config = {
       headers: {
          'Content-Type': 'application/json',

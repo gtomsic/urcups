@@ -10,9 +10,15 @@ import { login, selectUser } from '../../store/features/user/userSlice'
 const LoginPage = () => {
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
+   const { user } = useSelector(selectUser)
    const { isLoading, isSuccess, isError, message } = useSelector(selectUser)
    const navigate = useNavigate()
    const dispatch = useDispatch()
+   useEffect(() => {
+      if (user?.id) {
+         navigate('/')
+      }
+   }, [user])
    useEffect(() => {
       const redirect = JSON.parse(localStorage.getItem('redirect'))
       if (isSuccess) {
