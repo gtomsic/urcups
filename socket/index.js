@@ -1,15 +1,15 @@
+require('dotenv').config()
 const express = require('express')
 const http = require('http')
 const cors = require('cors')
 const socketio = require('socket.io')
 const { profileJoinNamespace } = require('./profileSocket')
 const Namespaces = require('./namespaces/namespaces')
+const { users } = require('./data/users')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-
-const users = []
 
 const server = app.listen(9000)
 
@@ -21,39 +21,31 @@ const io = socketio(server, {
 })
 
 const addUser = (data, socketId) => {
+   let ns
    if (!users.some((user) => user.user_id === data?.id)) {
-      const ns = new Namespaces(
+      ns = new Namespaces(
          data?.id,
          socketId,
          data?.username,
+         data?.avatar,
+         data?.wallpaper,
          data?.age,
          data?.sexualOrientation,
          data?.city,
          data?.stateProvince,
          data?.country,
-         data?.hugot
+         data?.hugot,
+         data?.isOnline,
+         data?.createdAt,
+         data?.updatedAt
       )
-      console.log(ns)
-
-      users.push({
-         user_id: data?.id,
-         socketId,
-         username: data?.username,
-         thumbnail: data?.thumbnail,
-         age: data?.age,
-         sex: data?.sex,
-         city: data?.city,
-         stateProvince: data?.stateProvince,
-         country: data?.country,
-         isOnline: data?.isOnline,
-         createdAt: data?.createdAt,
-         updatedAt: data?.updatedAt,
-      })
+      users.push(ns)
    }
+   return ns
 }
 
-const removeUser = (socketId) => {
-   users = users.filter((user) => user.socketId !== socketId)
+const removeUser = (user_id) => {
+   users = users.filter((user) => user.user_id !== user_id)
 }
 
 const getUser = (user_id) => {
@@ -62,9 +54,10 @@ const getUser = (user_id) => {
 
 io.on('connection', (socket) => {
    // User just joined
-   socket.on('user_joined', (data) => {
-      addUser(data, socket.id)
-      socket.emit('user_joined', data)
+   socket.on('user', async (data) => {
+      await addUser(data, socket.id)
+      console.log(users)
+      socket.emit('user', data)
    })
    // Send receive messages
    socket.on('sendMessage', (message) => {

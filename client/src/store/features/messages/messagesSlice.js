@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import _ from 'lodash'
-import { socket } from '../../../socket'
 
 import {
    serviceCountAllUnreadMessages,
@@ -240,7 +239,6 @@ const messagesSlice = createSlice({
          .addCase(sendMessage.fulfilled, (state, action) => {
             state.message.messageLoading = false
             state.message.messageSuccess = true
-            socket.emit('sendMessage', action.payload)
             const sortedMessage = _.orderBy(
                [...state.message.message, action.payload],
                'id',

@@ -19,7 +19,6 @@ import {
    selectAllMessages,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
-import { socket } from '../socket'
 
 const MenuItems = () => {
    const isFetch = useRef(false)
@@ -31,35 +30,35 @@ const MenuItems = () => {
       useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    useEffect(() => {
-      socket.on(user?.id, (msg) => {
-         if (user?.id && msg.user_id !== user?.id) {
-            dispatch(
-               countAllUnreadMessages({
-                  token: user?.token,
-                  user_id: msg.user_id,
-               })
-            )
-            dispatch(
-               readRoomMessages({
-                  token: user?.token,
-                  user_id: msg.user_id,
-                  roomId: msg.roomId,
-               })
-            )
-            dispatch(
-               getAllMessages({
-                  offset: messagesOffset,
-                  limit: messagesLimit,
-                  token: user.token,
-                  user_id: user.id,
-               })
-            )
-         }
-      })
-      return () => {
-         isFetch.current = true
-      }
-   }, [user, socket, messages])
+      // io.on(user?.id, (msg) => {
+      //    if (user?.id && msg.user_id !== user?.id) {
+      //       dispatch(
+      //          countAllUnreadMessages({
+      //             token: user?.token,
+      //             user_id: msg.user_id,
+      //          })
+      //       )
+      //       dispatch(
+      //          readRoomMessages({
+      //             token: user?.token,
+      //             user_id: msg.user_id,
+      //             roomId: msg.roomId,
+      //          })
+      //       )
+      //       dispatch(
+      //          getAllMessages({
+      //             offset: messagesOffset,
+      //             limit: messagesLimit,
+      //             token: user.token,
+      //             user_id: user.id,
+      //          })
+      //       )
+      //    }
+      // })
+      // return () => {
+      //    isFetch.current = true
+      // }
+   }, [user, messages])
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }

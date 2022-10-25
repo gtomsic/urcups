@@ -1,24 +1,34 @@
 class Namespaces {
    constructor(
-      id,
+      user_id,
       socketId,
       username,
       age,
+      avatar,
+      wallpaper,
       sexualOrientation,
       city,
       stateProvince,
       country,
-      hugot
+      hugot,
+      isOnline,
+      createdAt,
+      updatedAt
    ) {
-      this.id = id
+      this.user_id = user_id
       this.socketId = socketId
       this.username = username
+      this.avatar = avatar
+      this.wallpaper = wallpaper
       this.age = age
       this.sexualOrientation = sexualOrientation
       this.city = city
       this.stateProvince = stateProvince
       this.country = country
       this.hugot = hugot
+      this.isOnline = isOnline
+      this.createdAt = createdAt
+      this.updatedAt = updatedAt
       this.rooms = []
    }
    addRoom(room) {

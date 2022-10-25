@@ -11,18 +11,13 @@ import {
    countAllUnreadMessages,
    getMessageUserProfile,
    getRoomMessages,
-   insertMessage,
-   insertMessages,
    selectIsTyping,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
-   setIsTypingToFalse,
-   setIsTypingToTrue,
 } from '../store/features/messages/messagesSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import AttentionMessage from '../components/AttentionMessage'
-import { socket } from '../socket'
 import MessageProfileCard from '../components/messages/MessageProfileCard'
 import Messages from '../components/messages/Messages'
 import Avatar from '../components/Avatar'
@@ -59,61 +54,7 @@ const MessagePage = () => {
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
    }, [message, onInputFocus])
-   // MONITORING THE RECEIVE MESSAGES AN INSERT TO CHAT
-   useEffect(() => {
-      if (isFetch.current === false) {
-         // USING SOCKET TO INSERT MESSAGES
-         socket.on(user?.id, (data) => {
-            dispatch(insertMessage(data))
-            dispatch(insertMessages(data))
-            dispatch(
-               countAllUnreadMessages({ token: user.token, user_id: user.id })
-            )
-         })
-      }
-      return () => {
-         isFetch.current = true
-      }
-   }, [])
-   // USE EFFECT THE LISTENING TO SOCKET WHEN WE RECEIVE
-   // WAITING FOR DATA TO UPDATE THE SOCKET ISTYPING DATA
-   useEffect(() => {
-      let debounceId = null
-      socket.on(`${user.id}/isTyping`, (data) => {
-         if (data.isTyping) {
-            dispatch(setIsTypingToTrue(data))
-         } else {
-            dispatch(setIsTypingToFalse(data))
-         }
-         scrollEnd.current?.scrollIntoView()
-      })
-      return () => {
-         clearTimeout(debounceId)
-      }
-   }, [socket])
-   // USE EFFECT THAT UPDATE AND SENDING SOCKET IS TYPING MESSAGE
-   // SENDING DATA TO VIA SOCKET.IO TO UPDATE THE REDUX IS TYPING STATE
-   useEffect(() => {
-      let debounceId
-      const timerId = setTimeout(() => {
-         socket.emit('isTyping', {
-            isTyping: body ? true : false,
-            user_id: user.id,
-            receiverId: userProfile.id,
-         })
-         debounceId = setTimeout(() => {
-            socket.emit('isTyping', {
-               isTyping: false,
-               user_id: user.id,
-               receiverId: userProfile.id,
-            })
-         }, 3000)
-      }, 500)
-      return () => {
-         clearTimeout(timerId)
-         clearTimeout(debounceId)
-      }
-   }, [body])
+
    // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
    // AND GETTING THE ROOM MESSAGES
    // COUNTING THE UNREAD MESSAGES DYNAMITICALLY
@@ -158,10 +99,6 @@ const MessagePage = () => {
       }
       await dispatch(sendMessage({ data, token: user.token }))
       setBody('')
-      if (message.length < 1) {
-         dispatch(insertMessage({ ...data, user_id: userProfile.id }))
-         dispatch(insertMessages({ ...data, user_id: userProfile.id }))
-      }
    }
    return (
       <div className='flex gap-11'>
@@ -169,7 +106,7 @@ const MessagePage = () => {
             id='messages'
             className='flex-1 max-h-[80vh] overflow-y-auto pt-[80px]'
          >
-            {messageError || message?.length < 1 ? (
+            {message?.length < 1 ? (
                <AttentionMessage
                   title={`Are you interested to ${userProfile?.username}`}
                >

@@ -19,15 +19,13 @@ import ProfileSettings from './pages/profile/ProfileSettings'
 import ProfileStories from './pages/profile/ProfileStories'
 import ProfileEdit from './pages/profile/ProfileEdit'
 import MessagePage from './pages/MessagePage'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectUser } from './store/features/user/userSlice'
-import { socket } from './socket'
-import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
 import FavoritesPage from './pages/FavoritesPage'
 import StoriesPage from './pages/StoriesPage'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectUser } from './store/features/user/userSlice'
+import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
 
 const App = () => {
-   const isFetch = useRef(false)
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    useEffect(() => {
@@ -43,13 +41,7 @@ const App = () => {
             countAllUnreadMessages({ token: user?.token, user_id: user.id })
          )
       }
-      if (isFetch.current === false) {
-         socket.emit('user_joined', user)
-      }
-      return () => {
-         isFetch.current = true
-      }
-   }, [socket])
+   }, [user])
 
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>

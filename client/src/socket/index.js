@@ -1,5 +1,9 @@
 import io from 'socket.io-client'
 
-export const socket = io(`http://10.0.0.50:9000`)
+export let nsSocket = io('http://10.0.0.50:9000')
 
-export const nsSocket = (endPoint) => io(`http://10.0.0.50:9000${endPoint}`)
+export let nsConnection = (endPoint) => io(`http://10.0.0.50:9000${endPoint}`)
+
+export const socketJoinLeave = (data) => {
+   nsSocket.emit('joinLeave', data)
+}

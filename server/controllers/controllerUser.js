@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const db = require('../models')
+const Op = require('sequelize').Op
 const { makeToken } = require('../utils/middlewareJwt')
 const { sendEmail } = require('../utils/nodemailer')
 const { imageResize } = require('../utils/middlewareSharp')
@@ -206,11 +207,22 @@ module.exports.controllerGetAllUser = asyncHandler(async (req, res) => {
 // @ GET
 module.exports.controllerGetUserWithId = asyncHandler(async (req, res) => {
    const id = req.params.id
+   const room = await db.room.findOne({
+      where: {
+         [Op.or]: [
+            { receiver: req.user.id, sender: req.params.id },
+            { receiver: req.params.id, sender: req.user.id },
+         ],
+      },
+   })
    const user = await db.user.findOne({
       where: { id },
    })
-   if (user) {
-      return res.send(user)
+   if (!room) {
+      return res.json({ ...user.dataValues, roomId: '' })
+   }
+   if (room && user) {
+      return res.json({ ...user.dataValues, roomId: room.id })
    }
    throw new Error(
       'Profile not not exist, go back home and select a valid user.'
