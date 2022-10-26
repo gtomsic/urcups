@@ -321,7 +321,7 @@ const ProfileHeader = ({ profile }) => {
                </div>
             </div>
             {/* BOOKMARK PROFILE */}
-            {user?.id === profile?.id ? null : (
+            {user?.id === profile?.id || !user?.id ? null : (
                <div
                   onClick={addRemoveFavoritesHandler}
                   className={

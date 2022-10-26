@@ -10,8 +10,8 @@ const MoreInformation = ({ user }) => {
                <span>{user.maritalStatus}</span>
             </div>
             <div className='grid grid-cols-2'>
-               <span>Sexual Orientation:</span>
-               <span>{user.sexualOrientation}</span>
+               <span>Sex:</span>
+               <span>{user.sex}</span>
             </div>
             <div className='grid grid-cols-2'>
                <span>Children:</span>

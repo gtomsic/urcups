@@ -28,7 +28,7 @@ const MessageProfileCard = () => {
             <div className='flex-1 flex flex-col text-white'>
                <h4 className='text-white'>{userProfile?.username}</h4>
                <small>
-                  {userProfile?.age} / {userProfile.sex}
+                  {userProfile?.age} / {userProfile.sexualOrientation}
                </small>
                <small>{`${userProfile?.city} ${userProfile?.stateProvince} ${userProfile?.country}`}</small>
             </div>

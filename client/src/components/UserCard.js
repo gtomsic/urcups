@@ -30,7 +30,7 @@ function UserCard({ user }) {
                      <small>{user?.age}</small>
                   </div>
                   <div className='flex gap-2'>
-                     <small>Sex:</small>
+                     <small>SexOr:</small>
                      <small>{user?.sexualOrientation}</small>
                   </div>
                </div>
