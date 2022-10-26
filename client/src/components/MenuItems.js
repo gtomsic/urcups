@@ -183,7 +183,7 @@ const MenuItems = () => {
          {user?.id ? (
             <Button
                onClick={logoutHandler}
-               color='bg-gradient-to-bl from-primary bg-danger hover:from-warning hidden mt-5 lg:flex'
+               color='bg-gradient-to-tr from-primary to-danger hover:from-primary hover:to-secondary hidden mt-5 lg:flex'
             >
                <IoLogOut /> <div className='hidden xl:block'>Logout</div>
             </Button>

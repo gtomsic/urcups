@@ -80,12 +80,12 @@ const ProfileSettings = () => {
                   </div>
                   <div className='flex flex-col gap-11'>
                      <SelectOptions
-                        value={status}
+                        value={user?.isOnline}
                         onChange={(e) => setStatus(e.target.value)}
                         label='Active Status'
-                        data={[{ name: 'Online' }, { name: 'Hide Status' }]}
+                        data={[{ name: 'Online' }, { name: 'Hidden' }]}
                         bg={
-                           status === true || status !== 'Online'
+                           !user?.isOnline
                               ? 'bg-white text-dark'
                               : 'bg-secondary text-white'
                         }

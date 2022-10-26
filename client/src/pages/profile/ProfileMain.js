@@ -15,7 +15,7 @@ const Profile = () => {
          <Card>
             {/* Hobbies */}
             <h3>HOBBIES</h3>
-            <div className='grid gap-5 grid-cols-2'>
+            <div className='grid gap-5 grid-cols-2 lg:grid-cols-3'>
                {!profile?.hobbies
                   ? null
                   : profile?.hobbies.split(',').map((hoby, index) => {
