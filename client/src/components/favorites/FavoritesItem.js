@@ -9,9 +9,7 @@ const FavoritesItem = ({ user }) => {
       <div
          className='relative bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[250px] cursor-pointer overflow-hidden'
          style={{
-            backgroundImage: `url(${
-               url + user.avatar.replace('avatar', 'public')
-            })`,
+            backgroundImage: `url(${url + user.avatar})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',

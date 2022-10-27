@@ -36,8 +36,8 @@ const PhotoLayout = ({
          <div
             className={
                user?.id !== profile?.id || !user?.id
-                  ? `sticky mb-5 top-[70px] z-20 w-full px-3 flex justify-between overflow-hidden`
-                  : `sticky z-20 mb-5 top-[80px] md:top-[110px] w-full px-3 flex justify-between overflow-hidden`
+                  ? `sticky mb-5 top-[68px] z-20 w-full px-3 flex justify-between overflow-hidden`
+                  : `sticky z-20 mb-5 top-[68px] w-full px-3 flex justify-between overflow-hidden`
             }
          >
             {/* EDIT AND SAVE HERE */}

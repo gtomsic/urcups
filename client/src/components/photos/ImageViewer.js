@@ -86,7 +86,7 @@ const ImageViewer = ({ images, index, onClose }) => {
          )}
          <div
             onClick={onCloseHandler}
-            className='absolute z-30 top-0 right-0 p-3 rounded-bl-3xl text-white text-2xl lg:text-5xl bg-gradient-to-tr from-danger bg-primary'
+            className='absolute z-30 top-0 right-0 p-3 rounded-bl-3xl text-white text-2xl lg:text-5xl bg-gradient-to-tr from-primary bg-secondary hover:from-danger hover:to-primary cursor-pointer'
          >
             <AiOutlineClose />
          </div>
