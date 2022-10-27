@@ -245,29 +245,32 @@ const ProfileHeader = ({ profile }) => {
                               </span>
                            </div>
                         </Link>
-                        <Link
-                           className='flex-1'
-                           to={`/profile/${profile.username}/photos`}
-                        >
-                           <div
-                              className={`w-full flex flex-col items-center justify-center h-[100px] bg-gradient-to-b from-primary rounded-b-3xl hover:bg-secondary duration-300 cursor-pointer ${
-                                 `/profile/${profile.username}/photos` ===
-                                 location.pathname
-                                    ? 'bg-secondary'
-                                    : null
-                              }`}
+                        {/* Check if there user is login or not */}
+                        {!user?.id ? null : (
+                           <Link
+                              className='flex-1'
+                              to={`/profile/${profile.username}/photos`}
                            >
-                              <span className='text-md md:text-lg'>
-                                 <MdPhotoSizeSelectActual />
-                              </span>
-                              <span className='text-xs md:text-sm lg:text-md'>
-                                 {publicPhotos?.count
-                                    ? publicPhotos?.count
-                                    : null}{' '}
-                                 Photos
-                              </span>
-                           </div>
-                        </Link>
+                              <div
+                                 className={`w-full flex flex-col items-center justify-center h-[100px] bg-gradient-to-b from-primary rounded-b-3xl hover:bg-secondary duration-300 cursor-pointer ${
+                                    `/profile/${profile.username}/photos` ===
+                                    location.pathname
+                                       ? 'bg-secondary'
+                                       : null
+                                 }`}
+                              >
+                                 <span className='text-md md:text-lg'>
+                                    <MdPhotoSizeSelectActual />
+                                 </span>
+                                 <span className='text-xs md:text-sm lg:text-md'>
+                                    {publicPhotos?.count
+                                       ? publicPhotos?.count
+                                       : null}{' '}
+                                    Photos
+                                 </span>
+                              </div>
+                           </Link>
+                        )}
                         {check(user, profile) ? (
                            <>
                               <Link

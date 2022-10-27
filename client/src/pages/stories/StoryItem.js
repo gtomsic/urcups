@@ -1,12 +1,7 @@
 import React from 'react'
 import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa'
 
-const StoryItem = () => {
-   const story = {
-      image: `https://images.pexels.com/photos/853151/pexels-photo-853151.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-853151.jpg&fm=jpg&_gl=1*1934syx*_ga*OTQ2NzgxMzMyLjE2NjY2NjEzOTY.*_ga_8JE65Q40S6*MTY2NjY2MTM5Ny4xLjEuMTY2NjY2Mjk4Ny4wLjAuMA..`,
-      body: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam quisquam magnam architecto corporis, unde id accusamus porro illo repudiandae dolorum voluptatum rem? Tempore, quas illum minima ratione aliquid amet consequatur.`,
-   }
-
+const StoryItem = ({ story }) => {
    return (
       <div className='flex flex-col rounded-3xl p-5 bg-gradient-to-b from-secondary text-light cursor-pointer'>
          <div
@@ -19,7 +14,7 @@ const StoryItem = () => {
             className='rounded-2xl h-[300px]'
          ></div>
          <div className='mt-3'>
-            <h3>Gen and Oneil</h3>
+            <h3>{story?.title}</h3>
             <p>
                {story?.body.split('').length > 100 ? (
                   <>
