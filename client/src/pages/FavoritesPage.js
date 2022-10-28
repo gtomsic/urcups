@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AttentionMessage from '../components/AttentionMessage'
 
 import FavoritesItem from '../components/favorites/FavoritesItem'
@@ -13,10 +13,11 @@ import { selectUser } from '../store/features/user/userSlice'
 
 const FavoritesPage = () => {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const { user } = useSelector(selectUser)
    const { favorites, favsOffset, favsLimit } = useSelector(selectFavorites)
    useEffect(() => {
-      if (!user?.id) return
+      if (!user?.id) return navigate('/')
       dispatch(
          getAllUserFavorites({
             token: user.token,
@@ -24,7 +25,7 @@ const FavoritesPage = () => {
             limit: favsLimit,
          })
       )
-   }, [])
+   }, [user])
    if (favorites?.length <= 0) {
       return (
          <AttentionMessage title={`No favorites profile`}>

@@ -1,18 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
 const StoryItem = ({ story }) => {
+   const [loves, setLoves] = useState(0)
+   const [comments, setComments] = useState(0)
+   const url = useSelector((state) => state.url)
    return (
       <div className='flex flex-col rounded-3xl p-5 bg-gradient-to-b from-secondary text-light cursor-pointer'>
-         <div
-            style={{
-               backgroundImage: `url(${story?.image})`,
-               backgroundPosition: 'top',
-               backgroundSize: 'cover',
-               backgroundRepeat: 'no-repeat',
-            }}
-            className='rounded-2xl h-[300px]'
-         ></div>
+         {!story?.image ? (
+            <div className='flex justify-center items-center rounded-2xl h-[300px] bg-primary text-white'>
+               <h3>No Image</h3>
+            </div>
+         ) : (
+            <div
+               style={{
+                  backgroundImage: `url(${url + story?.image})`,
+                  backgroundPosition: 'top',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+               }}
+               className='rounded-2xl h-[300px]'
+            ></div>
+         )}
          <div className='mt-3'>
             <h3>{story?.title}</h3>
             <p>
@@ -33,14 +43,14 @@ const StoryItem = ({ story }) => {
                <span className='text-danger'>
                   <FaRegHeart />
                </span>
-               <small>23</small>
+               <small>{loves}</small>
             </div>
             <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
                <span>Comments</span>
                <span className='text-secondary'>
                   <FaRegCommentDots />
                </span>
-               <small>137</small>
+               <small>{comments}</small>
             </div>
          </div>
       </div>

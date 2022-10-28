@@ -7,6 +7,7 @@ import publicPhotosReducer from '../features/publicPhotos/publicPhotosSlice'
 import privatePhotosReducer from '../features/privatePhotos/privatePhotosSlice'
 import messagesReducer from '../features/messages/messagesSlice'
 import favoritesReducer from '../features/favorites/favoritesSlice'
+import storySlice from '../features/stories/storySlice'
 
 export const store = configureStore({
    reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
       privatePhotos: privatePhotosReducer,
       messages: messagesReducer,
       favorites: favoritesReducer,
+      story: storySlice,
    },
 })

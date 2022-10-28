@@ -13,7 +13,7 @@ const initialState = {
 }
 
 export const getUsersByLimit = createAsyncThunk(
-   'user/get-users-by-limit',
+   'user/getUsersByLimit',
    async (data, thunkApi) => {
       try {
          return await serviceGetUserByLimit(data)

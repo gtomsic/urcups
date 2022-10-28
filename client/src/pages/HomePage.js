@@ -19,15 +19,19 @@ import PrimaryButton from '../components/PrimaryButton'
 
 const HomePage = () => {
    const isFetch = useRef(false)
+   const scrollView = useRef(null)
    const dispatch = useDispatch()
    const [isShowFilter, setIsShowFilter] = useState(false)
    const { users, isLoading, filter, count } = useSelector(selectUsers)
    const { offset, limit, online, sexualOrientation } = filter
 
    useEffect(() => {
-      if (limit)
+      if (limit) {
          dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
+         scrollView?.current.scrollIntoView()
+      }
       if (isFetch.current === false) {
+         scrollView?.current.scrollIntoView()
          dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
       }
       return () => {
@@ -36,6 +40,8 @@ const HomePage = () => {
    }, [isFetch, limit, offset, dispatch, count, online, sexualOrientation])
    return (
       <div className='relative'>
+         {/* Auto scroll to view */}
+         <div ref={scrollView} />
          {isShowFilter ? (
             <div className=' z-20 sticky top-[70px] rounded-2xl mb-5 px-2 py-0 m-2 bg-gradient-to-tr from-secondary bg-primary'>
                <FilterSearch
@@ -57,12 +63,13 @@ const HomePage = () => {
                </PrimaryButton>
             </div>
          )}
+
          <div className='min-h-[700px]'>
             {isLoading ? (
                <Loader>Searching...</Loader>
             ) : (
                <>
-                  <div className='gap-1 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
+                  <div className='gap-5 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
                      {users.map((user) => {
                         return (
                            <Link key={user.id} to={`profile/${user.username}`}>

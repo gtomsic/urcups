@@ -21,8 +21,8 @@ function UserCard({ user }) {
          <div
             className={
                user?.isOnline
-                  ? 'absolute bg-gradient-to-t from-secondary bottom-0 w-full h-[130px] flex flex-col justify-end'
-                  : 'absolute bg-gradient-to-t from-dark bottom-0 w-full h-[130px] flex flex-col justify-end'
+                  ? 'absolute bg-gradient-to-t from-secondary hover:from-primary duration-300 bottom-0 w-full h-[130px] flex flex-col justify-end'
+                  : 'absolute bg-gradient-to-t from-dark hover:from-primary duration-300  bottom-0 w-full h-[130px] flex flex-col justify-end'
             }
          >
             <div className='mt-5 pb-5 flex justify-around'>
