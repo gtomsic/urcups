@@ -24,6 +24,7 @@ import StoriesPage from './pages/StoriesPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from './store/features/user/userSlice'
 import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
+import StoryPage from './pages/StoryPage'
 
 const App = () => {
    const dispatch = useDispatch()
@@ -53,6 +54,7 @@ const App = () => {
                <Route path='/messages/:id' element={<MessagePage />} />
                <Route path='/favorites' element={<FavoritesPage />} />
                <Route path='/stories' element={<StoriesPage />} />
+               <Route path='/stories/:story_id' element={<StoryPage />} />
                <Route path='/settings' element={<SettingsPage />} />
             </Route>
             <Route path='/profile' element={<ProfileLayout />}>

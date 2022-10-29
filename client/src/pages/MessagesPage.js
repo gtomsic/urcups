@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
+import AttentionMessage from '../components/AttentionMessage'
 import MessageItem from '../components/messages/MessageItem'
 import {
    getAllMessages,
@@ -41,25 +42,35 @@ const MessagesPage = () => {
       navigate(`/messages/${user_id}`)
    }
    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-2 lg:gap-4 relative'>
-         {messages?.map((message) => (
-            <div
-               onClick={(e) => onClickHandler(e, message.user_id)}
-               key={message.id}
-               className='shadow-md hover:shadow-secondary rounded-xl'
-            >
-               <MessageItem
-                  key={message.id}
-                  image={message.avatar}
-                  isRead={message.isRead}
-                  isOnline={message.isOnline}
-                  body={message.body}
-                  time={message.createdAt}
-                  message={message}
-               />
+      <>
+         {messages?.length < 1 ? (
+            <AttentionMessage title='No messages!'>
+               <br />
+               <p>You don't have message at the moment.</p>
+               <p>Start browsing profile now!</p>
+            </AttentionMessage>
+         ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-2 xl:grid-cols-3 gap-2 lg:gap-4 relative'>
+               {messages?.map((message) => (
+                  <div
+                     onClick={(e) => onClickHandler(e, message.user_id)}
+                     key={message.id}
+                     className='shadow-md hover:shadow-secondary rounded-xl'
+                  >
+                     <MessageItem
+                        key={message.id}
+                        image={message.avatar}
+                        isRead={message.isRead}
+                        isOnline={message.isOnline}
+                        body={message.body}
+                        time={message.createdAt}
+                        message={message}
+                     />
+                  </div>
+               ))}
             </div>
-         ))}
-      </div>
+         )}
+      </>
    )
 }
 

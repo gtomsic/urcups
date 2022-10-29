@@ -11,8 +11,8 @@ const AttentionMessage = ({ title, children, profile }) => {
             <br />
             <br />
             <img src='/urcups256.png' alt='Urcups Logo' className='w-[130px]' />
-            <p>Urcups Team &</p>
-            <p>Urcups President - Gabriel</p>
+            <p>Gabriel Tomsic</p>
+            <p>Urcups Administrator</p>
          </div>
       </div>
    )

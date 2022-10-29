@@ -3,6 +3,7 @@ import {
    serviceCreateStory,
    serviceGetAllPublicStories,
    serviceGetAllUserStories,
+   serviceGetStoryById,
 } from './serviceStory'
 
 const initialState = {
@@ -29,6 +30,22 @@ const initialState = {
    },
 }
 
+export const getStoryById = createAsyncThunk(
+   'user/getStoryById',
+   async (id, thunkApi) => {
+      try {
+         return await serviceGetStoryById(id)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getAllUserStories = createAsyncThunk(
    'user/getAllUserStories',
    async (data, thunkApi) => {
@@ -115,8 +132,27 @@ const storySlice = createSlice({
             state.story.storyIsError = false
             state.story.storyIsSuccess = true
             state.story.story = action.payload
+            state.userStories.userStories.rows = [
+               action.payload,
+               ...state.userStories.userStories.rows,
+            ]
          })
          .addCase(createStory.rejected, (state, action) => {
+            state.story.storyIsLoading = false
+            state.story.storyIsSuccess = false
+            state.story.storyIsError = true
+            state.story.storyIsMessage = action.payload
+         })
+         .addCase(getStoryById.pending, (state) => {
+            state.story.storyIsLoading = true
+         })
+         .addCase(getStoryById.fulfilled, (state, action) => {
+            state.story.storyIsLoading = false
+            state.story.storyIsError = false
+            state.story.storyIsSuccess = true
+            state.story.story = action.payload
+         })
+         .addCase(getStoryById.rejected, (state, action) => {
             state.story.storyIsLoading = false
             state.story.storyIsSuccess = false
             state.story.storyIsError = true

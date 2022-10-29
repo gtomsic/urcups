@@ -2,10 +2,9 @@ const asyncHandler = require('express-async-handler')
 const db = require('../models')
 
 module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
-   console.log(req.body)
    const { offset, limit, sexualOrientation, online } = req.body
    let users
-   if (online !== false && sexualOrientation !== 'All') {
+   if (!online && sexualOrientation !== 'All') {
       users = await db.user.findAndCountAll({
          order: [['updatedAt', 'DESC']],
          offset: Number(offset) * Number(limit),

@@ -112,7 +112,7 @@ const MessagePage = () => {
                >
                   <p>
                      Send {userProfile?.sex === 'Male' ? 'him' : 'her'} your
-                     message that interested to connect.
+                     message to start conversation.
                   </p>
                   <p>
                      And connect maybe{' '}

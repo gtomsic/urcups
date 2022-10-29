@@ -17,9 +17,11 @@ import {
    selectUserStories,
 } from '../../store/features/stories/storySlice'
 import Loader from '../../components/loader/Loader'
+import { useNavigate } from 'react-router-dom'
 
 const ProfileReader = () => {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const [isOpen, setIsOpen] = useState(false)
    const [limit, setLimit] = useState(100)
    const [offset, setOffset] = useState(0)
@@ -33,8 +35,13 @@ const ProfileReader = () => {
    const { userStories, userStoriesIsLoading } = useSelector(selectUserStories)
    const url = useSelector((state) => state.url)
    useEffect(() => {
-      dispatch(getAllUserStories({ limit, offset, token: user?.token }))
+      dispatch(getAllUserStories({ limit, offset, id: profile?.id }))
    }, [story])
+   const onClickHandler = (e, id) => {
+      e.preventDefault()
+      e.stopPropagation()
+      navigate(`/stories/${id}`)
+   }
    const onCloseHandler = (e) => {
       e.preventDefault()
       e.stopPropagation()
@@ -58,7 +65,7 @@ const ProfileReader = () => {
       const data = new FormData()
       data.append('story', file)
       dispatch(createStory({ token: user?.token, title, body, data }))
-      // onCancelHandler(e)
+      onCancelHandler(e)
    }
    return (
       <div className='relative grid grid-cols-1 gap-5 lg:gap-4 xl:gap-3 lg:grid-cols-2 xl:grid-cols-3 '>
@@ -78,8 +85,8 @@ const ProfileReader = () => {
          )}
          {/* Display stories here using map method */}
          {userStories?.rows?.map((item) => (
-            <div key={item.id}>
-               <StoryItem story={item} />
+            <div onClick={(e) => onClickHandler(e, item.id)} key={item.id}>
+               <StoryItem story={{ ...item, image: url + item.image }} />
             </div>
          ))}
          {!isOpen ? null : (
@@ -87,9 +94,9 @@ const ProfileReader = () => {
                <Container>
                   <form
                      onSubmit={onSubmitHandler}
-                     className='w-full grid grid-cols-12 gap-5'
+                     className='w-full grid grid-cols-1 md:grid-cols-12 gap-5'
                   >
-                     <div className='col-span-8 rounded-3xl bg-light bg-opacity-20 p-5'>
+                     <div className='md:col-span-8 rounded-3xl bg-light bg-opacity-20 p-5'>
                         <div className='relative flex justify-center items-center p-5 rounded-md text-white bg-gradient-to-tr from-secondary to-primary hover:from-danger hover:to-primary cursor-pointer overflow-hidden'>
                            {!image ? <FaCamera /> : 'Change Image'}
                            <input
@@ -110,7 +117,7 @@ const ProfileReader = () => {
                            onChange={(e) => setBody(e.target.value)}
                            name='body'
                            id='story-body'
-                           rows='15'
+                           rows='10'
                            placeholder='Write your story...'
                            className='bg-white  p-3 w-full resize-none'
                         ></textarea>
@@ -124,7 +131,7 @@ const ProfileReader = () => {
                            <PrimaryButton>Create</PrimaryButton>
                         </div>
                      </div>
-                     <div className='col-span-4'>
+                     <div className='hidden md:block md:col-span-4'>
                         <StoryItem story={{ title, body, image }} />
                      </div>
                   </form>

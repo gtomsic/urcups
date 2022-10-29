@@ -12,7 +12,7 @@ const BellsPage = () => {
    }, [user])
    if (!user?.id) return
    return (
-      <div className='grid grid-cols-1 gap-5 lg:gap-4 xl:gap-4 lg:grid-cols-3 xl:grid-cols-3'>
+      <div className='grid grid-cols-1 gap-1 lg:gap-3 xl:gap-2 lg:grid-cols-3 xl:grid-cols-3'>
          <BellsItem user={user} />
          <BellsItem user={user} />
          <BellsItem user={user} />

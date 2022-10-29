@@ -1,14 +1,17 @@
 import axios from '../../../apis/axios'
 
-export const serviceGetAllUserStories = async ({ limit, offset, token }) => {
+export const serviceGetStoryById = async (id) => {
+   const response = await axios.get(`/api/stories/id/${id}`)
+   return response.data
+}
+export const serviceGetAllUserStories = async ({ limit, offset, id }) => {
    const config = {
       headers: {
          'Content-Type': 'application/json',
-         Authorization: `Bearer ${token}`,
       },
    }
    const response = await axios.get(
-      `/api/stories/user/${limit}/${offset}`,
+      `/api/stories/user/${limit}/${offset}/${id}`,
       config
    )
    return response.data

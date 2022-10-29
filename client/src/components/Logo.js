@@ -14,13 +14,17 @@ const Logo = () => {
       location.pathname.includes('/bells') ||
       location.pathname.includes('/favorites') ||
       location.pathname.includes('/stories')
-
+   const onBackHandler = (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      navigate(-1)
+   }
    return (
       <>
          <div>
             {isTrue ? (
                <PrimaryButton
-                  onClick={() => navigate(-1)}
+                  onClick={onBackHandler}
                   add='bg-secondary hover:from-primary'
                >
                   <IoChevronBack />
