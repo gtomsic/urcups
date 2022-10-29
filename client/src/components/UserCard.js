@@ -7,9 +7,9 @@ function UserCard({ user }) {
    //    ? user?.avatar
    //    : user.avatar.replace('avatar', 'avatar')
    return (
-      <div className='relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-primary pb-[100px]'>
+      <div className='relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-br from-secondary to-primary pb-[100px]'>
          <div
-            className='relative bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[250px] cursor-pointer overflow-hidden'
+            className='relative bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[300px] cursor-pointer overflow-hidden'
             style={{
                backgroundImage: `url(${url + user?.avatar})`,
                backgroundSize: 'cover',
