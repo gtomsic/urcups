@@ -47,7 +47,7 @@ const FilterSearch = ({
          <div className='flex flex-col justify-center'>
             <PrimaryButton
                onClick={onSaveFilter}
-               add='py-[15px] md:p-[13px] from-dark bg-primary'
+               add='py-[15px] md:p-[14px] from-dark bg-primary'
             >
                Close
             </PrimaryButton>

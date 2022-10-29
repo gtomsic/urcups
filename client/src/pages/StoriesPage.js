@@ -32,7 +32,7 @@ const StoriesPage = () => {
    return (
       <>
          {!storiesIsLoading ? null : <Loader>Loading stories...</Loader>}
-         <div className='grid grid-cols-1 gap-5 lg:gap-4 xl:gap-3 lg:grid-cols-2 xl:grid-cols-3'>
+         <div className='relative grid grid-cols-1 gap-3 lg:gap-4 xl:gap-3 md:grid-cols-2 lg:grid-cols-3'>
             {stories?.rows?.map((item) => (
                <div onClick={(e) => onClickHandler(e, item.id)} key={item.id}>
                   <StoryItem story={{ ...item, image: url + item.image }} />

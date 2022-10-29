@@ -69,7 +69,7 @@ const HomePage = () => {
                <Loader>Searching...</Loader>
             ) : (
                <>
-                  <div className='gap-5 md:gap-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
+                  <div className='relative grid grid-cols-1 gap-3 lg:gap-4 xl:gap-3 md:grid-cols-2 lg:grid-cols-3'>
                      {users.map((user) => {
                         return (
                            <Link key={user.id} to={`profile/${user.username}`}>
