@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
    const story = sequelize.define('story', {
       image: {
          type: DataTypes.STRING,
-         allowNull: true,
+         allowNull: false,
       },
       title: {
          type: DataTypes.STRING,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       body: {
          type: DataTypes.TEXT,
-         allowNull: false,
+         allowNull: true,
       },
       user_id: {
          type: DataTypes.UUID,

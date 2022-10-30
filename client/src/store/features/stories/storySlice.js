@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {
    serviceCreateStory,
+   serviceCreateText,
+   serviceDeleteStory,
    serviceGetAllPublicStories,
    serviceGetAllUserStories,
    serviceGetStoryById,
@@ -30,6 +32,22 @@ const initialState = {
    },
 }
 
+export const deleteStory = createAsyncThunk(
+   'user/deleteStory',
+   async (data, thunkApi) => {
+      try {
+         return await serviceDeleteStory(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getStoryById = createAsyncThunk(
    'user/getStoryById',
    async (id, thunkApi) => {
@@ -68,6 +86,22 @@ export const getAllPublicStories = createAsyncThunk(
    async (data, thunkApi) => {
       try {
          return await serviceGetAllPublicStories(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+export const createStoryText = createAsyncThunk(
+   'user/createStoryText',
+   async (data, thunkApi) => {
+      try {
+         return await serviceCreateText(data)
       } catch (error) {
          const message =
             (error.response &&
@@ -128,16 +162,26 @@ const storySlice = createSlice({
             state.story.storyIsLoading = true
          })
          .addCase(createStory.fulfilled, (state, action) => {
+            state.story.storyIsError = false
+            state.story.storyIsSuccess = true
+            state.story.story = action.payload
+         })
+         .addCase(createStory.rejected, (state, action) => {
+            state.story.storyIsLoading = false
+            state.story.storyIsSuccess = false
+            state.story.storyIsError = true
+            state.story.storyIsMessage = action.payload
+         })
+         .addCase(createStoryText.pending, (state) => {
+            state.story.storyIsLoading = true
+         })
+         .addCase(createStoryText.fulfilled, (state, action) => {
             state.story.storyIsLoading = false
             state.story.storyIsError = false
             state.story.storyIsSuccess = true
             state.story.story = action.payload
-            state.userStories.userStories.rows = [
-               action.payload,
-               ...state.userStories.userStories.rows,
-            ]
          })
-         .addCase(createStory.rejected, (state, action) => {
+         .addCase(createStoryText.rejected, (state, action) => {
             state.story.storyIsLoading = false
             state.story.storyIsSuccess = false
             state.story.storyIsError = true
@@ -189,6 +233,21 @@ const storySlice = createSlice({
             state.userStories.userStoriesIsError = true
             state.userStories.userStories = {}
             state.userStories.userStoriesIsMessage = action.payload
+         })
+         .addCase(deleteStory.pending, (state) => {
+            state.story.storyIsLoading = true
+         })
+         .addCase(deleteStory.fulfilled, (state, action) => {
+            state.story.storyIsLoading = false
+            state.story.storyIsError = false
+            state.story.storyIsSuccess = true
+            state.story.story = action.payload
+         })
+         .addCase(deleteStory.rejected, (state, action) => {
+            state.story.storyIsLoading = false
+            state.story.storyIsSuccess = false
+            state.story.storyIsError = true
+            state.story.storyIsMessage = action.payload
          })
    },
 })

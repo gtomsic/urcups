@@ -14,16 +14,19 @@ const StoryItem = ({ story }) => {
    const [comments, setComments] = useState(0)
    const [isLove, setIsLove] = useState(false)
    const { user } = useSelector(selectUser)
+   const newBody = story?.body?.split('<br/>').join('\n')
    useEffect(() => {
-      if (user?.id && isFetch.current === false) {
+      if (isFetch.current === false) {
          const fetchingLove = async () => {
-            const response = await serviceCheckLove({
-               story_id: story.id,
-               token: user?.token,
-            })
             const countLoves = await serviceCountLoves({ story_id: story.id })
             setLoves(countLoves)
-            setIsLove(response)
+            if (user?.id) {
+               const response = await serviceCheckLove({
+                  story_id: story.id,
+                  token: user?.token,
+               })
+               setIsLove(response)
+            }
          }
          fetchingLove()
       }
@@ -66,9 +69,9 @@ const StoryItem = ({ story }) => {
          <div className='mt-3 min-h-[100px]'>
             <h3>{story?.title}</h3>
             <p>
-               {story?.body.split('').length > 60 ? (
+               {story?.body?.split('').length > 60 ? (
                   <>
-                     {story?.body.split('').splice(0, 60).join('')}
+                     {newBody?.split('').splice(0, 60).join('')}
                      <span className='text-secondary'> ...</span>
                   </>
                ) : (

@@ -1,41 +1,57 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
 import { MdOutlineDeleteOutline, MdEditNote } from 'react-icons/md'
 
 import Loader from '../components/loader/Loader'
-import { getStoryById, selectStory } from '../store/features/stories/storySlice'
+import {
+   deleteStory,
+   getStoryById,
+   selectStory,
+} from '../store/features/stories/storySlice'
 import { selectUser } from '../store/features/user/userSlice'
 import {
    serviceAddRemoveLoves,
    serviceCheckLove,
    serviceCountLoves,
 } from '../store/features/loves/serviceLove'
+import Modal from '../components/Modal'
+
+import StoryEdit from './stories/StoryEdit'
+import Comments from '../components/comments/Comments'
+import { AiOutlineClose } from 'react-icons/ai'
 
 const StoryPage = () => {
+   const scrollView = useRef(null)
    const isFetch = useRef(false)
    const params = useParams()
    const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const [isOpen, setIsOpen] = useState(false)
+   const [isCommentOpen, setIsCommentOpen] = useState(false)
    const [loves, setLoves] = useState(0)
+   const { story, storyIsLoading } = useSelector(selectStory)
    const [comments, setComments] = useState(0)
    const [isLove, setIsLove] = useState(0)
    const { user } = useSelector(selectUser)
-   const { story, storyIsLoading } = useSelector(selectStory)
    const url = useSelector((state) => state.url)
    useEffect(() => {
       dispatch(getStoryById(params.story_id))
    }, [params])
    useEffect(() => {
-      if (user?.id && isFetch.current === true) {
+      if (isFetch.current === true) {
          const fetchStory = async () => {
             const fetchLoves = await serviceCountLoves({ story_id: story.id })
-            const checkLove = await serviceCheckLove({
-               story_id: story.id,
-               token: user?.token,
-            })
+            scrollView.current.scrollIntoView()
             setLoves(fetchLoves)
-            setIsLove(checkLove)
+            if (user?.id) {
+               const checkLove = await serviceCheckLove({
+                  story_id: story.id,
+                  token: user?.token,
+               })
+               setIsLove(checkLove)
+            }
          }
          fetchStory()
       }
@@ -58,13 +74,30 @@ const StoryPage = () => {
       setIsLove(checkLove)
       setLoves(response)
    }
+   const onDeleteHandler = async (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const data = { story_id: story.id, token: user?.token }
+      await dispatch(deleteStory(data))
+      navigate(-1)
+   }
    return (
       <div className='relative'>
-         {!storyIsLoading ? null : <Loader>Please wait...</Loader>}
-         <img src={url + story?.image} alt={story?.id} />
-         <div className='p-3 pt-3 text-light'>
-            <h3>{story?.title}</h3>
-            <p>{story?.body}</p>
+         <div ref={scrollView} />
+
+         {!storyIsLoading ? null : (
+            <Modal>
+               <Loader>Please wait...</Loader>
+            </Modal>
+         )}
+         <img
+            src={url + story?.image}
+            alt={story?.id}
+            className='block md:float-left md:mx-4'
+         />
+         <div className='px-3 mt-5 md:mt-0 text-light'>
+            <h3 className='text-secondary'>{story?.title}</h3>
+            <div dangerouslySetInnerHTML={{ __html: story?.body }}></div>
             <div className='flex justify-between'>
                <div className='flex gap-3 mt-2'>
                   <div
@@ -83,7 +116,10 @@ const StoryPage = () => {
                      )}
                      <small>{loves}</small>
                   </div>
-                  <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
+                  <div
+                     onClick={() => setIsCommentOpen(true)}
+                     className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+                  >
                      <span className='hidden md:block'>Comments</span>
                      <span className='text-secondary'>
                         <FaRegCommentDots />
@@ -93,13 +129,19 @@ const StoryPage = () => {
                </div>
                {story?.user_id !== user?.id ? null : (
                   <div className='flex gap-3 mt-2'>
-                     <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
+                     <div
+                        onClick={() => setIsOpen(true)}
+                        className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+                     >
                         <span className='text-warning'>
                            <MdEditNote />
                         </span>
                         <span className='hidden md:block'>Edit</span>
                      </div>
-                     <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
+                     <div
+                        onClick={onDeleteHandler}
+                        className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+                     >
                         <span className='text-danger'>
                            <MdOutlineDeleteOutline />
                         </span>
@@ -109,6 +151,21 @@ const StoryPage = () => {
                )}
             </div>
          </div>
+
+         {!isOpen ? null : (
+            <StoryEdit story={story} isOpen={isOpen} setIsOpen={setIsOpen} />
+         )}
+         {!isCommentOpen ? null : (
+            <Modal>
+               <Comments story_id={story?.id} />
+               <div
+                  onClick={() => setIsCommentOpen(false)}
+                  className='absolute z-30 top-0 right-0 p-3 rounded-bl-3xl text-white text-2xl lg:text-5xl bg-gradient-to-tr from-primary bg-secondary hover:from-danger hover:to-primary cursor-pointer'
+               >
+                  <AiOutlineClose />
+               </div>
+            </Modal>
+         )}
       </div>
    )
 }

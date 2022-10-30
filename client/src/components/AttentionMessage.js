@@ -2,11 +2,11 @@ import React from 'react'
 
 const AttentionMessage = ({ title, children, profile }) => {
    return (
-      <div className='rounded-3xl overflow-hidden'>
+      <div className='rounded-3xl overflow-hidden max-w-[600px] w-full'>
          <div className='bg-gradient-to-tr from-secondary to-primary p-5'>
             <h3 className='text-white'>{title}</h3>
          </div>
-         <div className='p-5 text-white'>
+         <div className='p-5 text-white bg-dark'>
             {children}
             <br />
             <br />

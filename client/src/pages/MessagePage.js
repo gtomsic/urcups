@@ -104,7 +104,7 @@ const MessagePage = () => {
       <div className='flex gap-11'>
          <div
             id='messages'
-            className='flex-1 max-h-[80vh] overflow-y-auto pt-[80px]'
+            className='flex-1 h-[80vh] flex flex-col justify-end overflow-y-auto pt-[80px]'
          >
             {message?.length < 1 ? (
                <AttentionMessage

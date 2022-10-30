@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler')
 const db = require('../models')
-const sequelize = require('sequelize')
 const fs = require('fs')
 const { v4: uuid } = require('uuid')
 const { imageResize } = require('../utils/middlewareSharp')
@@ -70,16 +69,30 @@ module.exports.controllerGetAllPublicStories = asyncHandler(
    }
 )
 
+module.exports.controllerCreateStoryText = asyncHandler(async (req, res) => {
+   const { id, title, body } = req.body
+   await db.story.update(
+      {
+         title,
+         body,
+      },
+      { where: { id, user_id: req.user.id } }
+   )
+   const story = await db.story.findOne({ where: { id } })
+   if (story) {
+      return res.status(201).json(story)
+   }
+   throw new Error('Something went wrong try again later.')
+})
+
 module.exports.controllerCreateStory = asyncHandler(async (req, res) => {
    const fileName = uuid()
    const album = req.headers.album
-   const title = req.headers.storytitle
-   const body = req.headers.storybody
    const path = req.file.path
    await imageResize({
       path,
-      width: null,
-      height: 800,
+      width: 500,
+      height: null,
       quality: 100,
       album,
       location: `./users/${req.user.id}/${album}/${fileName}.jpg`,
@@ -88,8 +101,6 @@ module.exports.controllerCreateStory = asyncHandler(async (req, res) => {
    fs.unlinkSync(path)
    const story = await db.story.create({
       image: `/images/${req.user.id}/${album}/${fileName}.jpg`,
-      title,
-      body,
       user_id: req.user.id,
    })
    if (story) {

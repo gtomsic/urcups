@@ -12,17 +12,20 @@ import PrimaryButton from '../../components/PrimaryButton'
 import TextInput from '../../components/forms/TextInput'
 import {
    createStory,
+   createStoryText,
    getAllUserStories,
    selectStory,
    selectUserStories,
 } from '../../store/features/stories/storySlice'
 import Loader from '../../components/loader/Loader'
 import { useNavigate } from 'react-router-dom'
+import AttentionMessage from '../../components/AttentionMessage'
 
 const ProfileReader = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const [isOpen, setIsOpen] = useState(false)
+   const [messageBox, setMessageBox] = useState(false)
    const [limit, setLimit] = useState(100)
    const [offset, setOffset] = useState(0)
    const [image, setImage] = useState(null)
@@ -59,12 +62,29 @@ const ProfileReader = () => {
       setFile(e.target.files[0])
       setImage(URL.createObjectURL(e.target.files[0]))
    }
-   const onSubmitHandler = (e) => {
+   const onSubmitHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
       const data = new FormData()
       data.append('story', file)
-      dispatch(createStory({ token: user?.token, title, body, data }))
+      if (!Boolean(file) || !Boolean(title.trim()) || !Boolean(body.trim())) {
+         setMessageBox(true)
+         return
+      }
+      const createPhoto = await dispatch(
+         createStory({ token: user?.token, data })
+      )
+      if (createPhoto) {
+         const newBody = body?.split('\n').join('<br/>')
+         await dispatch(
+            createStoryText({
+               token: user?.token,
+               title,
+               body: newBody,
+               id: createPhoto?.payload?.id,
+            })
+         )
+      }
       onCancelHandler(e)
    }
    return (
@@ -113,6 +133,7 @@ const ProfileReader = () => {
                            title='Title of story'
                         />
                         <textarea
+                           type='text'
                            value={body}
                            onChange={(e) => setBody(e.target.value)}
                            name='body'
@@ -143,6 +164,18 @@ const ProfileReader = () => {
                >
                   <AiOutlineClose />
                </div>
+            </Modal>
+         )}
+
+         {!messageBox ? null : (
+            <Modal>
+               <AttentionMessage title='All filleds are required!'>
+                  <p>Please fill up the form completely.</p>
+                  <br />
+                  <PrimaryButton onClick={() => setMessageBox(false)}>
+                     Okay
+                  </PrimaryButton>
+               </AttentionMessage>
             </Modal>
          )}
       </div>
