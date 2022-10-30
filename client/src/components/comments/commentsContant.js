@@ -1,3 +1,3 @@
-export const ACTION = {
+export const commentAction = {
    SET_BODY: 'SET_BODY',
 }

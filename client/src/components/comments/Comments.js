@@ -1,45 +1,84 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AiOutlineClose } from 'react-icons/ai'
 
 import CommentsForm from './CommentsForm'
 import CommentItem from './CommentItem'
-import { ACTION } from './commentsContant'
+import Modal from '../Modal'
+import { commentAction } from './commentsContant'
 import { commentReducers } from './commentsReducers'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from '../../store/features/user/userSlice'
-const Comments = ({ story_id }) => {
+import {
+   createComments,
+   getComments,
+   resetComments,
+   selectComments,
+} from '../../store/features/comments/commentsSlice'
+import AttentionMessage from '../AttentionMessage'
+import Loader from '../loader/Loader'
+
+const Comments = ({ story_id, isOpen, closeComments }) => {
+   const reduxDispatch = useDispatch()
+   const isFetch = useRef(false)
    const { user } = useSelector(selectUser)
-   const reducerDispatch = useDispatch()
+   const { comments, commentsLoading } = useSelector(selectComments)
    const [state, dispatch] = useReducer(commentReducers, {
       story_id,
       body: '',
       user_id: user?.id,
+      token: user?.token,
    })
+   useEffect(() => {
+      if (isFetch.current === false) {
+         reduxDispatch(
+            getComments({ story_id, token: user?.token, offset: 0, limit: 30 })
+         )
+      }
+      return () => {
+         isFetch.current = true
+      }
+   }, [])
    const onSubmitHandler = (e) => {
       e.preventDefault()
       e.stopPropagation()
-      console.log(state)
+      reduxDispatch(createComments(state))
+      dispatch({ type: commentAction.SET_BODY, payload: '' })
    }
+   if (!isOpen) return
    return (
-      <div className='relative h-screen w-full max-w-[600px]'>
-         <CommentsForm
-            onSubmit={onSubmitHandler}
-            value={state.body}
-            onChange={(event) =>
-               dispatch({
-                  type: ACTION.SET_BODY,
-                  payload: event.target.value,
-               })
-            }
-         />
-         <div className='flex flex-col gap-2 p-3 bg-dark bg-opacity-50 rounded-lg h-[87vh]'>
-            <CommentItem />
-            <CommentItem />
-            <CommentItem />
-            <CommentItem />
-            <CommentItem />
-            <CommentItem />
+      <Modal>
+         <div className='relative h-screen w-full max-w-[600px] top-12 md:top-0'>
+            <CommentsForm
+               onSubmit={onSubmitHandler}
+               value={state.body}
+               onChange={(event) =>
+                  dispatch({
+                     type: commentAction.SET_BODY,
+                     payload: event.target.value,
+                  })
+               }
+            />
+            <div className='flex flex-col gap-2 p-3 bg-dark bg-opacity-50 rounded-lg h-[65vh] md:h-[87vh] overflow-y-scroll'>
+               {!commentsLoading ? null : <Loader>Loading comments...</Loader>}
+               {comments.rows?.length < 1 ? (
+                  <AttentionMessage title='No comments at moment.'>
+                     <p>Start your comment here.</p>
+                     <p>Please respect each other's privacy.</p>
+                  </AttentionMessage>
+               ) : (
+                  comments?.rows?.map((item) => (
+                     <CommentItem key={item?.id} comment={item} />
+                  ))
+               )}
+            </div>
          </div>
-      </div>
+         <div
+            onClick={closeComments}
+            className='absolute z-30 top-0 right-0 p-3 rounded-bl-3xl text-white text-2xl lg:text-5xl bg-gradient-to-tr from-primary bg-secondary hover:from-danger hover:to-primary cursor-pointer'
+         >
+            <AiOutlineClose />
+         </div>
+      </Modal>
    )
 }
 

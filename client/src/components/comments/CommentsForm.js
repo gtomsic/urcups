@@ -4,7 +4,7 @@ import PrimaryButton from '../PrimaryButton'
 
 const CommentsForm = ({ value, onChange, onSubmit }) => {
    return (
-      <form onSubmit={onSubmit} className='flex gap-1 items-center'>
+      <form onSubmit={onSubmit} className='flex px-2  gap-1 items-center'>
          <div className='flex-1'>
             <TextInput
                value={value}
