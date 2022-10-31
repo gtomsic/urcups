@@ -37,7 +37,10 @@ const HomePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [isFetch, limit, offset, dispatch, count, online, sexualOrientation])
+   }, [isFetch, limit, offset, dispatch, online, sexualOrientation])
+   useEffect(() => {
+      dispatch(setOffset(0))
+   }, [count])
    return (
       <div className='relative'>
          {/* Auto scroll to view */}

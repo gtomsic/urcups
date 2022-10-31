@@ -1,17 +1,18 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BsShieldLockFill } from 'react-icons/bs'
 import { MdMessage } from 'react-icons/md'
 
 import Avatar from '../components/Avatar'
 import Logo from '../components/Logo'
-import SearchInput from '../components/SearchInput'
+import urcups from '../assets/urcups256.png'
 import { selectUser } from '../store/features/user/userSlice'
 import { selectUnreadMessages } from '../store/features/messages/messagesSlice'
 
 const Header = () => {
    const { user } = useSelector(selectUser)
+   const location = useLocation()
    const navigate = useNavigate()
    const { unreadMessages } = useSelector(selectUnreadMessages)
    const MessagesNote = () => {
@@ -37,11 +38,18 @@ const Header = () => {
             <Link to='/'>
                <Logo />
             </Link>
-            <SearchInput />
+            {location.pathname !== '/' ? (
+               <img
+                  onClick={() => navigate('/')}
+                  src={urcups}
+                  alt='urcups logo'
+                  className='w-[100px] cursor-pointer'
+               />
+            ) : null}
             <div>
                {user?.id ? (
                   <div className='flex items-center gap-2'>
-                     <MessagesNote />
+                     {/* <MessagesNote /> */}
                      <Link to={`/profile/${user?.username}`}>
                         <Avatar
                            image={user?.thumbnail}

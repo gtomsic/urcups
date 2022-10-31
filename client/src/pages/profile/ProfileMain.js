@@ -14,34 +14,32 @@ const Profile = () => {
          </Card>
          <Card>
             {/* Hobbies */}
-            <h3>HOBBIES</h3>
+            <h3>Hobbies</h3>
             <div className='grid gap-5 grid-cols-2 lg:grid-cols-3'>
                {!profile?.hobbies
                   ? null
-                  : profile?.hobbies.split(',').map((hoby, index) => {
-                       return (
-                          <div
-                             key={index}
-                             className='py-5 text-center 
+                  : profile?.hobbies.split(',').map((hoby, index) => (
+                       <div
+                          key={index}
+                          className='py-5 text-center 
                text-white rounded-sm shadow-sm shadow-light'
-                          >
-                             {hoby}
-                          </div>
-                       )
-                    })}
+                       >
+                          {hoby}
+                       </div>
+                    ))}
             </div>
          </Card>
 
          {/* Looking for */}
          <Card>
-            <h3 className='text-white mb-5'>IDEAL PARTNER</h3>
+            <h3 className='text-white mb-5'>Ideal Partner</h3>
             <div
                dangerouslySetInnerHTML={{ __html: profile?.idealPartner }}
             ></div>
          </Card>
          {/* About Me */}
          <Card>
-            <h3 className='text-white mb-5 '>ABOUT ME</h3>
+            <h3 className='text-white mb-5 '>About Me</h3>
             <div dangerouslySetInnerHTML={{ __html: profile?.about }}></div>
          </Card>
       </>

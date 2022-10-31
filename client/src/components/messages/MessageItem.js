@@ -55,16 +55,16 @@ const MessageItem = ({ message, body, time }) => {
    return (
       <div
          onClick={onClickHandler}
-         className={`h-[80px] ${
+         className={`relative rounded-3xl overflow-hidden${
             message.user_id === user.id
                ? true
                : message.isRead
-               ? 'rounded-xl z-10 relative bg-gradient-to-tr from-gray  bg-dark flex gap-3 items-center overflow-hidden text-white cursor-pointer'
-               : 'rounded-xl z-10 relative bg-gradient-to-tr from-secondary  bg-primary flex gap-3 items-center overflow-hidden text-white cursor-pointer'
+               ? 'rounded-xl z-10 relative bg-gradient-to-tr from-dark  bg-darker flex gap-3 items-center overflow-hidden text-white cursor-pointer'
+               : 'rounded-xl z-10 relative bg-gradient-to-tr from-primary  bg-secondary flex gap-3 items-center overflow-hidden text-white cursor-pointer'
          }`}
       >
          <div
-            className='relative w-[90px] h-[90px] rounded-r-full m-[-10px] border-2 border-white mr-1'
+            className='relative h-[100px] w-[100px] border-r-2 border-white mr-1'
             style={{
                backgroundImage: `url(${url + profile?.avatar})`,
                backgroundSize: 'cover',
@@ -74,15 +74,15 @@ const MessageItem = ({ message, body, time }) => {
             {profile?.isOnline ? (
                <>
                   <span
-                     className={`z-10 absolute bottom-3 right-0 w-3 h-3 border-2 border-white rounded-full ${
+                     className={`z-10 absolute bottom-3 -right-[7px] w-3 h-3 border-2 border-white rounded-full ${
                         profile?.isOnline ? 'bg-secondary' : 'bg-gray'
                      }`}
                   ></span>
-                  <span className='z-0 animate-ping absolute bottom-3 right-0 w-3 h-3 inline-flex rounded-full bg-white opacity-95'></span>
+                  <span className='z-0 animate-ping absolute bottom-3 -right-[7px] w-3 h-3 inline-flex rounded-full bg-white opacity-95'></span>
                </>
             ) : null}
          </div>
-         <div className='flex flex-col flex-1 mr-3'>
+         <div className='flex flex-col flex-1 mr-3 py-3'>
             <div className='flex justify-between items-center text-white'>
                <p className='text-xl lg:text-lg'>
                   {profile?.username} / {profile?.age}

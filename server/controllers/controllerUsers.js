@@ -1,6 +1,19 @@
 const asyncHandler = require('express-async-handler')
 const db = require('../models')
 
+// @ USER GET SINGLE PUBLIC USER
+// @ PUBLIC
+// @ GET
+module.exports.controllerGetSinglePublicUser = asyncHandler(
+   async (req, res) => {
+      const user = await db.user.findOne({ where: { id: req.params.user_id } })
+      res.send(user)
+   }
+)
+
+// @ USER GET USERS BY LIMIT
+// @ PUBLIC
+// @ GET
 module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
    const { offset, limit, sexualOrientation, online } = req.body
    console.log({ online: online })

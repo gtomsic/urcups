@@ -202,7 +202,7 @@ module.exports.controllerGetAllUser = asyncHandler(async (req, res) => {
    const users = await db.user.findAll()
    res.send(users)
 })
-// @ USER GET SINGLE USER WITH ID
+// @ USER GET SINGLE USER with id
 // @ Private
 // @ GET
 module.exports.controllerGetUserWithId = asyncHandler(async (req, res) => {

@@ -80,7 +80,7 @@ db.sequelize.sync().then(() =>
       console.log(
          `Server running on http://10.0.0.50:${PORT}`.yellow.bold.inverse
       )
-      const orientation = ['Straight', 'Gay', 'Bi', 'Lesbian', 'Transgender']
+      // const orientation = ['Straight', 'Gay', 'Bi', 'Lesbian', 'Transgender']
       // for (let i = 0; i < 100; i++) {
       //    let id = uuid()
       //    let randomValue = Math.floor(Math.random() * 2 + 1)
@@ -99,11 +99,11 @@ db.sequelize.sync().then(() =>
       //       stateProvince: 'Utah',
       //       country: 'USA',
       //       isOnline: Math.floor(Math.random() * 2 + 1) === 1 ? true : false,
-      //       password: 'R@mlec28',
-      //       confirmPassword: 'R@mlec28',
+      //       password: 'gabriel',
+      //       confirmPassword: 'gabriel',
       //    })
       //    await db.config.create({
-      //       password: bcrypt.hashSync('R@mlec28', 10),
+      //       password: bcrypt.hashSync('gabriel', 10),
       //       email: `gabriel${i}@gmail.com`,
       //       isActivated: true,
       //       user_id: id,

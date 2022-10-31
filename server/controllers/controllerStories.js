@@ -25,20 +25,10 @@ module.exports.controllerGetAllUserStories = asyncHandler(async (req, res) => {
    const { limit, offset, id } = req.params
    const stories = await db.story.findAndCountAll({
       where: { user_id: id },
-      order: [['createdAt', 'DESC']],
+      order: [['updatedAt', 'DESC']],
       offset: Number(offset) * Number(limit),
       limit: Number(limit),
       subQuery: false,
-      include: [
-         {
-            model: db.love,
-            attributes: [],
-         },
-         {
-            model: db.comment,
-            attributes: [],
-         },
-      ],
    })
    if (stories) {
       return res.status(200).json(stories)
@@ -49,18 +39,10 @@ module.exports.controllerGetAllPublicStories = asyncHandler(
    async (req, res) => {
       const { limit, offset } = req.params
       const stories = await db.story.findAndCountAll({
-         order: [['createdAt', 'DESC']],
+         order: [['updatedAt', 'DESC']],
          offset: Number(offset) * Number(limit),
          limit: Number(limit),
          subQuery: false,
-         include: [
-            {
-               model: db.love,
-            },
-            {
-               model: db.comment,
-            },
-         ],
       })
       if (stories) {
          return res.status(200).json(stories)

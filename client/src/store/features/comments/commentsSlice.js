@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { serviceCreateComment, serviceGetComments } from './serviceComments'
+import {
+   serviceCountComments,
+   serviceCreateComment,
+   serviceGetComments,
+   seviceDeleteComments,
+} from './serviceComments'
 
 const initialState = {
    comments: { rows: [], count: 0 },
@@ -8,6 +13,56 @@ const initialState = {
    commentsError: false,
    commentsMessage: '',
 }
+
+export const deleteComments = createAsyncThunk(
+   'user/deleteComments',
+   async (data, thunkApi) => {
+      try {
+         return await seviceDeleteComments(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+export const countComments = createAsyncThunk(
+   'user/countComments',
+   async (story_id, thunkApi) => {
+      try {
+         return await serviceCountComments(story_id)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
+export const moreComments = createAsyncThunk(
+   'user/moreComments',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetComments(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 
 export const getComments = createAsyncThunk(
    'user/getComments',
@@ -61,7 +116,6 @@ const commentsSlice = createSlice({
             state.commentsLoading = true
          })
          .addCase(createComments.fulfilled, (state, action) => {
-            console.log(action.payload)
             state.commentsLoading = false
             state.commentsSuccess = true
             state.comments.rows = [action.payload, ...state.comments.rows]
@@ -77,13 +131,56 @@ const commentsSlice = createSlice({
          .addCase(getComments.fulfilled, (state, action) => {
             state.commentsLoading = false
             state.commentsSuccess = true
+            state.comments = action.payload
+         })
+         .addCase(getComments.rejected, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = false
+            state.commentsMessage = action.payload
+         })
+         .addCase(moreComments.pending, (state) => {
+            state.commentsLoading = true
+         })
+         .addCase(moreComments.fulfilled, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = true
             state.comments.rows = [
                ...state.comments.rows,
                ...action.payload.rows,
             ]
+         })
+         .addCase(moreComments.rejected, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = false
+            state.commentsMessage = action.payload
+         })
+         .addCase(countComments.pending, (state) => {
+            state.commentsLoading = true
+         })
+         .addCase(countComments.fulfilled, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = true
             state.comments.count = action.payload.count
          })
-         .addCase(getComments.rejected, (state, action) => {
+         .addCase(countComments.rejected, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = false
+            state.commentsMessage = action.payload
+         })
+         .addCase(deleteComments.pending, (state) => {
+            state.commentsLoading = true
+         })
+         .addCase(deleteComments.fulfilled, (state, action) => {
+            state.commentsLoading = false
+            state.commentsSuccess = true
+            const newRows = state.comments.rows.filter(
+               (item) => item.id !== Number(action.payload.id)
+            )
+
+            state.comments.rows = newRows
+            state.comments.count = state.comments.count - 1
+         })
+         .addCase(deleteComments.rejected, (state, action) => {
             state.commentsLoading = false
             state.commentsSuccess = false
             state.commentsMessage = action.payload

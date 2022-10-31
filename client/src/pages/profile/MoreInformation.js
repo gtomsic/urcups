@@ -3,7 +3,7 @@ import React from 'react'
 const MoreInformation = ({ user }) => {
    return (
       <>
-         <h3>MORE INFORMATION</h3>
+         <h3>Details</h3>
          <div className='grid grid-cols-1 gap-1 md:grid-cols-2'>
             <div className='grid grid-cols-2'>
                <span>Marital Status:</span>

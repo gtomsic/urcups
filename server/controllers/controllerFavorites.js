@@ -7,7 +7,6 @@ const asyncHandler = require('express-async-handler')
 module.exports.controllerFavoritesGetByLimit = asyncHandler(
    async (req, res) => {
       const { offset, limit } = req.params
-      console.log(limit, offset)
       const user_id = req.user.id
       const favorites = await db.favorite.findAll({
          where: { user_id },

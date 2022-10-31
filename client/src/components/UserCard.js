@@ -7,7 +7,13 @@ function UserCard({ user }) {
    //    ? user?.avatar
    //    : user.avatar.replace('avatar', 'avatar')
    return (
-      <div className='relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-br from-secondary to-primary pb-[100px]'>
+      <div
+         className={
+            user?.isOnline
+               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-br from-secondary to-primary pb-[100px]'
+               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-br from-dark to-darker pb-[100px]'
+         }
+      >
          <div
             className='relative bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[300px] cursor-pointer overflow-hidden'
             style={{

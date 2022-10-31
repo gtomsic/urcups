@@ -11,6 +11,7 @@ import { selectUser } from '../store/features/user/userSlice'
 
 const MessagesPage = () => {
    const isFetch = useRef(false)
+   const scrollView = useRef(null)
    const navigate = useNavigate()
    const dispatch = useDispatch()
    const location = useLocation()
@@ -22,6 +23,7 @@ const MessagesPage = () => {
    }
 
    useEffect(() => {
+      scrollView.current.scrollIntoView()
       if (isFetch.current === false && location.pathname === '/messages') {
          dispatch(
             getAllMessages({
@@ -43,6 +45,7 @@ const MessagesPage = () => {
    }
    return (
       <>
+         <div ref={scrollView} />
          {messages?.length < 1 ? (
             <AttentionMessage title='No messages!'>
                <br />

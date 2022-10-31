@@ -32,7 +32,7 @@ const Logo = () => {
             ) : (
                <>
                   <div
-                     className='w-10 aspect-square rounded-full border-2 border-primary md:block lg:hidden'
+                     className='w-9 aspect-square rounded-full border-2 border-primary md:block lg:hidden'
                      style={{
                         backgroundImage: `url(${logo})`,
                         backgroundSize: 'cover',
@@ -43,7 +43,7 @@ const Logo = () => {
                   <img
                      src={logoName}
                      alt='Urcups Logo'
-                     className='max-w-[120px] hidden lg:block'
+                     className='max-w-[100px] hidden lg:block'
                   />
                </>
             )}

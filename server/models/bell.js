@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-   const notifcation = sequelize.define('notifcation', {
+   const bell = sequelize.define('bell', {
       id: {
          type: DataTypes.UUID,
          allowNull: false,
@@ -17,14 +17,10 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.UUID,
          allowNull: false,
       },
-      sender: {
-         type: DataTypes.UUID,
-         allowNull: false,
-      },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
    })
-   return notifcation
+   return bell
 }

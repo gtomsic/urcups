@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { serviceCountComments } from '../../store/features/comments/serviceComments'
 import {
    serviceAddRemoveLoves,
    serviceCheckLove,
@@ -10,6 +11,7 @@ import { selectUser } from '../../store/features/user/userSlice'
 
 const StoryItem = ({ story }) => {
    const isFetch = useRef(false)
+   const dispatch = useDispatch()
    const [loves, setLoves] = useState(0)
    const [comments, setComments] = useState(0)
    const [isLove, setIsLove] = useState(false)
@@ -27,6 +29,8 @@ const StoryItem = ({ story }) => {
                })
                setIsLove(response)
             }
+            const response = await serviceCountComments(story.id)
+            setComments(response.count)
          }
          fetchingLove()
       }

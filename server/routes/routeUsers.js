@@ -26,6 +26,7 @@ router.post(
    upload.single('wallpaper'),
    controllerUpdateWallpaper
 )
+
 router.get('/user/:id', auth, controllerGetUserWithId)
 router.get('/:username', controllerGetSingleUser)
 router.post('/', controllerRegisterUser)

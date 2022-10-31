@@ -1,4 +1,10 @@
 import axios from '../../../apis/axios'
+import _ from 'lodash'
+
+export const fetchUser = _.memoize(async (user_id) => {
+   const response = await axios.get(`/api/public/${user_id}`)
+   return response.data
+})
 
 export const serviceUpdateWallpaper = async (formData) => {
    const config = {
