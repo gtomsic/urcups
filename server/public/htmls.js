@@ -30,7 +30,7 @@ module.exports.viewedProfile = (data) => {
     
     .btn {
       display: inline-block;
-      padding: 20px 50px;
+      padding: 15px 0;
       background: linear-gradient(to top right, #06b6d4, #6d28d9);
       border: 2px solid #ffffff;
       border-radius: 0.5rem;
@@ -43,7 +43,7 @@ module.exports.viewedProfile = (data) => {
     .header {
       height: 100px;
       width: 100%;
-      background: #111111;
+      background: linear-gradient(to top right, #6d28d9, #111111);
       margin: 0;
       display: flex;
       justify-content: center;
@@ -57,12 +57,11 @@ module.exports.viewedProfile = (data) => {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 100px;
-      width: 100%;
-      padding-top: 50px; }
+      padding: 50px 20px 100px 20px;
+      width: 100%; }
       main .box {
-        max-width: 450px;
-        margin: 0 20px;
+        max-width: 400px;
+        margin-top: 50px;
         width: 100%;
         background: linear-gradient(to top right, #6d28d9, #222222);
         border-radius: 1rem;
@@ -100,14 +99,14 @@ module.exports.viewedProfile = (data) => {
     
     .footer {
       display: block;
-      max-width: 450px;
+      max-width: 400px;
       margin: 50px 20px;
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #666666; }
-   
+    
       </style>
    </head>
    <body>

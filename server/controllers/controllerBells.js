@@ -23,7 +23,7 @@ module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
       const bell = await db.bell.create({
          id: uuid(),
          title: 'Profile',
-         body: `User ${req.user.username} viewed your profile.`,
+         body: `${req.user.username} viewed your profile.`,
          receiver: req.body.user_id,
          user_id: req.user.id,
       })
@@ -31,7 +31,7 @@ module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
          user.email,
          `Hi ${req.user.username} just visit you.`,
          viewedProfile({
-            title: 'Notification bell!',
+            title: 'Hey there!',
             body: bell.body,
             avatar: process.env.SERVER_HOST + req.user.avatar,
             link: process.env.WEB_HOST + `/profile/${req.user.username}`,

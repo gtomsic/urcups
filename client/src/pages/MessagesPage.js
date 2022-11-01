@@ -59,7 +59,7 @@ const MessagesPage = () => {
                   <div
                      onClick={(e) => onClickHandler(e, message.user_id)}
                      key={message.id}
-                     className='shadow-md hover:shadow-secondary rounded-xl'
+                     className='shadow-md hover:shadow-secondary rounded-3xl'
                   >
                      <MessageItem
                         key={message.id}

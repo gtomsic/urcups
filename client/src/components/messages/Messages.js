@@ -30,21 +30,17 @@ const Messages = () => {
       }
    }, [messagesLimit, messagesOffset, user])
    return (
-      <div className='h-[480px] overflow-scroll '>
+      <div className='h-[480px] overflow-scroll flex flex-col gap-1'>
          {messages?.map((message) => (
-            <div
+            <MessageItem
                key={message.id}
-               className='my-2 shadow-md hover:shadow-secondary rounded-2xl'
-            >
-               <MessageItem
-                  image={message.avatar}
-                  isRead={message.isRead}
-                  isOnline={message.isOnline}
-                  body={message.body}
-                  time={message.createdAt}
-                  message={message}
-               />
-            </div>
+               image={message.avatar}
+               isRead={message.isRead}
+               isOnline={message.isOnline}
+               body={message.body}
+               time={message.createdAt}
+               message={message}
+            />
          ))}
       </div>
    )

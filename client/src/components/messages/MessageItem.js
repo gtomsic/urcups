@@ -59,8 +59,8 @@ const MessageItem = ({ message, body, time }) => {
             message.user_id === user.id
                ? true
                : message.isRead
-               ? 'rounded-xl z-10 relative bg-gradient-to-tr from-dark  bg-darker flex gap-3 items-center overflow-hidden text-white cursor-pointer'
-               : 'rounded-xl z-10 relative bg-gradient-to-tr from-primary  bg-secondary flex gap-3 items-center overflow-hidden text-white cursor-pointer'
+               ? 'z-10 relative bg-gradient-to-tr from-dark  bg-darker flex gap-3 items-center overflow-hidden text-white cursor-pointer'
+               : 'z-10 relative bg-gradient-to-tr from-primary  bg-secondary flex gap-3 items-center overflow-hidden text-white cursor-pointer'
          }`}
       >
          <div
