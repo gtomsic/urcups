@@ -127,7 +127,7 @@ const userSlice = createSlice({
    name: 'user',
    initialState,
    reducers: {
-      reset: (state) => {
+      resetUser: (state) => {
          state.isLoading = false
          state.isSuccess = false
          state.isError = false
@@ -234,7 +234,7 @@ const userSlice = createSlice({
    },
 })
 
-export const { reset, updateUserDetail } = userSlice.actions
+export const { resetUser, updateUserDetail } = userSlice.actions
 export default userSlice.reducer
 
 // SELECTORS

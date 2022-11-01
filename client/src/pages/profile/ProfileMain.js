@@ -1,11 +1,34 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Card from '../../components/Card'
 import MoreInformation from './MoreInformation'
 import { selectProfile } from '../../store/features/profile/profileSlice'
+import { useEffect } from 'react'
+import { selectUser } from '../../store/features/user/userSlice'
+import { createBells } from '../../store/features/bells/bellsSlice'
 
 const Profile = () => {
+   const isFetch = useRef(false)
+   const dispatch = useDispatch()
+   const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
+   useEffect(() => {
+      let timerId
+      if (profile?.id !== user?.id && user?.id) {
+         timerId = setTimeout(() => {
+            dispatch(
+               createBells({
+                  title: 'viewedProfiles',
+                  user_id: profile?.id,
+                  token: user?.token,
+               })
+            )
+         }, 500)
+      }
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [profile])
    if (!profile?.id) return
    return (
       <>

@@ -20,8 +20,8 @@ const Messages = () => {
             getAllMessages({
                offset: 0,
                limit: messagesLimit,
-               token: user.token,
-               user_id: user.id,
+               token: user?.token,
+               user_id: user?.id,
             })
          )
       }

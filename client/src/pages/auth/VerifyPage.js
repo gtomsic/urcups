@@ -1,15 +1,20 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import ErrorMessage from '../../components/ErrorMessage'
-import TextInput from '../../components/forms/TextInput'
+import PrimaryButton from '../../components/PrimaryButton'
 import Loader from '../../components/loader/Loader'
-import { reset, selectUser, verify } from '../../store/features/user/userSlice'
+import {
+   resetUser,
+   selectUser,
+   verify,
+} from '../../store/features/user/userSlice'
 
 const VerifyPage = () => {
    const isFetch = useRef(false)
    const params = useParams()
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const { isLoading, isSuccess, isError, message } = useSelector(selectUser)
    useEffect(() => {
       if (isFetch.current === false) {
@@ -19,6 +24,10 @@ const VerifyPage = () => {
          isFetch.current = true
       }
    }, [params, dispatch])
+   const onClickHandler = () => {
+      dispatch(resetUser())
+      navigate('/auth')
+   }
    return (
       <div className='text-white flex flex-col gap-4'>
          {isLoading ? <Loader>Verifying user...</Loader> : null}
@@ -28,13 +37,7 @@ const VerifyPage = () => {
                <h3>Verification Success</h3>
                <p>You can go and login now.</p>
                <p>Please respects other's privacy. Thank you</p>
-               <Link to='/auth'>
-                  <TextInput
-                     type='button'
-                     value='Go To Login'
-                     bg='bg-secondary bg-gradient-to-bl from-primary hover:bg-warning duration-300'
-                  />
-               </Link>
+               <PrimaryButton onClick={onClickHandler}>Login</PrimaryButton>
             </>
          )}
       </div>

@@ -40,7 +40,7 @@ const MessagePage = () => {
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    if (!user?.id) {
-      navigate('/')
+      navigate('/auth')
    }
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
@@ -62,18 +62,18 @@ const MessagePage = () => {
       const fetchSync = async () => {
          if (isFetch.current === true) {
             await dispatch(
-               getMessageUserProfile({ user_id: params.id, token: user.token })
+               getMessageUserProfile({ user_id: params.id, token: user?.token })
             )
             await dispatch(
                getRoomMessages({
                   offset: messageOffset,
                   limit: messageLimit,
-                  token: user.token,
+                  token: user?.token,
                   user_id: params.id,
                })
             )
             await dispatch(
-               countAllUnreadMessages({ token: user.token, user_id: user.id })
+               countAllUnreadMessages({ token: user?.token, user_id: user.id })
             )
          }
       }
@@ -97,7 +97,7 @@ const MessagePage = () => {
          attachment: attachment.length > 0 ? attachment.join(',') : '',
          receiver: params.id,
       }
-      await dispatch(sendMessage({ data, token: user.token }))
+      await dispatch(sendMessage({ data, token: user?.token }))
       setBody('')
    }
    return (

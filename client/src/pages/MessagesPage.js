@@ -19,7 +19,8 @@ const MessagesPage = () => {
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
    if (!user?.id) {
-      navigate('/')
+      localStorage.setItem('redirect', JSON.stringify(location.pathname))
+      navigate('/auth')
    }
 
    useEffect(() => {
@@ -29,8 +30,8 @@ const MessagesPage = () => {
             getAllMessages({
                offset: messagesOffset,
                limit: messagesLimit,
-               token: user.token,
-               user_id: user.id,
+               token: user?.token,
+               user_id: user?.id,
             })
          )
       }

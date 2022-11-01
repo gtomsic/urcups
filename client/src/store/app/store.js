@@ -9,6 +9,7 @@ import messagesReducer from '../features/messages/messagesSlice'
 import favoritesReducer from '../features/favorites/favoritesSlice'
 import storySlice from '../features/stories/storySlice'
 import commentsSlice from '../features/comments/commentsSlice'
+import bellsSlice from '../features/bells/bellsSlice'
 
 export const store = configureStore({
    reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
       favorites: favoritesReducer,
       story: storySlice,
       comments: commentsSlice,
+      bells: bellsSlice,
    },
 })

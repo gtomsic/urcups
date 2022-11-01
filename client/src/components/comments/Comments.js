@@ -92,7 +92,20 @@ const Comments = () => {
                   </AttentionMessage>
                ) : null}
                {comments.rows.map((item) => (
-                  <CommentItem key={item?.id} comment={item} />
+                  <CommentItem
+                     key={item?.id}
+                     comment={item}
+                     getComments={() =>
+                        reduxDispatch(
+                           getComments({
+                              story_id: params.story_id,
+                              token: user?.token,
+                              offset: state.offset,
+                              limit: state.limit,
+                           })
+                        )
+                     }
+                  />
                ))}
                {!commentsLoading ? null : <Loader>Loading comments...</Loader>}
                {comments?.count === comments?.rows?.length ? (

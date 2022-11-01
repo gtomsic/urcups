@@ -7,7 +7,7 @@ import { fetchUser } from '../../store/features/user/userService'
 import { selectUser } from '../../store/features/user/userSlice'
 import Avatar from '../Avatar'
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, getComments }) => {
    const isFetch = useRef(false)
    const reduxDispatch = useDispatch()
    const [body, setBody] = useState(comment?.body)
@@ -42,6 +42,7 @@ const CommentItem = ({ comment }) => {
          body,
          token: user?.token,
       })
+      getComments()
       setBody(response.body)
    }
    const onDeleteHandler = async (e) => {

@@ -8,6 +8,7 @@ const Op = require('sequelize').Op
 const { makeToken } = require('../utils/middlewareJwt')
 const { sendEmail } = require('../utils/nodemailer')
 const { imageResize } = require('../utils/middlewareSharp')
+const { verifyEmail } = require('../public/htmls')
 
 module.exports.controllerUpdateUserInfo = asyncHandler(async (req, res) => {
    const {
@@ -255,15 +256,11 @@ module.exports.controllerGetSingleUser = asyncHandler(async (req, res) => {
 module.exports.controllerVerifyUser = asyncHandler(async (req, res) => {
    const token = req.params.token
    const decode = jwt.verify(token, process.env.JWT_SECRET)
-   await db.config.update(
+   const activate = await db.config.update(
       { isActivated: true },
       { where: { user_id: decode.id } }
    )
-   const activated = await db.config.findOne({ where: { user_id: decode.id } })
-   if (activated?.isActivated) {
-      return res.send({ token: makeToken(decode.id) })
-   }
-   throw new Error('Server error try again later.')
+   res.send(activate)
 })
 // @ USER LOGIN
 // @ PUBLIC
@@ -365,7 +362,6 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
    // CREATE USER INFO
    await db.info.create({
       user_id: user.id,
-      height: '/',
       idealPartner: '<br>',
       about: '<br>',
    })
@@ -380,11 +376,10 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
    sendEmail(
       createConfig.email,
       `Hi ${user.username} please verify your email to login.`,
-      `<a href="${process.env.WEB_HOST}/auth/verify/${makeToken(
-         user.id
-      )}">Click here to veirify. </a> <p>${
-         process.env.WEB_HOST
-      }/auth/verify/${makeToken(user.id)}</p>`
+      verifyEmail({
+         link: `${process.env.WEB_HOST}/auth/verify/${makeToken(user.id)}`,
+         username: user.username,
+      })
    )
 
    res.send({ token: makeToken(user.id) })
