@@ -5,6 +5,17 @@ const asyncHandler = require('express-async-handler')
 const { viewedProfile } = require('../public/htmls')
 const { sendEmail } = require('../utils/nodemailer')
 
+module.exports.controllerGetBells = asyncHandler(async (req, res) => {
+   const bells = await db.bell.findAndCountAll({
+      where: { receiver: req.user.id },
+      order: [['createdAt', 'DESC']],
+      offset: Number(req.params.offset) * Number(req.params.limit),
+      limit: Number(req.params.limit),
+      subQuery: false,
+   })
+   res.status(200).json(bells)
+})
+
 module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
    const TODAY_START = new Date().setHours(0, 0, 0, 0)
    const NOW = new Date()

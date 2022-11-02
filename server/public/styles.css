@@ -43,11 +43,10 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 50px 20px 100px 20px;
+  padding: 50px 20px;
   width: 100%; }
   main .box {
     max-width: 400px;
-    margin-top: 50px;
     width: 100%;
     background: linear-gradient(to top right, #6d28d9, #222222);
     border-radius: 1rem;
@@ -82,6 +81,15 @@ main {
           letter-spacing: 3px; }
         main .box-content__body h5 {
           letter-spacing: 1px; }
+
+ul {
+  width: 400px;
+  padding: 0 20px;
+  margin-top: 50px;
+  color: gray;
+  display: flex;
+  list-style: none;
+  justify-content: space-between; }
 
 .footer {
   display: block;

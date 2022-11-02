@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { serviceCreateBells } from './serviceBells'
+import { serviceCreateBells, serviceGetBells } from './serviceBells'
 
 const initialState = {
    bell: {},
@@ -7,7 +7,7 @@ const initialState = {
    bellSuccess: false,
    bellError: false,
    bellMessage: '',
-   bells: [],
+   bells: { rows: [], count: 0 },
    bellsLoading: false,
    bellsSuccess: false,
    bellsError: false,
@@ -16,6 +16,19 @@ const initialState = {
    bellsLimit: 30,
 }
 
+export const getBells = createAsyncThunk('getBells', async (data, thunkApi) => {
+   try {
+      return await serviceGetBells(data)
+   } catch (error) {
+      const message =
+         (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+         error.message ||
+         error.toString()
+      return thunkApi.rejectWithValue(message)
+   }
+})
 export const createBells = createAsyncThunk(
    'createBells',
    async (data, thunkApi) => {
@@ -45,7 +58,7 @@ const bellsSlice = createSlice({
          state.bellMessage = ''
       },
       resetBells: (state) => {
-         state.bells = {}
+         state.bells = { rows: [], count: 0 }
          state.bellsLoading = false
          state.bellsSuccess = false
          state.bellsError = false
@@ -67,6 +80,21 @@ const bellsSlice = createSlice({
             state.bellSuccess = false
             state.bellError = true
             state.bellMessage = action.payload
+         })
+         .addCase(getBells.pending, (state) => {
+            state.bellsLoading = true
+         })
+         .addCase(getBells.fulfilled, (state, action) => {
+            state.bellsLoading = false
+            state.bellsSuccess = true
+            state.bells = action.payload
+            state.bells = action.payload
+         })
+         .addCase(getBells.rejected, (state, action) => {
+            state.bellsLoading = false
+            state.bellsSuccess = false
+            state.bellsError = true
+            state.bellsMessage = action.payload
          })
    },
 })

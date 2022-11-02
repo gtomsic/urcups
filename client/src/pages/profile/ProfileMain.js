@@ -1,11 +1,13 @@
 import React, { useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Card from '../../components/Card'
-import MoreInformation from './MoreInformation'
-import { selectProfile } from '../../store/features/profile/profileSlice'
 import { useEffect } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { selectProfile } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import { createBells } from '../../store/features/bells/bellsSlice'
+
+import Card from '../../components/Card'
+import MoreInformation from './MoreInformation'
 
 const Profile = () => {
    const isFetch = useRef(false)
@@ -14,7 +16,7 @@ const Profile = () => {
    const { profile } = useSelector(selectProfile)
    useEffect(() => {
       let timerId
-      if (profile?.id !== user?.id && user?.id) {
+      if (profile?.id !== user?.id && user?.id && isFetch.current === false) {
          timerId = setTimeout(() => {
             dispatch(
                createBells({
@@ -55,14 +57,14 @@ const Profile = () => {
 
          {/* Looking for */}
          <Card>
-            <h3 className='text-white mb-5'>Ideal Partner</h3>
+            <h3 className='text-white'>Ideal Partner</h3>
             <div
                dangerouslySetInnerHTML={{ __html: profile?.idealPartner }}
             ></div>
          </Card>
          {/* About Me */}
          <Card>
-            <h3 className='text-white mb-5 '>About Me</h3>
+            <h3 className='text-white '>About Me</h3>
             <div dangerouslySetInnerHTML={{ __html: profile?.about }}></div>
          </Card>
       </>

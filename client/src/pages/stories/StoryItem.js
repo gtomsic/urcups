@@ -54,7 +54,7 @@ const StoryItem = ({ story }) => {
       setLoves(response)
    }
    return (
-      <div className='relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-secondary text-light cursor-pointer'>
+      <div className='relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-primary text-light cursor-pointer'>
          {!story?.image ? (
             <div className='flex justify-center items-center rounded-2xl h-[300px] bg-gradient-to-tr from-secondary to-primary text-white'>
                <h3>No Image</h3>

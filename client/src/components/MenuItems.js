@@ -19,6 +19,7 @@ import {
    selectAllMessages,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
+import { getBells, selectBells } from '../store/features/bells/bellsSlice'
 
 const MenuItems = () => {
    const isFetch = useRef(false)
@@ -29,6 +30,23 @@ const MenuItems = () => {
    const { messages, messagesLimit, messagesOffset } =
       useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
+   const { bellsOffset, bellsLimit, bells } = useSelector(selectBells)
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         if (location.pathname !== '/bells') {
+            dispatch(
+               getBells({
+                  limit: bellsLimit,
+                  offset: bellsOffset,
+                  token: user?.token,
+               })
+            )
+         }
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [user, messages])
    useEffect(() => {
       // io.on(user?.id, (msg) => {
       //    if (user?.id && msg.user_id !== user?.id) {
@@ -59,6 +77,7 @@ const MenuItems = () => {
       //    isFetch.current = true
       // }
    }, [user, messages])
+
    const logoutHandler = () => {
       dispatch(logout(user.id))
    }
@@ -106,7 +125,7 @@ const MenuItems = () => {
                         <div className='relative'>
                            <FaBell />
                            <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
-                              17
+                              {bells?.count}
                            </span>
                         </div>
                         <div className='hidden xl:block'>Bells</div>

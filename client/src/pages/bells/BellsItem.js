@@ -1,24 +1,53 @@
 import React from 'react'
 import moment from 'moment'
+import { IoTrashOutline } from 'react-icons/io5'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { fetchUser } from '../../store/features/user/userService'
 import { useSelector } from 'react-redux'
-import { MdClose } from 'react-icons/md'
+import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const BellsItem = ({ user }) => {
+const BellsItem = ({ bell }) => {
+   const isFetch = useRef(false)
+   const navigate = useNavigate()
+   const [profile, setProfile] = useState({})
    const url = useSelector((state) => state.url)
+   useEffect(() => {
+      let timerId = setTimeout(() => {
+         const fetchingUser = async () => {
+            const response = await fetchUser(bell.user_id)
+            setProfile(response)
+         }
+         fetchingUser()
+      }, 200)
+
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [bell])
+   const onClickHandler = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      navigate(`/${bell?.title.toLowerCase()}/${profile?.username}`)
+   }
    return (
-      <div className='relative rounded-3xl bg-gradient-to-tr from-primary to-secondary flex gap-2 overflow-hidden cursor-pointer'>
+      <div
+         onClick={onClickHandler}
+         className='relative rounded-3xl bg-gradient-to-tr from-primary to-secondary flex gap-2 overflow-hidden cursor-pointer'
+      >
          <img
-            src={url + user.avatar}
-            alt={user.avatar}
+            src={url + profile?.avatar}
+            alt={profile?.avatar}
             className='max-h-[100px]'
          />
-         <div className='my-2 text-white'>
-            <h4>{user.username}</h4>
+         <div className='my-2 flex-1 text-white'>
+            <h4>{profile?.username}</h4>
             <p>Just view your profile</p>
-            <small>{moment(user.updatedAt).fromNow()}</small>
+            <small>{moment(bell?.updatedAt).fromNow()}</small>
          </div>
-         <div className='absolute top-2 right-2 p-2 rounded-full border border-white text-white hover:bg-danger duration-300 cursor-pointer'>
-            <MdClose />
+         <div className='border-l border-white w-8 flex justify-center items-center text-white bg-primary hover:bg-danger duration-300'>
+            <IoTrashOutline />
          </div>
       </div>
    )
