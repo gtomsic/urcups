@@ -54,12 +54,15 @@ const MessagesPage = () => {
                <p>Start browsing profile now!</p>
             </AttentionMessage>
          ) : (
-            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 lg:grid-cols-3'>
+            <div
+               className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 xl:grid-cols-3
+            '
+            >
                {messages?.map((message) => (
                   <div
                      onClick={(e) => onClickHandler(e, message.user_id)}
                      key={message.id}
-                     className='shadow-md hover:shadow-secondary rounded-3xl'
+                     className='shadow-md hover:shadow-secondary duration-300 rounded-3xl'
                   >
                      <MessageItem
                         key={message.id}

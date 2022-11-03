@@ -16,7 +16,6 @@ import PhotoLayout from '../../components/photos/PhotoLayout'
 import { useParams } from 'react-router-dom'
 
 const ProfilePhotos = () => {
-   const isFetch = useRef(false)
    const [pages, setPages] = useState(null)
    const [select, setSelect] = useState(false)
    const [toDelete, setToDelete] = useState([])
@@ -32,17 +31,19 @@ const ProfilePhotos = () => {
       publicPhotosLimit,
    } = useSelector(selectPublicPhotos)
    useEffect(() => {
-      dispatch(
-         getPublicPhotos({
-            user_id: profile?.id,
-            token: user?.token,
-            offset: publicPhotosOffset,
-            limit: publicPhotosLimit,
-         })
-      )
+      const timerId = setTimeout(() => {
+         dispatch(
+            getPublicPhotos({
+               user_id: profile?.id,
+               token: user?.token,
+               offset: publicPhotosOffset,
+               limit: publicPhotosLimit,
+            })
+         )
+      }, 200)
       return () => {
-         isFetch.current = true
          dispatch(resetPhotos())
+         clearTimeout(timerId)
       }
    }, [
       dispatch,

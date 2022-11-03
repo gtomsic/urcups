@@ -21,6 +21,7 @@ import AttentionMessage from '../components/AttentionMessage'
 import MessageProfileCard from '../components/messages/MessageProfileCard'
 import Messages from '../components/messages/Messages'
 import Avatar from '../components/Avatar'
+import { actionBells } from '../store/features/bells/bellsSlice'
 
 const MessagePage = () => {
    const navigate = useNavigate()
@@ -35,13 +36,31 @@ const MessagePage = () => {
    const { user } = useSelector(selectUser)
    const { userTyping } = useSelector(selectIsTyping)
    const { userProfile } = useSelector(selectMessageUserProfile)
-   const { message, messageOffset, messageLimit, messageError } =
+   const { message, messageOffset, messageLimit, messageSuccess } =
       useSelector(selectMessage)
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    if (!user?.id) {
       navigate('/auth')
    }
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         if (messageSuccess === true) {
+            dispatch(
+               actionBells({
+                  title: 'new message!',
+                  link: `/messages`,
+                  user_id: userProfile?.id,
+                  body: `${user?.username} sent you message.`,
+                  token: user?.token,
+               })
+            )
+         }
+      }, 5000)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [messageSuccess])
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)

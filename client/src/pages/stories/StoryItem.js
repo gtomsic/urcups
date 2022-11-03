@@ -54,7 +54,7 @@ const StoryItem = ({ story }) => {
       setLoves(response)
    }
    return (
-      <div className='relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-primary text-light cursor-pointer'>
+      <div className='group relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-primary hover:bg-gradient-to-t hover:to-danger duration-300 text-light cursor-pointer'>
          {!story?.image ? (
             <div className='flex justify-center items-center rounded-2xl h-[300px] bg-gradient-to-tr from-secondary to-primary text-white'>
                <h3>No Image</h3>
@@ -91,11 +91,11 @@ const StoryItem = ({ story }) => {
             >
                <span>Loves</span>
                {!isLove ? (
-                  <span className='text-danger'>
+                  <span className='text-danger group-hover:text-white'>
                      <FaRegHeart />
                   </span>
                ) : (
-                  <span className='text-danger'>
+                  <span className='text-danger group-hover:text-white'>
                      <FaHeart />
                   </span>
                )}
@@ -103,7 +103,7 @@ const StoryItem = ({ story }) => {
             </div>
             <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
                <span>Comments</span>
-               <span className='text-secondary'>
+               <span className='text-secondary group-hover:text-white'>
                   <FaRegCommentDots />
                </span>
                <small>{comments}</small>

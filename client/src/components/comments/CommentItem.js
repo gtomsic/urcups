@@ -37,6 +37,7 @@ const CommentItem = ({ comment, getComments }) => {
       e.preventDefault()
       e.stopPropagation()
       setIsEdit(false)
+      if (!Boolean(body.trim())) return
       const response = await serviceUpdateComments({
          id: comment?.id,
          body,

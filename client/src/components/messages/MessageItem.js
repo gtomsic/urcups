@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import moment from 'moment'
+import { IoTrashOutline } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { serviceGetUserProfile } from '../../store/features/messages/serviceMessages'
@@ -52,10 +53,15 @@ const MessageItem = ({ message, body, time }) => {
       dispatch(updateIsReadMessage(message.user_id))
       navigate(`/messages/${message.user_id}`)
    }
+   const onDeleteMessageHandler = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      console.log(message.id)
+   }
    return (
       <div
          onClick={onClickHandler}
-         className={`relative rounded-3xl overflow-hidden${
+         className={`relative h-[100px] rounded-3xl overflow-hidden ${
             message.user_id === user.id
                ? true
                : message.isRead
@@ -64,10 +70,11 @@ const MessageItem = ({ message, body, time }) => {
          }`}
       >
          <div
-            className='relative h-[100px] w-[100px] border-r-2 border-white mr-1'
+            className='relative h-[100px] w-[70px] border-r-2 border-white mr-1'
             style={{
                backgroundImage: `url(${url + profile?.avatar})`,
                backgroundSize: 'cover',
+               backgroundPosition: 'center',
                backgroundRepeat: 'no-repeat',
             }}
          >
@@ -94,6 +101,12 @@ const MessageItem = ({ message, body, time }) => {
                   : body}
             </p>
             <small>{moment(time).fromNow()}</small>
+         </div>
+         <div
+            onClick={onDeleteMessageHandler}
+            className='border-l h-[100px] border-white w-8 flex justify-center items-center text-white bg-primary hover:bg-danger duration-300'
+         >
+            <IoTrashOutline />
          </div>
       </div>
    )

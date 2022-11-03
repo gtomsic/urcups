@@ -5,11 +5,16 @@ module.exports = (sequelize, DataTypes) => {
          allowNull: false,
          primaryKey: true,
       },
-      title: {
+      body: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      body: {
+      isRead: {
+         type: DataTypes.STRING,
+         allowNull: false,
+         defaultValue: false,
+      },
+      link: {
          type: DataTypes.STRING,
          allowNull: false,
       },

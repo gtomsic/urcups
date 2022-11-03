@@ -1,13 +1,19 @@
 import React, { useEffect } from 'react'
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import AttentionMessage from '../components/AttentionMessage'
 import Loader from '../components/loader/Loader'
-import { getBells, selectBells } from '../store/features/bells/bellsSlice'
+import {
+   deleteBell,
+   getBells,
+   selectBells,
+} from '../store/features/bells/bellsSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import BellsItem from './bells/BellsItem'
 
 const BellsPage = () => {
+   const isFetch = useRef(false)
    const navigate = useNavigate()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
@@ -15,7 +21,7 @@ const BellsPage = () => {
       useSelector(selectBells)
    useEffect(() => {
       if (!user?.id) return navigate('/')
-      const timerId = setTimeout(() => {
+      if (isFetch.current === false) {
          dispatch(
             getBells({
                limit: bellsLimit,
@@ -23,11 +29,21 @@ const BellsPage = () => {
                token: user?.token,
             })
          )
-      }, 500)
+      }
       return () => {
-         clearTimeout(timerId)
+         isFetch.current = true
       }
    }, [user])
+   const onDeleteBellHandler = (id) => {
+      dispatch(
+         deleteBell({
+            id,
+            limit: bellsLimit,
+            offset: bellsOffset,
+            token: user?.token,
+         })
+      )
+   }
    if (!user?.id) return
    if (bells?.rows?.length < 1) {
       if (!user?.id) return
@@ -44,11 +60,16 @@ const BellsPage = () => {
    }
    return (
       <>
-         {!bellsLoading ? null : <Loader>Loading Bells...</Loader>}
-         {bells?.rows?.length < 1 ? null : (
-            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 lg:grid-cols-3'>
+         {bellsLoading ? (
+            <Loader>Loading Bells...</Loader>
+         ) : (
+            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 xl:grid-cols-3'>
                {bells?.rows?.map((item) => (
-                  <BellsItem key={item.id} bell={item} />
+                  <BellsItem
+                     key={item.id}
+                     bell={item}
+                     onDelete={onDeleteBellHandler}
+                  />
                ))}
             </div>
          )}

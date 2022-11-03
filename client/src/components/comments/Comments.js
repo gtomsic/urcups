@@ -65,6 +65,7 @@ const Comments = () => {
    const onSubmitHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
+      if (!Boolean(state.body.trim())) return
       await reduxDispatch(createComments(state))
       dispatch({ type: commentAction.SET_BODY, payload: '' })
       reduxDispatch(countComments(params.story_id))

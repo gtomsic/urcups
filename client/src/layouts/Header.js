@@ -7,14 +7,13 @@ import Avatar from '../components/Avatar'
 import Logo from '../components/Logo'
 import urcups from '../assets/urcups256.png'
 import { selectUser } from '../store/features/user/userSlice'
-import { selectUnreadMessages } from '../store/features/messages/messagesSlice'
 
 const Header = () => {
    const { user } = useSelector(selectUser)
    const location = useLocation()
    const navigate = useNavigate()
    return (
-      <header className='sticky top-0 py-3 w-full z-40 shadow-xl shadow-primary backdrop-blur-3xl backdrop-filter backdrop-opacity-95'>
+      <header className='sticky top-0 py-3 w-full z-40 backdrop-blur-3xl backdrop-filter backdrop-opacity-95'>
          <div className='flex justify-between items-center mx-auto md:max-w-[98%] lg:max-w-[90%] xl:max-w-[80%] px-3 gap-2'>
             <Link to='/'>
                <Logo />

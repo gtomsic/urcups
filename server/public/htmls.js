@@ -270,7 +270,7 @@ module.exports.verifyEmail = (data) => {
             </div>
             <div class="box-content">
                <div class="box-content__body">
-                  <h2>Hi ${data.username} Welcome!</h2>
+                  <h2>Hi ${data.username} welcome!</h2>
                   <h3>Please verify your email to start.</h3>
                </div>
                <a href="${data.link}" class="btn btn-primary"

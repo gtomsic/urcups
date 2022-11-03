@@ -4,7 +4,11 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectProfile } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
-import { createBells } from '../../store/features/bells/bellsSlice'
+import {
+   createBells,
+   readBell,
+   selectBells,
+} from '../../store/features/bells/bellsSlice'
 
 import Card from '../../components/Card'
 import MoreInformation from './MoreInformation'
@@ -14,6 +18,22 @@ const Profile = () => {
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
+   const { bellsOffset, bellsLimit } = useSelector(selectBells)
+   useEffect(() => {
+      if (isFetch.current === false) {
+         dispatch(
+            readBell({
+               user_id: profile?.id,
+               limit: bellsLimit,
+               offset: bellsOffset,
+               token: user?.token,
+            })
+         )
+      }
+      return () => {
+         isFetch.current = true
+      }
+   }, [profile])
    useEffect(() => {
       let timerId
       if (profile?.id !== user?.id && user?.id && isFetch.current === false) {

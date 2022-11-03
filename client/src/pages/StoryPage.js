@@ -47,23 +47,28 @@ const StoryPage = () => {
       setCountComments(comments.count)
    }, [comments.count])
    useEffect(() => {
-      const fetchStory = async () => {
-         const fetchLoves = await serviceCountLoves({ story_id: story.id })
-         scrollView.current.scrollIntoView()
-         setLoves(fetchLoves)
-         if (user?.id) {
-            const checkLove = await serviceCheckLove({
-               story_id: story.id,
-               token: user?.token,
-            })
-            setIsLove(checkLove)
+      const timerId = setTimeout(() => {
+         const fetchStory = async () => {
+            const fetchLoves = await serviceCountLoves({ story_id: story.id })
+            scrollView.current.scrollIntoView()
+            setLoves(fetchLoves)
+            if (user?.id) {
+               const checkLove = await serviceCheckLove({
+                  story_id: story.id,
+                  token: user?.token,
+               })
+               setIsLove(checkLove)
+            }
+            const response = await serviceCountComments(story.id)
+            setCountComments(response.count)
+            const getProfile = await fetchUser(story.user_id)
+            setProfile(getProfile)
          }
-         const response = await serviceCountComments(story.id)
-         setCountComments(response.count)
-         const getProfile = await fetchUser(story.user_id)
-         setProfile(getProfile)
+         fetchStory()
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
       }
-      fetchStory()
    }, [story])
    const loveClickHandler = async (e) => {
       e.stopPropagation()
@@ -102,10 +107,10 @@ const StoryPage = () => {
             className={
                story?.body?.split('').length < 1500
                   ? 'block pb-5'
-                  : 'block lg:float-left md:mx-4'
+                  : 'block lg:float-left lg:pr-3'
             }
          />
-         <div className='px-3 mt-5 lg:mt-0 text-light'>
+         <div className='mt-5 lg:mt-0 text-light'>
             <h3 className='text-secondary'>{story?.title}</h3>
             <div dangerouslySetInnerHTML={{ __html: story?.body }}></div>
             {/* Publish by User */}

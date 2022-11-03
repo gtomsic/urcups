@@ -22,6 +22,7 @@ import {
    checkIsFavorite,
    selectFavorite,
 } from '../../store/features/favorites/favoritesSlice'
+import { actionBells } from '../../store/features/bells/bellsSlice'
 const ProfileHeader = ({ profile }) => {
    const isFetch = useRef(false)
    const location = useLocation()
@@ -62,6 +63,17 @@ const ProfileHeader = ({ profile }) => {
             profileId: profile?.id,
          })
       )
+      if (!favorite) {
+         dispatch(
+            actionBells({
+               title: 'added you as favorite.',
+               link: location.pathname,
+               user_id: profile?.id,
+               body: user?.username + ' added you as favorite.',
+               token: user?.token,
+            })
+         )
+      }
       navigate('/favorites')
    }
 

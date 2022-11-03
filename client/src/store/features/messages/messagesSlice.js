@@ -235,6 +235,7 @@ const messagesSlice = createSlice({
       builder
          .addCase(sendMessage.pending, (state) => {
             state.message.messageLoading = true
+            state.message.messageSuccess = false
          })
          .addCase(sendMessage.fulfilled, (state, action) => {
             state.message.messageLoading = false

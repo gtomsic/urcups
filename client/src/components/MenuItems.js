@@ -89,7 +89,7 @@ const MenuItems = () => {
                   className={
                      location.pathname === '/'
                         ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                   }
                >
                   <div className='relative'>
@@ -103,7 +103,7 @@ const MenuItems = () => {
                   className={
                      location.pathname === `/stories`
                         ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                        : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                   }
                >
                   <div className='relative '>
@@ -119,14 +119,16 @@ const MenuItems = () => {
                         className={
                            location.pathname === '/bells'
                               ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
                            <FaBell />
-                           <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
-                              {bells?.count}
-                           </span>
+                           {bells?.count > 0 ? (
+                              <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
+                                 {bells?.count}
+                              </span>
+                           ) : null}
                         </div>
                         <div className='hidden xl:block'>Bells</div>
                      </div>
@@ -136,7 +138,7 @@ const MenuItems = () => {
                         className={
                            location.pathname === '/messages'
                               ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -155,7 +157,7 @@ const MenuItems = () => {
                         className={
                            location.pathname === '/favorites'
                               ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -172,7 +174,7 @@ const MenuItems = () => {
                         className={
                            location.pathname === '/auth'
                               ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
@@ -186,7 +188,7 @@ const MenuItems = () => {
                         className={
                            location.pathname === '/auth/register'
                               ? 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-primary'
-                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-secondary duration-300'
+                              : 'py-4 px-4 md:py-4 gap-3 md:px-3 xl:px-5 text-3xl lg:text-xl flex items-center lg:justify-center xl:justify-start text-white border-b-8 lg:border-b-0 lg:border-l-8  border-white hover:border-primary duration-300'
                         }
                      >
                         <div className='relative'>
