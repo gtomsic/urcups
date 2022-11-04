@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import PrimaryButton from '../components/PrimaryButton'
 import MessageFormInput from '../components/messages/MessageFormInput'
@@ -35,7 +35,6 @@ const MessagePage = () => {
    const params = useParams()
    const navigate = useNavigate()
    const dispatch = useDispatch()
-   const location = useLocation()
    const [send, setSend] = useState(false)
    const [onInputFocus, setOnInputFocus] = useState(false)
    const [openInput, setOpenInput] = useState(false)
@@ -45,8 +44,7 @@ const MessagePage = () => {
    const { user } = useSelector(selectUser)
    const { userProfile } = useSelector(selectMessageUserProfile)
    const { bellsOffset, bellsLimit } = useSelector(selectBells)
-   const { message, messageOffset, messageLimit, messageSuccess } =
-      useSelector(selectMessage)
+   const { message, messageOffset, messageLimit } = useSelector(selectMessage)
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    if (!user?.id) {
@@ -64,7 +62,7 @@ const MessagePage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [])
+   })
 
    useEffect(() => {
       let insedeTimer
@@ -85,7 +83,7 @@ const MessagePage = () => {
          clearTimeout(timerId)
          clearTimeout(insedeTimer)
       }
-   }, [body])
+   }, [body, params.id, user, dispatch])
 
    useEffect(() => {
       const timerId = setTimeout(() => {
@@ -101,7 +99,7 @@ const MessagePage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [userProfile])
+   }, [userProfile, bellsLimit, bellsOffset, user, dispatch])
 
    useEffect(() => {
       let time = userProfile?.isOnline ? 60000 * 2 : 0
@@ -121,7 +119,7 @@ const MessagePage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [send, message])
+   }, [send, message, user, userProfile, dispatch])
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)
@@ -129,7 +127,7 @@ const MessagePage = () => {
          setOpenInput(false)
          dispatch(clearRoomProfile())
       }
-   }, [])
+   }, [dispatch])
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
@@ -162,22 +160,18 @@ const MessagePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [params, user, dispatch])
+   }, [params, user, messageLimit, dispatch])
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
-      const checkBody = Boolean(body.trim())
-      if (!checkBody && user.id !== params.id) {
-         setBody('')
-         return
-      }
       const data = {
          body,
          attachment: attachment.length > 0 ? attachment.join(',') : '',
          receiver: params.id,
       }
+      if (!Boolean(body.trim())) return
       await dispatch(sendMessage({ data, token: user?.token }))
       socket.emit('typing', {
          typing: false,

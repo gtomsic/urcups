@@ -25,6 +25,7 @@ import { serviceCountComments } from '../store/features/comments/serviceComments
 import { fetchUser } from '../store/features/user/userService'
 import Avatar from '../components/Avatar'
 import moment from 'moment'
+import { socket } from '../socket'
 
 const StoryPage = () => {
    const scrollView = useRef(null)
@@ -42,7 +43,7 @@ const StoryPage = () => {
    const url = useSelector((state) => state.url)
    useEffect(() => {
       dispatch(getStoryById(params.story_id))
-   }, [params])
+   }, [params, dispatch])
    useEffect(() => {
       setCountComments(comments.count)
    }, [comments.count])
@@ -69,7 +70,7 @@ const StoryPage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [story])
+   })
    const loveClickHandler = async (e) => {
       e.stopPropagation()
       e.preventDefault()
@@ -84,6 +85,7 @@ const StoryPage = () => {
       })
       setIsLove(checkLove)
       setLoves(response)
+      socket.emit('stories', { ...story, path: `/love/${story.id}` })
    }
    const onDeleteHandler = async (e) => {
       e.preventDefault()
@@ -158,7 +160,7 @@ const StoryPage = () => {
                      className={
                         !user?.id
                            ? 'flex gap-2 items-center'
-                           : 'flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+                           : 'flex gap-2 items-center p-2 rounded-md '
                      }
                   >
                      <span className='hidden md:block'>Comments</span>
@@ -196,7 +198,7 @@ const StoryPage = () => {
          {!isOpen ? null : (
             <StoryEdit story={story} isOpen={isOpen} setIsOpen={setIsOpen} />
          )}
-         <Comments profile={profile} />
+         <Comments profile={profile} story={story} />
       </div>
    )
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { socket } from '../../socket'
 import { serviceCountComments } from '../../store/features/comments/serviceComments'
 import {
    serviceAddRemoveLoves,
@@ -11,12 +12,28 @@ import { selectUser } from '../../store/features/user/userSlice'
 
 const StoryItem = ({ story }) => {
    const isFetch = useRef(false)
-   const dispatch = useDispatch()
    const [loves, setLoves] = useState(0)
    const [comments, setComments] = useState(0)
    const [isLove, setIsLove] = useState(false)
    const { user } = useSelector(selectUser)
    const newBody = story?.body?.split('<br/>').join('\n')
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         socket.on(`/stories/love/${story.id}`, async (msg) => {
+            if (story.id !== msg.id) return
+            const countLoves = await serviceCountLoves({ story_id: msg.id })
+            setLoves(countLoves)
+         })
+         socket.on(`/stories/comments/${story.id}`, async (msg) => {
+            if (story.id != msg.id) return
+            const response = await serviceCountComments(msg.id)
+            setComments(response.count)
+         })
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   })
    useEffect(() => {
       if (isFetch.current === false) {
          const fetchingLove = async () => {
@@ -37,7 +54,7 @@ const StoryItem = ({ story }) => {
       return () => {
          isFetch.current = true
       }
-   }, [user])
+   })
    const loveClickHandler = async (e) => {
       e.stopPropagation()
       e.preventDefault()
@@ -52,6 +69,7 @@ const StoryItem = ({ story }) => {
       })
       setIsLove(checkLove)
       setLoves(response)
+      socket.emit('stories', { ...story, path: `/love/${story.id}` })
    }
    return (
       <div className='group relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-primary hover:bg-gradient-to-t hover:to-danger duration-300 text-light cursor-pointer'>

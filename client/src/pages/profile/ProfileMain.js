@@ -21,6 +21,7 @@ const Profile = () => {
    const { bellsOffset, bellsLimit } = useSelector(selectBells)
    useEffect(() => {
       if (isFetch.current === false) {
+         if (!user?.id) return
          dispatch(
             readBell({
                user_id: profile?.id,
@@ -33,7 +34,7 @@ const Profile = () => {
       return () => {
          isFetch.current = true
       }
-   }, [profile])
+   }, [profile, bellsLimit, bellsOffset, user, dispatch])
    useEffect(() => {
       let timerId
       if (profile?.id !== user?.id && user?.id && isFetch.current === false) {
@@ -50,7 +51,7 @@ const Profile = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [profile])
+   })
    if (!profile?.id) return
    return (
       <>

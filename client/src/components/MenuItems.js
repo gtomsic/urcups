@@ -1,10 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { FaBell, FaUserPlus } from 'react-icons/fa'
 import { BsShieldLockFill } from 'react-icons/bs'
 import { MdMessage } from 'react-icons/md'
-// import { IoMdChatboxes } from 'react-icons/io'
-// import { BsBookmarkStarFill, BsBookmarkPlusFill, BsBookmarkXFill } from 'react-icons/bs'
 import { BsBookmarkStarFill } from 'react-icons/bs'
 import { MdAutoStories } from 'react-icons/md'
 import { IoLogOut } from 'react-icons/io5'
@@ -12,10 +10,7 @@ import { HiUsers } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
-import {
-   selectAllMessages,
-   selectUnreadMessages,
-} from '../store/features/messages/messagesSlice'
+import { selectUnreadMessages } from '../store/features/messages/messagesSlice'
 import { getBells, selectBells } from '../store/features/bells/bellsSlice'
 import { socket } from '../socket'
 
@@ -23,30 +18,27 @@ const MenuItems = () => {
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
-   const { messages } = useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    const { bellsOffset, bellsLimit, bells } = useSelector(selectBells)
    useEffect(() => {
       if (!user?.id) return
       const timerId = setTimeout(() => {
-         if (location.pathname !== '/bells') {
-            dispatch(
-               getBells({
-                  limit: bellsLimit,
-                  offset: bellsOffset,
-                  token: user?.token,
-               })
-            )
-         }
+         dispatch(
+            getBells({
+               limit: bellsLimit,
+               offset: bellsOffset,
+               token: user?.token,
+            })
+         )
       }, 500)
       return () => {
          clearTimeout(timerId)
       }
-   }, [user, messages])
+   }, [user, bellsLimit, bellsOffset])
 
    const logoutHandler = async () => {
-      dispatch(logout(user.id))
-      socket.emit('disconnected')
+      socket.emit('user', { ...user, isOnline: false })
+      await dispatch(logout(user.id))
    }
    return (
       <div className='sticky top-[85px]'>

@@ -128,6 +128,7 @@ const userSlice = createSlice({
    initialState,
    reducers: {
       resetUser: (state) => {
+         state.user = {}
          state.isLoading = false
          state.isSuccess = false
          state.isError = false

@@ -13,6 +13,7 @@ const BellsItem = ({ bell, onDelete }) => {
    const navigate = useNavigate()
    const [profile, setProfile] = useState({})
    const url = useSelector((state) => state.url)
+
    useEffect(() => {
       if (isFetch.current === false) {
          const fetchingUser = async () => {

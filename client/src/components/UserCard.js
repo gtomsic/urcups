@@ -3,15 +3,12 @@ import { useSelector } from 'react-redux'
 
 function UserCard({ user }) {
    const url = useSelector((state) => state.url)
-   // const image = user?.avatar.includes('/avatar.jpg')
-   //    ? user?.avatar
-   //    : user.avatar.replace('avatar', 'avatar')
    return (
       <div
          className={
             user?.isOnline
-               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-secondary to-primary hover:to-secondary pb-[100px]'
-               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:to-secondary  pb-[100px]'
+               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-secondary to-primary hover:from-danger pb-[100px]'
+               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-danger  pb-[100px]'
          }
       >
          <div
@@ -33,8 +30,8 @@ function UserCard({ user }) {
          <div
             className={
                user?.isOnline
-                  ? 'absolute bg-gradient-to-t from-primary group-hover:from-secondary duration-300 bottom-0 left-0 w-full h-[130px] flex flex-col justify-end text-white'
-                  : 'absolute bg-gradient-to-t from-dark group-hover:from-secondary duration-300  bottom-0 left-0 w-full h-[130px] flex flex-col justify-end text-white'
+                  ? 'absolute bg-gradient-to-t from-primary group-hover:from-primary duration-300 bottom-0 left-0 w-full h-[130px] flex flex-col justify-end text-white'
+                  : 'absolute bg-gradient-to-t from-dark group-hover:from-primary duration-300  bottom-0 left-0 w-full h-[130px] flex flex-col justify-end text-white'
             }
          >
             <div className='mt-5 pb-5 flex justify-around'>

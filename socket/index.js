@@ -69,6 +69,12 @@ io.on('connection', (socket) => {
          updatedAt: message?.updatedAt,
       })
    })
+
+   // Bells
+   socket.on('stories', (data) => {
+      io.emit(`/stories${data.path}`, data)
+   })
+
    // When the user is typing message
    socket.on('typing', (type) => {
       io.emit(type.receiver, type)

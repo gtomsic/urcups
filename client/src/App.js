@@ -22,7 +22,7 @@ import MessagePage from './pages/MessagePage'
 import FavoritesPage from './pages/FavoritesPage'
 import StoriesPage from './pages/StoriesPage'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectUser } from './store/features/user/userSlice'
+import { resetUser, selectUser } from './store/features/user/userSlice'
 import {
    countAllUnreadMessages,
    getAllMessages,
@@ -41,10 +41,16 @@ const App = () => {
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
    useEffect(() => {
-      if (!user?.id) return
       const timerId = setTimeout(() => {
-         socket.on('user', (data) => {
-            dispatch(socketUpdateUser(data))
+         if (!user?.id) return
+         socket.on('user', async (data) => {
+            if (!data?.id) return
+            await dispatch(socketUpdateUser(data))
+            const localUser = JSON.parse(localStorage.getItem('user'))
+            if (data.id === localUser.id && data.isOnline === false) {
+               await dispatch(resetUser())
+               localStorage.removeItem('user')
+            }
          })
          socket.on(`${user?.id}/message`, (msg) => {
             dispatch(insertMessage(msg))
@@ -98,7 +104,7 @@ const App = () => {
             countAllUnreadMessages({ token: user?.token, user_id: user.id })
          )
       }
-   }, [user])
+   }, [user, dispatch])
 
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>

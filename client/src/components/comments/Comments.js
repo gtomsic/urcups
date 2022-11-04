@@ -17,8 +17,9 @@ import AttentionMessage from '../AttentionMessage'
 import Loader from '../loader/Loader'
 import { useParams } from 'react-router-dom'
 import { actionBells } from '../../store/features/bells/bellsSlice'
+import { socket } from '../../socket'
 
-const Comments = ({ profile }) => {
+const Comments = ({ profile, story }) => {
    const reduxDispatch = useDispatch()
    const params = useParams()
    const isFetch = useRef(false)
@@ -46,7 +47,7 @@ const Comments = ({ profile }) => {
       return () => {
          isFetch.current = true
       }
-   }, [params])
+   }, [params, state.limit, state.offset, user, reduxDispatch])
    const onMoreButtonHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
@@ -67,7 +68,6 @@ const Comments = ({ profile }) => {
       e.preventDefault()
       e.stopPropagation()
       if (!Boolean(state.body.trim())) return
-      await reduxDispatch(createComments(state))
       reduxDispatch(
          actionBells({
             title: 'just commented on your story.',
@@ -79,6 +79,12 @@ const Comments = ({ profile }) => {
       )
       dispatch({ type: commentAction.SET_BODY, payload: '' })
       reduxDispatch(countComments(params.story_id))
+      socket.emit('stories', {
+         id: params.story_id,
+         path: `/comments/${params.story_id}`,
+      })
+      if (story?.user_id === user?.id) return
+      await reduxDispatch(createComments(state))
    }
    return (
       <>
