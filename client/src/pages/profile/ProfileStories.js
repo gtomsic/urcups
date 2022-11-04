@@ -14,8 +14,10 @@ import {
    createStory,
    createStoryText,
    getAllUserStories,
+   getMoreUserStories,
    selectStory,
    selectUserStories,
+   setUserStoriesOffset,
 } from '../../store/features/stories/storySlice'
 import Loader from '../../components/loader/Loader'
 import { useNavigate } from 'react-router-dom'
@@ -35,10 +37,21 @@ const ProfileReader = () => {
    const { user } = useSelector(selectUser)
    const { profile } = useSelector(selectProfile)
    const { story, storyIsLoading } = useSelector(selectStory)
-   const { userStories, userStoriesIsLoading } = useSelector(selectUserStories)
+   const {
+      userStories,
+      userStoriesIsLoading,
+      userStoriesOffset,
+      userStoriesLimit,
+   } = useSelector(selectUserStories)
    const url = useSelector((state) => state.url)
    useEffect(() => {
-      dispatch(getAllUserStories({ limit, offset, id: profile?.id }))
+      dispatch(
+         getAllUserStories({
+            limit: userStoriesLimit,
+            offset: userStoriesOffset,
+            id: profile?.id,
+         })
+      )
    }, [story])
    const onClickHandler = (e, id) => {
       e.preventDefault()
@@ -87,6 +100,16 @@ const ProfileReader = () => {
       }
       onCancelHandler(e)
    }
+   const onMoreStoriesHandler = async () => {
+      await dispatch(
+         getMoreUserStories({
+            limit: userStoriesLimit,
+            offset: userStoriesOffset + 1,
+            id: profile?.id,
+         })
+      )
+      await dispatch(setUserStoriesOffset(userStoriesOffset + 1))
+   }
    return (
       <>
          {userStories?.rows < 1 && user?.id !== profile?.id ? (
@@ -117,6 +140,14 @@ const ProfileReader = () => {
                   <StoryItem story={{ ...item, image: url + item.image }} />
                </div>
             ))}
+            {userStories?.count === userStories?.rows?.length ? null : (
+               <div
+                  onClick={onMoreStoriesHandler}
+                  className='flex flex-col justify-center items-center gap-3 min-h-[400px] max-h-full  text-white bg-gradient-to-tr from-secondary to-primary p-3 rounded-3xl hover:from-danger hover:to-primary duration-300 cursor-pointer'
+               >
+                  More...
+               </div>
+            )}
             {!isOpen ? null : (
                <Modal>
                   <Container>

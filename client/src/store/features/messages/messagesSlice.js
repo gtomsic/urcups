@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import _ from 'lodash'
+import { socket } from '../../../socket'
 
 import {
    serviceCountAllUnreadMessages,
@@ -246,6 +247,9 @@ const messagesSlice = createSlice({
                'asc'
             )
             state.message.message = sortedMessage
+            socket.emit(`message`, {
+               ...action.payload,
+            })
          })
          .addCase(sendMessage.rejected, (state, action) => {
             state.message.messageLoading = false

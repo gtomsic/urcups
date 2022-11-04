@@ -32,6 +32,7 @@ const MenuItems = () => {
    const { unreadMessages } = useSelector(selectUnreadMessages)
    const { bellsOffset, bellsLimit, bells } = useSelector(selectBells)
    useEffect(() => {
+      if (!user?.id) return
       const timerId = setTimeout(() => {
          if (location.pathname !== '/bells') {
             dispatch(
@@ -46,36 +47,6 @@ const MenuItems = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [user, messages])
-   useEffect(() => {
-      // io.on(user?.id, (msg) => {
-      //    if (user?.id && msg.user_id !== user?.id) {
-      //       dispatch(
-      //          countAllUnreadMessages({
-      //             token: user?.token,
-      //             user_id: msg.user_id,
-      //          })
-      //       )
-      //       dispatch(
-      //          readRoomMessages({
-      //             token: user?.token,
-      //             user_id: msg.user_id,
-      //             roomId: msg.roomId,
-      //          })
-      //       )
-      //       dispatch(
-      //          getAllMessages({
-      //             offset: messagesOffset,
-      //             limit: messagesLimit,
-      //             token: user.token,
-      //             user_id: user.id,
-      //          })
-      //       )
-      //    }
-      // })
-      // return () => {
-      //    isFetch.current = true
-      // }
    }, [user, messages])
 
    const logoutHandler = () => {

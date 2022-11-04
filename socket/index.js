@@ -54,28 +54,24 @@ const getUser = (user_id) => {
 
 io.on('connection', (socket) => {
    // User just joined
-   socket.on('user', async (data) => {
-      await addUser(data, socket.id)
-      console.log(users)
-      socket.emit('user', data)
+   socket.on('user', (data) => {
+      addUser(data, socket.id)
+      socket.broadcast.emit('user', data)
    })
+
    // Send receive messages
-   socket.on('sendMessage', (message) => {
+   socket.on('message', (message) => {
       const sender = getUser(message.user_id)
-      io.emit(message.receiver, {
+      io.emit(`${message.receiver}/message`, {
          ...message,
-         thumbnail: sender?.thumbnail ? sender?.thumbnail : '/avatar.jpg',
-         age: sender?.age,
-         sex: sender?.sex,
-         city: sender?.city,
-         stateProvince: sender?.stateProvince,
-         country: sender?.country,
-         isOnline: sender?.isOnline,
+         ...sender,
+         createdAt: message?.createdAt,
+         updatedAt: message?.updatedAt,
       })
    })
    // When the user is typing message
-   socket.on('isTyping', (data) => {
-      io.emit(`${data.receiverId}/isTyping`, data)
+   socket.on('typing', (type) => {
+      io.emit(type.receiver, type)
    })
    // When disconnect
    socket.on('disconnected', () => {

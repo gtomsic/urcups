@@ -51,6 +51,12 @@ const usersSlice = createSlice({
       setSexualOrientation: (state, action) => {
          state.filter.sexualOrientation = action.payload
       },
+      socketUpdateUser: (state, action) => {
+         const filterUsers = state.users.filter(
+            (item) => item.id !== action.payload.id
+         )
+         state.users = [action.payload, ...filterUsers]
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -70,8 +76,14 @@ const usersSlice = createSlice({
    },
 })
 
-export const { reset, setOffset, setLimit, setOnline, setSexualOrientation } =
-   usersSlice.actions
+export const {
+   reset,
+   setOffset,
+   setLimit,
+   setOnline,
+   setSexualOrientation,
+   socketUpdateUser,
+} = usersSlice.actions
 export default usersSlice.reducer
 
 // SELECTORS

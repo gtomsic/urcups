@@ -16,8 +16,9 @@ import {
 import AttentionMessage from '../AttentionMessage'
 import Loader from '../loader/Loader'
 import { useParams } from 'react-router-dom'
+import { actionBells } from '../../store/features/bells/bellsSlice'
 
-const Comments = () => {
+const Comments = ({ profile }) => {
    const reduxDispatch = useDispatch()
    const params = useParams()
    const isFetch = useRef(false)
@@ -67,6 +68,15 @@ const Comments = () => {
       e.stopPropagation()
       if (!Boolean(state.body.trim())) return
       await reduxDispatch(createComments(state))
+      reduxDispatch(
+         actionBells({
+            title: 'just commented on your story.',
+            link: `/stories/${params.story_id}`,
+            user_id: profile?.id,
+            body: `comment on your story.`,
+            token: user?.token,
+         })
+      )
       dispatch({ type: commentAction.SET_BODY, payload: '' })
       reduxDispatch(countComments(params.story_id))
    }
@@ -109,7 +119,7 @@ const Comments = () => {
                   />
                ))}
                {!commentsLoading ? null : <Loader>Loading comments...</Loader>}
-               {comments?.count === comments?.rows?.length ? (
+               {comments?.count >= comments?.rows?.length ? (
                   <div className='py-8'></div>
                ) : (
                   <div

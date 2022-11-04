@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
@@ -23,18 +23,74 @@ import FavoritesPage from './pages/FavoritesPage'
 import StoriesPage from './pages/StoriesPage'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser } from './store/features/user/userSlice'
-import { countAllUnreadMessages } from './store/features/messages/messagesSlice'
+import {
+   countAllUnreadMessages,
+   getAllMessages,
+   insertMessage,
+   insertMessages,
+   readRoomMessages,
+   selectAllMessages,
+} from './store/features/messages/messagesSlice'
 import StoryPage from './pages/StoryPage'
+import { socket } from './socket'
+import { socketUpdateUser } from './store/features/users/usersSlice'
 
 const App = () => {
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
+   const { messages, messagesOffset, messagesLimit } =
+      useSelector(selectAllMessages)
+   useEffect(() => {
+      if (!user?.id) return
+      const timerId = setTimeout(() => {
+         socket.on('user', (data) => {
+            dispatch(socketUpdateUser(data))
+         })
+         socket.on(`${user?.id}/message`, (msg) => {
+            dispatch(insertMessage(msg))
+            dispatch(insertMessages(msg))
+            dispatch(
+               countAllUnreadMessages({
+                  token: user?.token,
+                  user_id: msg.user_id,
+               })
+            )
+            dispatch(
+               readRoomMessages({
+                  token: user?.token,
+                  user_id: msg.user_id,
+                  roomId: msg.roomId,
+               })
+            )
+            dispatch(
+               getAllMessages({
+                  offset: messagesOffset,
+                  limit: messagesLimit,
+                  token: user.token,
+                  user_id: user.id,
+               })
+            )
+         })
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [])
+   useEffect(() => {
+      if (!user?.id) return
+      const timerId = setTimeout(() => {
+         socket.emit('user', user)
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [user])
    useEffect(() => {
       if (!user?.id) return
       dispatch(
          countAllUnreadMessages({ token: user?.token, user_id: user?.id })
       )
-   }, [user, dispatch])
+   }, [user, messages, dispatch])
 
    useEffect(() => {
       if (user?.id) {

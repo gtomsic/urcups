@@ -29,7 +29,6 @@ const ProfilePage = () => {
             )
          }
       }
-
       return () => {
          isFetch.current = true
       }

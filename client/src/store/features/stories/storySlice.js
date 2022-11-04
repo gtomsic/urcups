@@ -22,6 +22,8 @@ const initialState = {
       storiesIsSuccess: false,
       storiesIsError: false,
       storiesIsMessage: '',
+      storiesOffset: 0,
+      storiesLimit: 30,
    },
    userStories: {
       userStories: {},
@@ -29,6 +31,8 @@ const initialState = {
       userStoriesIsSuccess: false,
       userStoriesIsError: false,
       userStoriesIsMessage: '',
+      userStoriesOffset: 0,
+      userStoriesLimit: 30,
    },
 }
 
@@ -69,6 +73,39 @@ export const getAllUserStories = createAsyncThunk(
    async (data, thunkApi) => {
       try {
          return await serviceGetAllUserStories(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+export const getMoreUserStories = createAsyncThunk(
+   'user/getMoreUserStories',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetAllUserStories(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
+export const getMorePublicStories = createAsyncThunk(
+   'user/getMorePublicStories',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetAllPublicStories(data)
       } catch (error) {
          const message =
             (error.response &&
@@ -155,6 +192,12 @@ const storySlice = createSlice({
          state.userStories.userStoriesIsError = false
          state.userStories.userStoriesIsMessage = ''
       },
+      setPublicStoriesOffset: (state, action) => {
+         state.stories.storiesOffset = action.payload
+      },
+      setUserStoriesOffset: (state, action) => {
+         state.userStories.userStoriesOffset = action.payload
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -218,6 +261,26 @@ const storySlice = createSlice({
             state.stories.stories = {}
             state.stories.storiesIsMessage = action.payload
          })
+         .addCase(getMorePublicStories.pending, (state) => {
+            state.stories.storiesIsLoading = true
+         })
+         .addCase(getMorePublicStories.fulfilled, (state, action) => {
+            state.stories.storiesIsLoading = false
+            state.stories.storiesIsError = false
+            state.stories.storiesIsSuccess = true
+            state.stories.stories.rows = [
+               ...state.stories.stories.rows,
+               ...action.payload.rows,
+            ]
+            state.stories.stories.count = action.payload.count
+         })
+         .addCase(getMorePublicStories.rejected, (state, action) => {
+            state.stories.storiesIsLoading = false
+            state.stories.storiesIsSuccess = false
+            state.stories.storiesIsError = true
+            state.stories.stories = {}
+            state.stories.storiesIsMessage = action.payload
+         })
          .addCase(getAllUserStories.pending, (state) => {
             state.userStories.userStoriesIsLoading = true
          })
@@ -228,6 +291,26 @@ const storySlice = createSlice({
             state.userStories.userStories = action.payload
          })
          .addCase(getAllUserStories.rejected, (state, action) => {
+            state.userStories.userStoriesIsLoading = false
+            state.userStories.userStoriesIsSuccess = false
+            state.userStories.userStoriesIsError = true
+            state.userStories.userStories = {}
+            state.userStories.userStoriesIsMessage = action.payload
+         })
+         .addCase(getMoreUserStories.pending, (state) => {
+            state.userStories.userStoriesIsLoading = true
+         })
+         .addCase(getMoreUserStories.fulfilled, (state, action) => {
+            state.userStories.userStoriesIsLoading = false
+            state.userStories.userStoriesIsError = false
+            state.userStories.userStoriesIsSuccess = true
+            state.userStories.userStories.rows = [
+               ...state.userStories.userStories.rows,
+               ...action.payload.rows,
+            ]
+            state.userStories.userStories.count = action.payload.count
+         })
+         .addCase(getMoreUserStories.rejected, (state, action) => {
             state.userStories.userStoriesIsLoading = false
             state.userStories.userStoriesIsSuccess = false
             state.userStories.userStoriesIsError = true
@@ -252,7 +335,13 @@ const storySlice = createSlice({
    },
 })
 
-export const { clearStory, clearStories, clearUserStories } = storySlice.actions
+export const {
+   clearStory,
+   clearStories,
+   clearUserStories,
+   setPublicStoriesOffset,
+   setUserStoriesOffset,
+} = storySlice.actions
 export default storySlice.reducer
 
 // SELECTORS

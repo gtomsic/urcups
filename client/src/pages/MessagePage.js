@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import PrimaryButton from '../components/PrimaryButton'
 import MessageFormInput from '../components/messages/MessageFormInput'
@@ -11,7 +11,6 @@ import {
    countAllUnreadMessages,
    getMessageUserProfile,
    getRoomMessages,
-   selectIsTyping,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
@@ -21,46 +20,105 @@ import AttentionMessage from '../components/AttentionMessage'
 import MessageProfileCard from '../components/messages/MessageProfileCard'
 import Messages from '../components/messages/Messages'
 import Avatar from '../components/Avatar'
-import { actionBells } from '../store/features/bells/bellsSlice'
+import {
+   actionBells,
+   readBell,
+   selectBells,
+} from '../store/features/bells/bellsSlice'
+import { socket } from '../socket'
 
 const MessagePage = () => {
-   const navigate = useNavigate()
-   const params = useParams()
-   const dispatch = useDispatch()
    const isFetch = useRef(false)
    const scrollEnd = useRef(null)
+   const params = useParams()
+   const navigate = useNavigate()
+   const dispatch = useDispatch()
+   const location = useLocation()
+   const [send, setSend] = useState(false)
    const [onInputFocus, setOnInputFocus] = useState(false)
    const [openInput, setOpenInput] = useState(false)
    const [body, setBody] = useState('')
    const [attachment, setAttachment] = useState([])
+   const [userTyping, setUserTyping] = useState(false)
    const { user } = useSelector(selectUser)
-   const { userTyping } = useSelector(selectIsTyping)
    const { userProfile } = useSelector(selectMessageUserProfile)
+   const { bellsOffset, bellsLimit } = useSelector(selectBells)
    const { message, messageOffset, messageLimit, messageSuccess } =
       useSelector(selectMessage)
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    if (!user?.id) {
+      localStorage.setItem('redirect', JSON.stringify(`/messages`))
       navigate('/auth')
    }
+
    useEffect(() => {
       const timerId = setTimeout(() => {
-         if (messageSuccess === true) {
-            dispatch(
-               actionBells({
-                  title: 'new message!',
-                  link: `/messages`,
-                  user_id: userProfile?.id,
-                  body: `${user?.username} sent you message.`,
-                  token: user?.token,
-               })
-            )
-         }
+         socket.on(`${user?.id}/${params.id}/typing`, (data) => {
+            setUserTyping(data.typing)
+            scrollEnd.current?.scrollIntoView()
+         })
       }, 5000)
       return () => {
          clearTimeout(timerId)
       }
-   }, [messageSuccess])
+   }, [])
+
+   useEffect(() => {
+      let insedeTimer
+      const timerId = setTimeout(() => {
+         socket.emit('typing', {
+            typing: true,
+            receiver: `${params.id}/${user?.id}/typing`,
+         })
+         insedeTimer = setTimeout(() => {
+            socket.emit('typing', {
+               typing: false,
+               receiver: `${params.id}/${user?.id}/typing`,
+            })
+         }, 3000)
+      }, 200)
+      return () => {
+         clearTimeout(timerId)
+         clearTimeout(insedeTimer)
+      }
+   }, [body])
+
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         dispatch(
+            readBell({
+               user_id: userProfile?.id,
+               limit: bellsLimit,
+               offset: bellsOffset,
+               token: user?.token,
+            })
+         )
+      }, 500)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [userProfile])
+
+   useEffect(() => {
+      let time = userProfile?.isOnline ? 60000 * 10 : 0
+      const timerId = setTimeout(() => {
+         if (send === true) {
+            dispatch(
+               actionBells({
+                  title: 'new message!',
+                  link: `/messages/${user?.id}`,
+                  user_id: userProfile?.id,
+                  body: `sent you message.`,
+                  token: user?.token,
+               })
+            )
+         }
+      }, time)
+      return () => {
+         clearTimeout(timerId)
+      }
+   }, [send, message])
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)
@@ -117,13 +175,18 @@ const MessagePage = () => {
          receiver: params.id,
       }
       await dispatch(sendMessage({ data, token: user?.token }))
+      socket.emit('typing', {
+         typing: false,
+         receiver: `${params.id}/${user?.id}/typing`,
+      })
+      setSend(true)
       setBody('')
    }
    return (
-      <div className='flex gap-11'>
+      <div className='flex gap-8'>
          <div
             id='messages'
-            className='flex-1 h-[80vh] flex flex-col justify-end overflow-y-auto pt-[80px]'
+            className='flex-1 h-[80vh] overflow-y-auto pt-[80px]'
          >
             {message?.length < 1 ? (
                <AttentionMessage

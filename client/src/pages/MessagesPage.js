@@ -44,6 +44,16 @@ const MessagesPage = () => {
       e.stopPropagation()
       navigate(`/messages/${user_id}`)
    }
+   const onMoreMessagesHandler = () => {
+      dispatch(
+         getAllMessages({
+            offset: messagesOffset,
+            limit: messagesLimit + 1,
+            token: user?.token,
+            user_id: user?.id,
+         })
+      )
+   }
    return (
       <>
          <div ref={scrollView} />
@@ -54,10 +64,7 @@ const MessagesPage = () => {
                <p>Start browsing profile now!</p>
             </AttentionMessage>
          ) : (
-            <div
-               className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 xl:grid-cols-3
-            '
-            >
+            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2'>
                {messages?.map((message) => (
                   <div
                      onClick={(e) => onClickHandler(e, message.user_id)}
@@ -75,6 +82,14 @@ const MessagesPage = () => {
                      />
                   </div>
                ))}
+            </div>
+         )}
+         {messages?.count === messages?.rows?.length ? null : (
+            <div
+               onClick={onMoreMessagesHandler}
+               className='py-5 my-5 text-center text-white cursor-pointer rounded-md hover:bg-secondary hover:bg-opacity-10'
+            >
+               <p>More...</p>
             </div>
          )}
       </>

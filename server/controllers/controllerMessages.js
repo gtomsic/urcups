@@ -4,13 +4,11 @@ const { v4: uuid } = require('uuid')
 const asyncHandler = require('express-async-handler')
 
 module.exports.controllerReadRoomMessages = asyncHandler(async (req, res) => {
-   console.log(req.headers)
    const checkIsEqual = await db.message.findOne({
       where: { roomId: req.body.roomId },
       order: [['createdAt', 'DESC']],
       limit: 1,
    })
-   console.log(checkIsEqual)
    if (checkIsEqual.user_id === req.user.id) {
       return res.send({ message: 'Not allowed to read your own message.' })
    }

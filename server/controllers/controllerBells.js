@@ -8,7 +8,7 @@ const { sendEmail } = require('../utils/nodemailer')
 module.exports.controllerReadBells = asyncHandler(async (req, res) => {
    await db.bell.update(
       { isRead: true },
-      { where: { user_id: req.body.user_id, isRead: false } }
+      { where: { user_id: req.body.user_id } }
    )
    const bells = await db.bell.findAndCountAll({
       where: { receiver: req.user.id, isRead: false },
@@ -56,10 +56,10 @@ module.exports.controllerBellAction = asyncHandler(async (req, res) => {
    })
    sendEmail(
       user.email,
-      `Hi ${req.user.username} ${req.body.title}`,
+      `Hi ${req.user.username} ${title}`,
       viewedProfile({
          title,
-         body,
+         body: `${req.user.username} ${title}`,
          avatar: process.env.SERVER_HOST + req.user.avatar,
          link: process.env.WEB_HOST + link,
          webHost: process.env.WEB_HOST,

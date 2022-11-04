@@ -7,7 +7,9 @@ import Loader from '../components/loader/Loader'
 import {
    deleteBell,
    getBells,
+   getMoreBells,
    selectBells,
+   setBellsOffset,
 } from '../store/features/bells/bellsSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import BellsItem from './bells/BellsItem'
@@ -34,6 +36,18 @@ const BellsPage = () => {
          isFetch.current = true
       }
    }, [user])
+
+   const onMoreBellsHandler = async () => {
+      await dispatch(
+         getMoreBells({
+            offset: bellsOffset + 1,
+            limit: bellsLimit,
+            token: user?.token,
+         })
+      )
+      await dispatch(setBellsOffset(bellsOffset + 1))
+   }
+
    const onDeleteBellHandler = (id) => {
       dispatch(
          deleteBell({
@@ -44,6 +58,7 @@ const BellsPage = () => {
          })
       )
    }
+
    if (!user?.id) return
    if (bells?.rows?.length < 1) {
       if (!user?.id) return
@@ -63,7 +78,10 @@ const BellsPage = () => {
          {bellsLoading ? (
             <Loader>Loading Bells...</Loader>
          ) : (
-            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2 xl:grid-cols-3'>
+            <div
+               className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2
+            '
+            >
                {bells?.rows?.map((item) => (
                   <BellsItem
                      key={item.id}
@@ -71,6 +89,14 @@ const BellsPage = () => {
                      onDelete={onDeleteBellHandler}
                   />
                ))}
+            </div>
+         )}
+         {bells?.count === bells?.rows?.length ? null : (
+            <div
+               onClick={onMoreBellsHandler}
+               className='py-5 my-5 text-center text-white cursor-pointer rounded-md hover:bg-secondary hover:bg-opacity-10'
+            >
+               <p>More...</p>
             </div>
          )}
       </>

@@ -196,7 +196,7 @@ const StoryPage = () => {
          {!isOpen ? null : (
             <StoryEdit story={story} isOpen={isOpen} setIsOpen={setIsOpen} />
          )}
-         <Comments />
+         <Comments profile={profile} />
       </div>
    )
 }

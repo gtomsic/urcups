@@ -70,6 +70,22 @@ export const deleteBell = createAsyncThunk(
    }
 )
 
+export const getMoreBells = createAsyncThunk(
+   'getMoreBells',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetBells(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getBells = createAsyncThunk('getBells', async (data, thunkApi) => {
    try {
       return await serviceGetBells(data)
@@ -119,6 +135,9 @@ const bellsSlice = createSlice({
          state.bellsError = false
          state.bellsMessage = ''
       },
+      setBellsOffset: (state, action) => {
+         state.bellsOffset = action.payload
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -165,6 +184,21 @@ const bellsSlice = createSlice({
             state.bellsError = true
             state.bellsMessage = action.payload
          })
+         .addCase(getMoreBells.pending, (state) => {
+            state.bellsLoading = true
+         })
+         .addCase(getMoreBells.fulfilled, (state, action) => {
+            state.bellsLoading = false
+            state.bellsSuccess = true
+            state.bells.rows = [...state.bells.rows, ...action.payload.rows]
+            state.bells.count = action.payload.count
+         })
+         .addCase(getMoreBells.rejected, (state, action) => {
+            state.bellsLoading = false
+            state.bellsSuccess = false
+            state.bellsError = true
+            state.bellsMessage = action.payload
+         })
          .addCase(deleteBell.pending, (state) => {
             state.bellsLoading = true
          })
@@ -198,7 +232,7 @@ const bellsSlice = createSlice({
    },
 })
 
-export const { resetBell, resetBells } = bellsSlice.actions
+export const { resetBell, resetBells, setBellsOffset } = bellsSlice.actions
 export default bellsSlice.reducer
 
 // SELECTOR

@@ -12,6 +12,7 @@ export const serviceReadRoomMessages = async (data) => {
       { roomId: data.roomId },
       config
    )
+
    return response.data
 }
 

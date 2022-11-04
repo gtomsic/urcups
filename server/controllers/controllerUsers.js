@@ -16,7 +16,6 @@ module.exports.controllerGetSinglePublicUser = asyncHandler(
 // @ GET
 module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
    const { offset, limit, sexualOrientation, online } = req.body
-   console.log({ online: online })
    let users
    if (online === 'false' && sexualOrientation !== 'All') {
       users = await db.user.findAndCountAll({
