@@ -10,10 +10,12 @@ import {
    clearRoomProfile,
    countAllUnreadMessages,
    getMessageUserProfile,
+   getMoreRoomMessages,
    getRoomMessages,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
+   setMessageOffset,
 } from '../store/features/messages/messagesSlice'
 import { selectUser } from '../store/features/user/userSlice'
 import AttentionMessage from '../components/AttentionMessage'
@@ -66,6 +68,7 @@ const MessagePage = () => {
 
    useEffect(() => {
       let insedeTimer
+      if (!Boolean(body.trim())) return
       const timerId = setTimeout(() => {
          socket.emit('typing', {
             typing: true,
@@ -101,7 +104,7 @@ const MessagePage = () => {
    }, [userProfile])
 
    useEffect(() => {
-      let time = userProfile?.isOnline ? 60000 * 10 : 0
+      let time = userProfile?.isOnline ? 60000 * 2 : 0
       const timerId = setTimeout(() => {
          if (send === true) {
             dispatch(
@@ -130,7 +133,7 @@ const MessagePage = () => {
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
-   }, [message, onInputFocus])
+   }, [onInputFocus])
 
    // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
    // AND GETTING THE ROOM MESSAGES
@@ -143,7 +146,7 @@ const MessagePage = () => {
             )
             await dispatch(
                getRoomMessages({
-                  offset: messageOffset,
+                  offset: 0,
                   limit: messageLimit,
                   token: user?.token,
                   user_id: params.id,
@@ -152,13 +155,14 @@ const MessagePage = () => {
             await dispatch(
                countAllUnreadMessages({ token: user?.token, user_id: user.id })
             )
+            scrollEnd.current?.scrollIntoView()
          }
       }
       fetchSync()
       return () => {
          isFetch.current = true
       }
-   }, [params?.id, messageLimit, messageOffset, user, dispatch])
+   }, [params, user, dispatch])
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {
@@ -181,6 +185,18 @@ const MessagePage = () => {
       })
       setSend(true)
       setBody('')
+      scrollEnd.current?.scrollIntoView()
+   }
+   const onMoreMessage = async () => {
+      await dispatch(
+         getMoreRoomMessages({
+            offset: messageOffset + 1,
+            limit: messageLimit,
+            token: user?.token,
+            user_id: params.id,
+         })
+      )
+      await dispatch(setMessageOffset(messageOffset + 1))
    }
    return (
       <div className='flex gap-8'>
@@ -188,7 +204,7 @@ const MessagePage = () => {
             id='messages'
             className='flex-1 h-[80vh] overflow-y-auto pt-[80px]'
          >
-            {message?.length < 1 ? (
+            {message?.rows?.length < 1 ? (
                <AttentionMessage
                   title={`Are you interested to ${userProfile?.username}`}
                >
@@ -217,7 +233,15 @@ const MessagePage = () => {
                </AttentionMessage>
             ) : (
                <>
-                  {message.map((content) => {
+                  {message?.count === message?.rows?.length ? null : (
+                     <div
+                        onClick={onMoreMessage}
+                        className='py-5 my-5 text-center text-white cursor-pointer rounded-md hover:bg-secondary hover:bg-opacity-10'
+                     >
+                        <p>More...</p>
+                     </div>
+                  )}
+                  {message?.rows?.map((content) => {
                      if (content.user_id !== user.id) {
                         return (
                            <LeftMessage

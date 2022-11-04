@@ -55,7 +55,7 @@ module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
       throw new Error('You have no communication with this user yet!')
    }
    await db.message.update({ isRead: true }, { where: { roomId: room.id } })
-   const messages = await db.message.findAll({
+   const messages = await db.message.findAndCountAll({
       where: { roomId: room.id },
       order: [['createdAt', 'DESC']],
       offset: Number(offset) * Number(limit),

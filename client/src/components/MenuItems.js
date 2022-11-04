@@ -13,22 +13,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
 import {
-   countAllUnreadMessages,
-   getAllMessages,
-   readRoomMessages,
    selectAllMessages,
    selectUnreadMessages,
 } from '../store/features/messages/messagesSlice'
 import { getBells, selectBells } from '../store/features/bells/bellsSlice'
+import { socket } from '../socket'
 
 const MenuItems = () => {
-   const isFetch = useRef(false)
    const location = useLocation()
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
-   const url = useSelector((state) => state.url)
-   const { messages, messagesLimit, messagesOffset } =
-      useSelector(selectAllMessages)
+   const { messages } = useSelector(selectAllMessages)
    const { unreadMessages } = useSelector(selectUnreadMessages)
    const { bellsOffset, bellsLimit, bells } = useSelector(selectBells)
    useEffect(() => {
@@ -49,8 +44,9 @@ const MenuItems = () => {
       }
    }, [user, messages])
 
-   const logoutHandler = () => {
+   const logoutHandler = async () => {
       dispatch(logout(user.id))
+      socket.emit('disconnected')
    }
    return (
       <div className='sticky top-[85px]'>

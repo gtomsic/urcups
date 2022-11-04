@@ -30,12 +30,12 @@ const initialState = {
       messagesOffset: 0,
    },
    message: {
-      message: [],
+      message: {},
       messageLoading: false,
       messageSuccess: false,
       messageError: false,
       messageMessage: '',
-      messageLimit: 30,
+      messageLimit: 10,
       messageOffset: 0,
    },
    userProfile: {
@@ -121,8 +121,24 @@ export const getMessageUserProfile = createAsyncThunk(
       }
    }
 )
+export const getMoreRoomMessages = createAsyncThunk(
+   'user/getMoreRoomMessages',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetRoomMessages(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
 export const getRoomMessages = createAsyncThunk(
-   'user/getRoomMessage',
+   'user/getRoomMessages',
    async (data, thunkApi) => {
       try {
          return await serviceGetRoomMessages(data)
@@ -159,24 +175,30 @@ const messagesSlice = createSlice({
    reducers: {
       resetMessage: (state) => {
          state.message = {
-            message: [],
+            message: {},
             messageLoading: false,
             messageSuccess: false,
             messageError: false,
             messageMessage: '',
-            limit: 30,
+            limit: 10,
             offset: 0,
          }
+      },
+      setMessageOffset: (state, action) => {
+         state.message.messageOffset = action.payload
       },
       insertMessage: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
          const sortedMessage = _.orderBy(
-            [...state.message.message, { ...action.payload, isRead: true }],
+            [
+               ...state.message.message.rows,
+               { ...action.payload, isRead: true },
+            ],
             'id',
             'asc'
          )
-         state.message.message = sortedMessage
+         state.message.message.rows = sortedMessage
       },
       insertMessages: (state, action) => {
          const profileId = state.userProfile.userProfile.id
@@ -242,11 +264,11 @@ const messagesSlice = createSlice({
             state.message.messageLoading = false
             state.message.messageSuccess = true
             const sortedMessage = _.orderBy(
-               [...state.message.message, action.payload],
+               [...state.message.message.rows, action.payload],
                'id',
                'asc'
             )
-            state.message.message = sortedMessage
+            state.message.message.rows = sortedMessage
             socket.emit(`message`, {
                ...action.payload,
             })
@@ -264,14 +286,36 @@ const messagesSlice = createSlice({
             state.message.messageLoading = false
             state.message.messageSuccess = true
             state.message.messageError = false
-            const sortedMessages = _.orderBy(action.payload, 'id', 'asc')
-            state.message.message = sortedMessages
+            const sortedMessages = _.orderBy(action.payload.rows, 'id', 'asc')
+            state.message.message.rows = sortedMessages
+            state.message.message.count = action.payload.count
          })
          .addCase(getRoomMessages.rejected, (state, action) => {
             state.message.messageLoading = false
             state.message.messageSuccess = false
             state.message.messageError = true
-            state.message.message = []
+            state.message.message = {}
+            state.message.messageMessage = action.payload
+         })
+         .addCase(getMoreRoomMessages.pending, (state) => {
+            state.message.messageLoading = true
+         })
+         .addCase(getMoreRoomMessages.fulfilled, (state, action) => {
+            state.message.messageLoading = false
+            state.message.messageSuccess = true
+            state.message.messageError = false
+            const sortedMessages = _.orderBy(action.payload.rows, 'id', 'asc')
+            state.message.message.rows = [
+               ...sortedMessages,
+               ...state.message.message.rows,
+            ]
+            state.message.message.count = action.payload.count
+         })
+         .addCase(getMoreRoomMessages.rejected, (state, action) => {
+            state.message.messageLoading = false
+            state.message.messageSuccess = false
+            state.message.messageError = true
+            state.message.message = {}
             state.message.messageMessage = action.payload
          })
          .addCase(getMessageUserProfile.pending, (state) => {
@@ -346,6 +390,7 @@ export const {
    setIsTypingToTrue,
    setIsTypingToFalse,
    clearRoomProfile,
+   setMessageOffset,
 } = messagesSlice.actions
 export default messagesSlice.reducer
 
