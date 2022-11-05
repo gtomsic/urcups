@@ -4,15 +4,24 @@ import { IoTrashOutline } from 'react-icons/io5'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { fetchUser } from '../../store/features/user/userService'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import {
+   countBells,
+   readBell,
+   selectBells,
+} from '../../store/features/bells/bellsSlice'
+import { selectUser } from '../../store/features/user/userSlice'
 
 const BellsItem = ({ bell, onDelete }) => {
    const isFetch = useRef(false)
    const navigate = useNavigate()
-   const [profile, setProfile] = useState({})
+   const dispatch = useDispatch()
+   const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
+   const [profile, setProfile] = useState({})
+   const { bellsLimit, bellsOffset } = useSelector(selectBells)
 
    useEffect(() => {
       if (isFetch.current === false) {
@@ -27,9 +36,18 @@ const BellsItem = ({ bell, onDelete }) => {
          isFetch.current = true
       }
    }, [bell])
-   const onClickHandler = (e) => {
+   const onClickHandler = async (e) => {
       e.preventDefault()
       e.stopPropagation()
+      await dispatch(
+         readBell({
+            user_id: bell?.user_id,
+            limit: bellsLimit,
+            offset: bellsOffset,
+            token: user?.token,
+         })
+      )
+      dispatch(countBells({ token: user?.token }))
       navigate(bell.link)
    }
    const onDeleteBellHandler = (e) => {

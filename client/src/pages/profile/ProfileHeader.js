@@ -67,7 +67,7 @@ const ProfileHeader = ({ profile }) => {
          dispatch(
             actionBells({
                title: 'added you as favorite.',
-               link: location.pathname,
+               link: `/profile/${user?.username}`,
                user_id: profile?.id,
                body: user?.username + ' added you as favorite.',
                token: user?.token,

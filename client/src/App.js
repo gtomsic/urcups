@@ -40,18 +40,22 @@ const App = () => {
    const { user } = useSelector(selectUser)
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages)
+
+   useEffect(() => {
+      socket.on('user', async (data) => {
+         if (!data?.id) return
+         await dispatch(socketUpdateUser(data))
+         const localUser = JSON.parse(localStorage.getItem('user'))
+         if (data?.id === localUser?.id && data?.isOnline === false) {
+            // console.log(data.id, localUser.id)
+            localStorage.removeItem('user')
+            await dispatch(resetUser())
+         }
+      })
+   })
    useEffect(() => {
       const timerId = setTimeout(() => {
          if (!user?.id) return
-         socket.on('user', async (data) => {
-            if (!data?.id) return
-            await dispatch(socketUpdateUser(data))
-            const localUser = JSON.parse(localStorage.getItem('user'))
-            if (data.id === localUser.id && data.isOnline === false) {
-               await dispatch(resetUser())
-               localStorage.removeItem('user')
-            }
-         })
          socket.on(`${user?.id}/message`, (msg) => {
             dispatch(insertMessage(msg))
             dispatch(insertMessages(msg))

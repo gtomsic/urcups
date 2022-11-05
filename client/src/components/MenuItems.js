@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout, selectUser } from '../store/features/user/userSlice'
 import Button from './Button'
 import { selectUnreadMessages } from '../store/features/messages/messagesSlice'
-import { getBells, selectBells } from '../store/features/bells/bellsSlice'
+import { countBells, selectBells } from '../store/features/bells/bellsSlice'
 import { socket } from '../socket'
 
 const MenuItems = () => {
@@ -19,14 +19,12 @@ const MenuItems = () => {
    const dispatch = useDispatch()
    const { user } = useSelector(selectUser)
    const { unreadMessages } = useSelector(selectUnreadMessages)
-   const { bellsOffset, bellsLimit, bells } = useSelector(selectBells)
+   const { bellsOffset, bellsLimit, count } = useSelector(selectBells)
    useEffect(() => {
       if (!user?.id) return
       const timerId = setTimeout(() => {
          dispatch(
-            getBells({
-               limit: bellsLimit,
-               offset: bellsOffset,
+            countBells({
                token: user?.token,
             })
          )
@@ -83,9 +81,9 @@ const MenuItems = () => {
                      >
                         <div className='relative'>
                            <FaBell />
-                           {bells?.count > 0 ? (
+                           {count > 0 ? (
                               <span className='absolute text-xs bg-danger px-1 rounded-full top-[-10px] text-white left-2'>
-                                 {bells?.count}
+                                 {count}
                               </span>
                            ) : null}
                         </div>

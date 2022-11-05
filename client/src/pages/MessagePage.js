@@ -22,11 +22,7 @@ import AttentionMessage from '../components/AttentionMessage'
 import MessageProfileCard from '../components/messages/MessageProfileCard'
 import Messages from '../components/messages/Messages'
 import Avatar from '../components/Avatar'
-import {
-   actionBells,
-   readBell,
-   selectBells,
-} from '../store/features/bells/bellsSlice'
+import { actionBells, countBells } from '../store/features/bells/bellsSlice'
 import { socket } from '../socket'
 
 const MessagePage = () => {
@@ -43,7 +39,6 @@ const MessagePage = () => {
    const [userTyping, setUserTyping] = useState(false)
    const { user } = useSelector(selectUser)
    const { userProfile } = useSelector(selectMessageUserProfile)
-   const { bellsOffset, bellsLimit } = useSelector(selectBells)
    const { message, messageOffset, messageLimit } = useSelector(selectMessage)
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
@@ -62,7 +57,7 @@ const MessagePage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   })
+   }, [])
 
    useEffect(() => {
       let insedeTimer
@@ -83,26 +78,10 @@ const MessagePage = () => {
          clearTimeout(timerId)
          clearTimeout(insedeTimer)
       }
-   }, [body, params.id, user, dispatch])
+   }, [body])
 
    useEffect(() => {
-      const timerId = setTimeout(() => {
-         dispatch(
-            readBell({
-               user_id: userProfile?.id,
-               limit: bellsLimit,
-               offset: bellsOffset,
-               token: user?.token,
-            })
-         )
-      }, 500)
-      return () => {
-         clearTimeout(timerId)
-      }
-   }, [userProfile, bellsLimit, bellsOffset, user, dispatch])
-
-   useEffect(() => {
-      let time = userProfile?.isOnline ? 60000 * 2 : 0
+      let time = userProfile?.isOnline == false ? 0 : 60000 * 2
       const timerId = setTimeout(() => {
          if (send === true) {
             dispatch(
@@ -119,7 +98,7 @@ const MessagePage = () => {
       return () => {
          clearTimeout(timerId)
       }
-   }, [send, message, user, userProfile, dispatch])
+   }, [send, message])
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
       setOpenInput(true)
@@ -127,7 +106,7 @@ const MessagePage = () => {
          setOpenInput(false)
          dispatch(clearRoomProfile())
       }
-   }, [dispatch])
+   }, [])
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
       scrollEnd.current?.scrollIntoView()
@@ -153,6 +132,7 @@ const MessagePage = () => {
             await dispatch(
                countAllUnreadMessages({ token: user?.token, user_id: user.id })
             )
+            dispatch(countBells({ token: user?.token }))
             scrollEnd.current?.scrollIntoView()
          }
       }
@@ -160,7 +140,7 @@ const MessagePage = () => {
       return () => {
          isFetch.current = true
       }
-   }, [params, user, messageLimit, dispatch])
+   }, [params, user, dispatch])
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {

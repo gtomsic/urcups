@@ -5,6 +5,13 @@ const asyncHandler = require('express-async-handler')
 const { viewedProfile } = require('../public/htmls')
 const { sendEmail } = require('../utils/nodemailer')
 
+module.exports.controllerCountUnReadBells = asyncHandler(async (req, res) => {
+   const bells = await db.bell.count({
+      where: { receiver: req.user.id, isRead: false },
+   })
+   res.status(200).json(bells)
+})
+
 module.exports.controllerReadBells = asyncHandler(async (req, res) => {
    await db.bell.update(
       { isRead: true },

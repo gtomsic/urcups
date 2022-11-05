@@ -7,8 +7,8 @@ function UserCard({ user }) {
       <div
          className={
             user?.isOnline
-               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-secondary to-primary hover:from-danger pb-[100px]'
-               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-danger  pb-[100px]'
+               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-dark to-primary hover:from-primary hover:to-primary pb-[100px]'
+               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-primary hover:to-primary  pb-[100px]'
          }
       >
          <div

@@ -26,6 +26,7 @@ import { fetchUser } from '../store/features/user/userService'
 import Avatar from '../components/Avatar'
 import moment from 'moment'
 import { socket } from '../socket'
+import { countBells } from '../store/features/bells/bellsSlice'
 
 const StoryPage = () => {
    const scrollView = useRef(null)
@@ -51,7 +52,6 @@ const StoryPage = () => {
       const timerId = setTimeout(() => {
          const fetchStory = async () => {
             const fetchLoves = await serviceCountLoves({ story_id: story.id })
-            scrollView.current.scrollIntoView()
             setLoves(fetchLoves)
             if (user?.id) {
                const checkLove = await serviceCheckLove({
@@ -59,11 +59,13 @@ const StoryPage = () => {
                   token: user?.token,
                })
                setIsLove(checkLove)
+               dispatch(countBells({ token: user?.token }))
             }
             const response = await serviceCountComments(story.id)
             setCountComments(response.count)
             const getProfile = await fetchUser(story.user_id)
             setProfile(getProfile)
+            scrollView.current.scrollIntoView()
          }
          fetchStory()
       }, 500)

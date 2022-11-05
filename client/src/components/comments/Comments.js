@@ -68,6 +68,14 @@ const Comments = ({ profile, story }) => {
       e.preventDefault()
       e.stopPropagation()
       if (!Boolean(state.body.trim())) return
+      await reduxDispatch(createComments(state))
+      dispatch({ type: commentAction.SET_BODY, payload: '' })
+      reduxDispatch(countComments(params.story_id))
+      socket.emit('stories', {
+         id: params.story_id,
+         path: `/comments/${params.story_id}`,
+      })
+      if (story?.user_id === user?.id) return
       reduxDispatch(
          actionBells({
             title: 'just commented on your story.',
@@ -77,14 +85,6 @@ const Comments = ({ profile, story }) => {
             token: user?.token,
          })
       )
-      dispatch({ type: commentAction.SET_BODY, payload: '' })
-      reduxDispatch(countComments(params.story_id))
-      socket.emit('stories', {
-         id: params.story_id,
-         path: `/comments/${params.story_id}`,
-      })
-      if (story?.user_id === user?.id) return
-      await reduxDispatch(createComments(state))
    }
    return (
       <>

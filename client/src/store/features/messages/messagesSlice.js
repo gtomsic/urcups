@@ -5,6 +5,7 @@ import { socket } from '../../../socket'
 import {
    serviceCountAllUnreadMessages,
    serviceGetAllMessages,
+   serviceGetMoreMessages,
    serviceGetRoomMessages,
    serviceGetUserProfile,
    serviceReadRoomMessages,
@@ -21,13 +22,13 @@ const initialState = {
       unreadMessage: '',
    },
    messages: {
-      messages: [],
+      messages: {},
       messagesLoading: false,
       messagesSuccess: false,
       messagesError: false,
       messagesMessage: '',
-      messagesLimit: 15,
       messagesOffset: 0,
+      messagesLimit: 30,
    },
    message: {
       message: {},
@@ -35,7 +36,7 @@ const initialState = {
       messageSuccess: false,
       messageError: false,
       messageMessage: '',
-      messageLimit: 10,
+      messageLimit: 15,
       messageOffset: 0,
    },
    userProfile: {
@@ -78,6 +79,22 @@ export const countAllUnreadMessages = createAsyncThunk(
          const id = thunkApi.getState().messages.userProfile.userProfile.id
          if (id === data.user_id) return
          return await serviceCountAllUnreadMessages(data.token)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+export const getMoreMessages = createAsyncThunk(
+   'user/getMoreMessages',
+   async (data, thunkApi) => {
+      try {
+         return await serviceGetMoreMessages(data)
       } catch (error) {
          const message =
             (error.response &&
@@ -187,6 +204,9 @@ const messagesSlice = createSlice({
       setMessageOffset: (state, action) => {
          state.message.messageOffset = action.payload
       },
+      setMessagesOffset: (state, action) => {
+         state.messages.messagesOffset = action.payload
+      },
       insertMessage: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId !== action.payload.user_id) return
@@ -203,22 +223,22 @@ const messagesSlice = createSlice({
       insertMessages: (state, action) => {
          const profileId = state.userProfile.userProfile.id
          if (profileId === action.payload.user_id) return
-         const filteredMessages = state.messages.messages.filter(
+         const filteredMessages = state.messages.messages.rows.filter(
             (message) => message.user_id !== action.payload.user_id
          )
-         state.messages.messages = [
+         state.messages.messages.rows = [
             { ...action.payload, isRead: false },
             ...filteredMessages,
          ]
       },
       updateIsReadMessage: (state, action) => {
-         const updated = state.messages.messages.filter(
+         const updated = state.messages.messages.rows.filter(
             (message) => message.user_id === action.payload
          )
-         const filteredMessages = state.messages.messages.filter(
+         const filteredMessages = state.messages.messages.rows.filter(
             (message) => message.user_id !== action.payload
          )
-         state.messages.messages = [
+         state.messages.messages.rows = [
             {
                id: updated[0].id,
                attachment: updated[0].attachment,
@@ -340,10 +360,31 @@ const messagesSlice = createSlice({
             state.messages.messagesLoading = false
             state.messages.messagesSuccess = true
             state.messages.messagesError = false
-            const sortedMessages = _.orderBy(action.payload, 'id', 'desc')
-            state.messages.messages = sortedMessages
+            const sortedMessages = _.orderBy(action.payload.rows, 'id', 'desc')
+            state.messages.messages.rows = sortedMessages
+            state.messages.messages.count = action.payload.count
          })
          .addCase(getAllMessages.rejected, (state, action) => {
+            state.messages.messagesLoading = false
+            state.messages.messagesSuccess = false
+            state.messages.messagesError = true
+            state.messages.messagesMessage = action.payload
+         })
+         .addCase(getMoreMessages.pending, (state) => {
+            state.messages.messagesLoading = true
+         })
+         .addCase(getMoreMessages.fulfilled, (state, action) => {
+            state.messages.messagesLoading = false
+            state.messages.messagesSuccess = true
+            state.messages.messagesError = false
+            const sortedMessages = _.orderBy(action.payload.rows, 'id', 'desc')
+            state.messages.messages.rows = [
+               ...state.messages.messages.rows,
+               ...sortedMessages,
+            ]
+            state.messages.messages.count = action.payload.count
+         })
+         .addCase(getMoreMessages.rejected, (state, action) => {
             state.messages.messagesLoading = false
             state.messages.messagesSuccess = false
             state.messages.messagesError = true
@@ -391,6 +432,7 @@ export const {
    setIsTypingToFalse,
    clearRoomProfile,
    setMessageOffset,
+   setMessagesOffset,
 } = messagesSlice.actions
 export default messagesSlice.reducer
 

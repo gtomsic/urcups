@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {
    serviceBellAction,
+   serviceCountBells,
    serviceCreateBells,
    serviceDeleteBell,
    serviceGetBells,
@@ -8,6 +9,7 @@ import {
 } from './serviceBells'
 
 const initialState = {
+   count: 0,
    bell: {},
    bellLoading: false,
    bellSuccess: false,
@@ -27,6 +29,23 @@ export const actionBells = createAsyncThunk(
    async (data, thunkApi) => {
       try {
          return await serviceBellAction(data)
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString()
+         return thunkApi.rejectWithValue(message)
+      }
+   }
+)
+
+export const countBells = createAsyncThunk(
+   'countBells',
+   async (data, thunkApi) => {
+      try {
+         return await serviceCountBells(data)
       } catch (error) {
          const message =
             (error.response &&
@@ -150,6 +169,20 @@ const bellsSlice = createSlice({
             state.bell = action.payload
          })
          .addCase(createBells.rejected, (state, action) => {
+            state.bellLoading = false
+            state.bellSuccess = false
+            state.bellError = true
+            state.bellMessage = action.payload
+         })
+         .addCase(countBells.pending, (state) => {
+            state.bellLoading = true
+         })
+         .addCase(countBells.fulfilled, (state, action) => {
+            state.bellLoading = false
+            state.bellSuccess = true
+            state.count = action.payload
+         })
+         .addCase(countBells.rejected, (state, action) => {
             state.bellLoading = false
             state.bellSuccess = false
             state.bellError = true

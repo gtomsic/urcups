@@ -3,8 +3,10 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import urcups from '../assets/avatar.jpg'
+import { selectUser } from '../store/features/user/userSlice'
 
-const MessageItem = ({ user }) => {
+const UserProfile = () => {
+   const { user } = useSelector(selectUser)
    const url = useSelector((state) => state.url)
    const address =
       `${user?.city}, ${user?.stateProvince}, ${user?.country}`.split('')
@@ -45,7 +47,7 @@ const MessageItem = ({ user }) => {
    )
 }
 
-MessageItem.defaultProps = {
+UserProfile.defaultProps = {
    user: {
       avatar: urcups,
       username: 'urcups',
@@ -57,4 +59,4 @@ MessageItem.defaultProps = {
    },
 }
 
-export default MessageItem
+export default UserProfile

@@ -5,7 +5,9 @@ import AttentionMessage from '../components/AttentionMessage'
 import MessageItem from '../components/messages/MessageItem'
 import {
    getAllMessages,
+   getMoreMessages,
    selectAllMessages,
+   setMessagesOffset,
 } from '../store/features/messages/messagesSlice'
 import { selectUser } from '../store/features/user/userSlice'
 
@@ -28,7 +30,7 @@ const MessagesPage = () => {
       if (isFetch.current === false && location.pathname === '/messages') {
          dispatch(
             getAllMessages({
-               offset: messagesOffset,
+               offset: 0,
                limit: messagesLimit,
                token: user?.token,
                user_id: user?.id,
@@ -41,18 +43,20 @@ const MessagesPage = () => {
    }, [dispatch, messagesLimit, messagesOffset, user, location])
 
    const onClickHandler = (e, user_id) => {
+      e.preventDefault()
       e.stopPropagation()
       navigate(`/messages/${user_id}`)
    }
    const onMoreMessagesHandler = () => {
       dispatch(
-         getAllMessages({
-            offset: messagesOffset,
-            limit: messagesLimit + 1,
+         getMoreMessages({
+            offset: messagesOffset + 1,
+            limit: messagesLimit,
             token: user?.token,
             user_id: user?.id,
          })
       )
+      dispatch(setMessagesOffset(messagesOffset + 1))
    }
    return (
       <>
@@ -65,7 +69,7 @@ const MessagesPage = () => {
             </AttentionMessage>
          ) : (
             <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2'>
-               {messages?.map((message) => (
+               {messages?.rows?.map((message) => (
                   <div
                      onClick={(e) => onClickHandler(e, message.user_id)}
                      key={message.id}

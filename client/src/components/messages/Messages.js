@@ -31,7 +31,7 @@ const Messages = () => {
    }, [messagesLimit, messagesOffset, user])
    return (
       <div className='h-[480px] overflow-scroll flex flex-col gap-1'>
-         {messages?.map((message) => (
+         {messages?.rows?.map((message) => (
             <MessageItem
                key={message.id}
                image={message.avatar}

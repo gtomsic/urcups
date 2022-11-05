@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectProfile } from '../../store/features/profile/profileSlice'
 import { selectUser } from '../../store/features/user/userSlice'
 import {
+   countBells,
    createBells,
    readBell,
    selectBells,
@@ -30,6 +31,7 @@ const Profile = () => {
                token: user?.token,
             })
          )
+         dispatch(countBells({ token: user?.token }))
       }
       return () => {
          isFetch.current = true

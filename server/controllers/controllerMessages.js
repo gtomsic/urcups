@@ -3,6 +3,23 @@ const Op = require('sequelize').Op
 const { v4: uuid } = require('uuid')
 const asyncHandler = require('express-async-handler')
 
+module.exports.controllerGetMoreMessages = asyncHandler(async (req, res) => {
+   const id = req.user.id
+   const { limit, offset } = req.body
+   const rooms = await db.room.findAndCountAll({
+      where: { [Op.or]: [{ receiver: id }, { sender: id }] },
+      order: [['createdAt', 'DESC']],
+      offset: Number(offset) * Number(limit),
+      limit: Number(limit),
+      subQuery: false,
+      include: [
+         { model: db.message, limit: 1, order: [['createdAt', 'DESC']] },
+      ],
+   })
+
+   res.status(200).json(rooms)
+})
+
 module.exports.controllerReadRoomMessages = asyncHandler(async (req, res) => {
    const checkIsEqual = await db.message.findOne({
       where: { roomId: req.body.roomId },
@@ -65,24 +82,22 @@ module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
    res.status(200).json(messages)
 })
 
-module.exports.controllerGetRoomsWithMessage = asyncHandler(
-   async (req, res) => {
-      const id = req.user.id
-      const { limit, offset } = req.params
-      const rooms = await db.room.findAll({
-         where: { [Op.or]: [{ receiver: id }, { sender: id }] },
-         order: [['createdAt', 'DESC']],
-         offset: Number(offset) * Number(limit),
-         limit: Number(limit),
-         subQuery: false,
-         include: [
-            { model: db.message, limit: 1, order: [['createdAt', 'DESC']] },
-         ],
-      })
+module.exports.controllerGetAllMessages = asyncHandler(async (req, res) => {
+   const id = req.user.id
+   const { limit, offset } = req.params
+   const rooms = await db.room.findAndCountAll({
+      where: { [Op.or]: [{ receiver: id }, { sender: id }] },
+      order: [['createdAt', 'DESC']],
+      offset: Number(offset) * Number(limit),
+      limit: Number(limit),
+      subQuery: false,
+      include: [
+         { model: db.message, limit: 1, order: [['createdAt', 'DESC']] },
+      ],
+   })
 
-      res.status(200).json(rooms)
-   }
-)
+   res.status(200).json(rooms)
+})
 
 module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
    const { body, attachment, receiver } = req.body

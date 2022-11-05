@@ -1,5 +1,31 @@
 import axios from '../../../apis/axios'
 
+export const serviceGetMoreMessages = async (data) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${data.token}`,
+      },
+   }
+   const response = await axios.post(`/api/messages/more`, data, config)
+   const newArray = []
+   response.data.rows.filter((item) => {
+      if (Number(item.messages.length) === 1 && item.sender !== data.user_id) {
+         return newArray.push({
+            ...item.messages[0],
+            user_id: item.sender,
+         })
+      } else {
+         return newArray.push({
+            ...item.messages[0],
+            user_id: item.receiver,
+         })
+      }
+   })
+
+   return { rows: newArray, count: response.data.count }
+}
+
 export const serviceReadRoomMessages = async (data) => {
    const config = {
       headers: {
@@ -37,7 +63,7 @@ export const serviceGetAllMessages = async (data) => {
    }
    const response = await axios.get(`/api/messages/${limit}/${offset}`, config)
    const newArray = []
-   response.data.filter((item) => {
+   response.data.rows.filter((item) => {
       if (Number(item.messages.length) === 1 && item.sender !== user_id) {
          return newArray.push({
             ...item.messages[0],
@@ -50,7 +76,8 @@ export const serviceGetAllMessages = async (data) => {
          })
       }
    })
-   return newArray
+
+   return { rows: newArray, count: response.data.count }
 }
 
 export const serviceGetUserProfile = async (data) => {

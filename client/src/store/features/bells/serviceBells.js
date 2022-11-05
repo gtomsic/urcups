@@ -1,5 +1,15 @@
 import axios from '../../../apis/axios'
 
+export const serviceCountBells = async (data) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${data.token}`,
+      },
+   }
+   const response = await axios.get(`/api/bells/count`, config)
+   return response.data
+}
 export const serviceReadBell = async (data) => {
    const config = {
       headers: {
