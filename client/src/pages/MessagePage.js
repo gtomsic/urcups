@@ -82,14 +82,16 @@ const MessagePage = () => {
 
    useEffect(() => {
       let time = userProfile?.isOnline == false ? 0 : 60000 * 2
+      if (!Boolean(body.trim())) return
       const timerId = setTimeout(() => {
          if (send === true) {
             dispatch(
                actionBells({
-                  title: 'new message!',
+                  subject: `New message from ${user?.username}`,
+                  title: `${user?.username} sent you message.`,
                   link: `/messages/${user?.id}`,
                   user_id: userProfile?.id,
-                  body: `sent you message.`,
+                  body: `Like to check ${user?.username} message? 😄`,
                   token: user?.token,
                })
             )

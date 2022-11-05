@@ -66,10 +66,11 @@ const ProfileHeader = ({ profile }) => {
       if (!favorite) {
          dispatch(
             actionBells({
-               title: 'added you as favorite.',
+               subject: `${user?.username} added you as favorite!`,
+               title: `You are added as favorite by ${user?.username}.`,
                link: `/profile/${user?.username}`,
                user_id: profile?.id,
-               body: user?.username + ' added you as favorite.',
+               body: `Please check ${user?.username} here! 😄`,
                token: user?.token,
             })
          )

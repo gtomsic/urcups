@@ -78,10 +78,11 @@ const Comments = ({ profile, story }) => {
       if (story?.user_id === user?.id) return
       reduxDispatch(
          actionBells({
-            title: 'just commented on your story.',
+            subject: 'New comment!',
+            title: `${user?.username} wrote on your story.`,
             link: `/stories/${params.story_id}`,
             user_id: profile?.id,
-            body: `comment on your story.`,
+            body: `Like to ${user?.username} comment! 😄`,
             token: user?.token,
          })
       )

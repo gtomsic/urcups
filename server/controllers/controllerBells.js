@@ -50,7 +50,7 @@ module.exports.controllerGetBells = asyncHandler(async (req, res) => {
 })
 
 module.exports.controllerBellAction = asyncHandler(async (req, res) => {
-   const { title, body, link, user_id } = req.body
+   const { subject, title, body, link, user_id } = req.body
    const user = await db.config.findOne({
       where: { user_id },
    })
@@ -63,15 +63,15 @@ module.exports.controllerBellAction = asyncHandler(async (req, res) => {
    })
    sendEmail(
       user.email,
-      `Hi ${req.user.username} ${title}`,
+      subject,
       viewedProfile({
          title,
-         body: `${req.user.username} ${title}`,
+         body,
          avatar: process.env.SERVER_HOST + req.user.avatar,
          link: process.env.WEB_HOST + link,
          webHost: process.env.WEB_HOST,
          serverHost: process.env.SERVER_HOST,
-         button: `Check Out`,
+         button: `View Now`,
       })
    )
    res.status(201).json(bell)
