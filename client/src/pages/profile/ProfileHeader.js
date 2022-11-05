@@ -70,7 +70,9 @@ const ProfileHeader = ({ profile }) => {
                title: `You are added as favorite by ${user?.username}.`,
                link: `/profile/${user?.username}`,
                user_id: profile?.id,
-               body: `Please check ${user?.username} here! 😄`,
+               body: `Would you like to check on ${
+                  user?.sex === 'Male' ? 'his' : 'her'
+               } profile? 😄`,
                token: user?.token,
             })
          )

@@ -82,7 +82,9 @@ const Comments = ({ profile, story }) => {
             title: `${user?.username} wrote on your story.`,
             link: `/stories/${params.story_id}`,
             user_id: profile?.id,
-            body: `Like to ${user?.username} comment! 😄`,
+            body: `Would you like to check on ${
+               user?.sex === 'Male' ? 'his' : 'her'
+            } comment? 😄`,
             token: user?.token,
          })
       )

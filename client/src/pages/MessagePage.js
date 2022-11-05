@@ -91,7 +91,9 @@ const MessagePage = () => {
                   title: `${user?.username} sent you message.`,
                   link: `/messages/${user?.id}`,
                   user_id: userProfile?.id,
-                  body: `Like to check ${user?.username} message? 😄`,
+                  body: `Would you like to check ${
+                     user?.sex === 'Male' ? 'his' : 'her'
+                  } message? 😄`,
                   token: user?.token,
                })
             )
