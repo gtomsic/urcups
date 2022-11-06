@@ -1,11 +1,12 @@
 const {
    controllerRequestNewPassword,
    controllerUpdatePassword,
-} = require('../controllers/controllerAuth')
+} = require('../controllers/controllerAuth');
+const { auth } = require('../middlewares/middlewareAuth');
 
-const router = require('express').Router()
+const router = require('express').Router();
 
-router.put('/', controllerUpdatePassword)
-router.post('/', controllerRequestNewPassword)
+router.put('/', auth, controllerUpdatePassword);
+router.post('/', controllerRequestNewPassword);
 
-module.exports = router
+module.exports = router;

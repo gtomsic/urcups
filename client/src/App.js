@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import AuthLayout from './layouts/AuthLayout'
-import MainLayout from './layouts/MainLayout'
-import ProfileLayout from './layouts/ProfileLayout'
-import LoginPage from './pages/auth/LoginPage'
-import RegisterPage from './pages/auth/RegisterPage'
-import RegisterSuccessPage from './pages/auth/RegisterSuccessPage'
-import VerifyPage from './pages/auth/VerifyPage'
-import HomePage from './pages/HomePage'
-import MessagesPage from './pages/MessagesPage'
-import BellsPage from './pages/BellsPage'
-import ProfileMain from './pages/profile/ProfileMain'
-import ProfilePage from './pages/ProfilePage'
-import ProfilePhotos from './pages/profile/ProfilePhotos'
-import ProfilePrivatePhotos from './pages/profile/ProfilePivatePhotos'
-import SettingsPage from './pages/SettingsPage'
-import ProfileSettings from './pages/profile/ProfileSettings'
-import ProfileStories from './pages/profile/ProfileStories'
-import ProfileEdit from './pages/profile/ProfileEdit'
-import MessagePage from './pages/MessagePage'
-import FavoritesPage from './pages/FavoritesPage'
-import StoriesPage from './pages/StoriesPage'
-import { useDispatch, useSelector } from 'react-redux'
-import { resetUser, selectUser } from './store/features/user/userSlice'
+import React, { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import AuthLayout from './layouts/AuthLayout';
+import MainLayout from './layouts/MainLayout';
+import ProfileLayout from './layouts/ProfileLayout';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import RegisterSuccessPage from './pages/auth/RegisterSuccessPage';
+import VerifyPage from './pages/auth/VerifyPage';
+import HomePage from './pages/HomePage';
+import MessagesPage from './pages/MessagesPage';
+import BellsPage from './pages/BellsPage';
+import ProfileMain from './pages/profile/ProfileMain';
+import ProfilePage from './pages/ProfilePage';
+import ProfilePhotos from './pages/profile/ProfilePhotos';
+import ProfilePrivatePhotos from './pages/profile/ProfilePivatePhotos';
+import SettingsPage from './pages/SettingsPage';
+import ProfileSettings from './pages/profile/ProfileSettings';
+import ProfileStories from './pages/profile/ProfileStories';
+import ProfileEdit from './pages/profile/ProfileEdit';
+import MessagePage from './pages/MessagePage';
+import FavoritesPage from './pages/FavoritesPage';
+import StoriesPage from './pages/StoriesPage';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetUser, selectUser } from './store/features/user/userSlice';
 import {
    countAllUnreadMessages,
    getAllMessages,
@@ -30,48 +30,49 @@ import {
    insertMessages,
    readRoomMessages,
    selectAllMessages,
-} from './store/features/messages/messagesSlice'
-import StoryPage from './pages/StoryPage'
-import { socket } from './socket'
-import { socketUpdateUser } from './store/features/users/usersSlice'
-import ForgotPassword from './pages/auth/ForgotPassword'
+} from './store/features/messages/messagesSlice';
+import StoryPage from './pages/StoryPage';
+import { socket } from './socket';
+import { socketUpdateUser } from './store/features/users/usersSlice';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import NewPassword from './pages/auth/NewPassword';
 
 const App = () => {
-   const dispatch = useDispatch()
-   const { user } = useSelector(selectUser)
+   const dispatch = useDispatch();
+   const { user } = useSelector(selectUser);
    const { messages, messagesOffset, messagesLimit } =
-      useSelector(selectAllMessages)
+      useSelector(selectAllMessages);
 
    useEffect(() => {
       socket.on('user', async (data) => {
-         if (!data?.id) return
-         await dispatch(socketUpdateUser(data))
-         const localUser = JSON.parse(localStorage.getItem('user'))
+         if (!data?.id) return;
+         await dispatch(socketUpdateUser(data));
+         const localUser = JSON.parse(localStorage.getItem('user'));
          if (data?.id === localUser?.id && data?.isOnline == false) {
-            localStorage.removeItem('user')
-            dispatch(resetUser())
+            localStorage.removeItem('user');
+            dispatch(resetUser());
          }
-      })
-   })
+      });
+   });
    useEffect(() => {
       const timerId = setTimeout(() => {
-         if (!user?.id) return
+         if (!user?.id) return;
          socket.on(`${user?.id}/message`, (msg) => {
-            dispatch(insertMessage(msg))
-            dispatch(insertMessages(msg))
+            dispatch(insertMessage(msg));
+            dispatch(insertMessages(msg));
             dispatch(
                countAllUnreadMessages({
                   token: user?.token,
                   user_id: msg.user_id,
                })
-            )
+            );
             dispatch(
                readRoomMessages({
                   token: user?.token,
                   user_id: msg.user_id,
                   roomId: msg.roomId,
                })
-            )
+            );
             dispatch(
                getAllMessages({
                   offset: messagesOffset,
@@ -79,36 +80,36 @@ const App = () => {
                   token: user.token,
                   user_id: user.id,
                })
-            )
-         })
-      }, 500)
+            );
+         });
+      }, 500);
       return () => {
-         clearTimeout(timerId)
-      }
-   }, [])
+         clearTimeout(timerId);
+      };
+   }, []);
    useEffect(() => {
-      if (!user?.id) return
+      if (!user?.id) return;
       const timerId = setTimeout(() => {
-         socket.emit('user', user)
-      }, 500)
+         socket.emit('user', user);
+      }, 500);
       return () => {
-         clearTimeout(timerId)
-      }
-   }, [user])
+         clearTimeout(timerId);
+      };
+   }, [user]);
    useEffect(() => {
-      if (!user?.id) return
+      if (!user?.id) return;
       dispatch(
          countAllUnreadMessages({ token: user?.token, user_id: user?.id })
-      )
-   }, [user, messages, dispatch])
+      );
+   }, [user, messages, dispatch]);
 
    useEffect(() => {
       if (user?.id) {
          dispatch(
             countAllUnreadMessages({ token: user?.token, user_id: user.id })
-         )
+         );
       }
-   }, [user, dispatch])
+   }, [user, dispatch]);
 
    return (
       <div className=' bg-dark text-gray min-h-screen w-full'>
@@ -153,11 +154,15 @@ const App = () => {
                <Route path='/auth/request' element={<ForgotPassword />} />
                <Route path='/auth/register' element={<RegisterPage />} />
                <Route path='/auth/success' element={<RegisterSuccessPage />} />
+               <Route
+                  path='/auth/new_password/:token/:email'
+                  element={<NewPassword />}
+               />
                <Route path='/auth/verify/:token' element={<VerifyPage />} />
             </Route>
          </Routes>
       </div>
-   )
-}
+   );
+};
 
-export default App
+export default App;
