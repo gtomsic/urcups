@@ -5,11 +5,12 @@ import ErrorMessage from '../../components/ErrorMessage'
 import TextInput from '../../components/forms/TextInput'
 import Loader from '../../components/loader/Loader'
 import Modal from '../../components/Modal'
+import PrimaryButton from '../../components/PrimaryButton'
 import { login, selectUser } from '../../store/features/user/userSlice'
 
-const LoginPage = () => {
-   const [email, setEmail] = useState('')
+const ForgotPassword = () => {
    const [password, setPassword] = useState('')
+   const [confirmPassword, setConfirmPassword] = useState('')
    const { user } = useSelector(selectUser)
    const { isLoading, isSuccess, isError, message } = useSelector(selectUser)
    const navigate = useNavigate()
@@ -19,22 +20,10 @@ const LoginPage = () => {
          navigate('/')
       }
    }, [user])
-   useEffect(() => {
-      const redirect = JSON.parse(localStorage.getItem('redirect'))
-      if (isSuccess) {
-         if (redirect) {
-            navigate(redirect)
-            localStorage.removeItem('redirect')
-            return
-         } else {
-            navigate('/')
-         }
-      }
-   }, [isSuccess, dispatch, navigate])
    const onSubmitHandler = (e) => {
       e.preventDefault()
-      const data = { email, password }
-      dispatch(login(data))
+      e.stopPropagation()
+      console.log('Submited')
    }
    return (
       <form onSubmit={onSubmitHandler} className='relative'>
@@ -44,14 +33,6 @@ const LoginPage = () => {
                <Loader>Checking Credentials...</Loader>
             </Modal>
          ) : null}
-         <TextInput
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type='text'
-            name='username'
-            label='Email'
-            title='Email'
-         />
 
          <TextInput
             value={password}
@@ -61,6 +42,14 @@ const LoginPage = () => {
             label='Password'
             title='Password'
          />
+         <TextInput
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            type='password'
+            name='confirmPassword'
+            label='Confirm Passsword'
+            title='Confirm Password'
+         />
          <div className='p-4'>
             <p className='text-light'>
                No account with us.{' '}
@@ -69,24 +58,18 @@ const LoginPage = () => {
                </Link>
             </p>
          </div>
-         <TextInput
-            type='submit'
-            name='submit'
-            title='Submit'
-            value='Login'
-            label=''
-            bg='bg-gradient-to-tr from-primary bg-secondary text-white hover:from-warning duration-300 cursor-pointer'
-         />
-         <div className='p-4'>
-            <p className='text-light'>
-               Forgot password{' '}
-               <Link to='/auth/request' className='text-secondary ml-3'>
-                  Reset your password here!
-               </Link>
-            </p>
+         <div className='w-full grid grid-cols-2 gap-2'>
+            <PrimaryButton
+               onClick={() => navigate('/auth')}
+               type='button'
+               add='from-primary to-dark'
+            >
+               Back
+            </PrimaryButton>
+            <PrimaryButton type='submit'>Submit</PrimaryButton>
          </div>
       </form>
    )
 }
 
-export default LoginPage
+export default ForgotPassword

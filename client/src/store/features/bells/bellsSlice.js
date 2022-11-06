@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {
    serviceBellAction,
@@ -208,8 +209,13 @@ const bellsSlice = createSlice({
          .addCase(getBells.fulfilled, (state, action) => {
             state.bellsLoading = false
             state.bellsSuccess = true
-            state.bells = action.payload
-            state.bells = action.payload
+            const sortedBells = _.orderBy(
+               action.payload.rows,
+               'createdAt',
+               'desc'
+            )
+            state.bells.rows = sortedBells
+            state.bells.count = action.payload.count
          })
          .addCase(getBells.rejected, (state, action) => {
             state.bellsLoading = false
@@ -223,7 +229,12 @@ const bellsSlice = createSlice({
          .addCase(getMoreBells.fulfilled, (state, action) => {
             state.bellsLoading = false
             state.bellsSuccess = true
-            state.bells.rows = [...state.bells.rows, ...action.payload.rows]
+            const sortedBells = _.orderBy(
+               action.payload.rows,
+               'createdAt',
+               'asc'
+            )
+            state.bells.rows = [...state.bells.rows, ...sortedBells]
             state.bells.count = action.payload.count
          })
          .addCase(getMoreBells.rejected, (state, action) => {

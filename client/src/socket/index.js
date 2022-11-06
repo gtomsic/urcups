@@ -1,8 +1,11 @@
 import io from 'socket.io-client'
-export let endPoint = `http://10.0.0.50:9000`
+import { socketUrl } from '../url'
 let socket
-if (socket) {
-   socket.close()
-}
-socket = io(`http://10.0.0.50:9000`)
+
+socket = (() => {
+   if (socket) {
+      socket.close()
+   }
+   return (socket = io(socketUrl))
+})()
 export { socket }

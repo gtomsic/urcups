@@ -10,10 +10,11 @@ import favoritesReducer from '../features/favorites/favoritesSlice'
 import storySlice from '../features/stories/storySlice'
 import commentsSlice from '../features/comments/commentsSlice'
 import bellsSlice from '../features/bells/bellsSlice'
+import { serverUrl } from '../../url'
 
 export const store = configureStore({
    reducer: {
-      url: () => 'http://10.0.0.50:8000',
+      url: () => serverUrl,
       user: userReducer,
       users: usersReducers,
       profile: profileReducer,

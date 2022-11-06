@@ -82,7 +82,6 @@ const MessagePage = () => {
 
    useEffect(() => {
       let time = userProfile?.isOnline == false ? 0 : 60000 * 2
-      if (!Boolean(body.trim())) return
       const timerId = setTimeout(() => {
          if (send === true) {
             dispatch(
@@ -157,12 +156,12 @@ const MessagePage = () => {
       }
       if (!Boolean(body.trim())) return
       await dispatch(sendMessage({ data, token: user?.token }))
+      setSend(true)
+      setBody('')
       socket.emit('typing', {
          typing: false,
          receiver: `${params.id}/${user?.id}/typing`,
       })
-      setSend(true)
-      setBody('')
       scrollEnd.current?.scrollIntoView()
    }
    const onMoreMessage = async () => {

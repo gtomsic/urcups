@@ -34,6 +34,7 @@ import {
 import StoryPage from './pages/StoryPage'
 import { socket } from './socket'
 import { socketUpdateUser } from './store/features/users/usersSlice'
+import ForgotPassword from './pages/auth/ForgotPassword'
 
 const App = () => {
    const dispatch = useDispatch()
@@ -46,10 +47,9 @@ const App = () => {
          if (!data?.id) return
          await dispatch(socketUpdateUser(data))
          const localUser = JSON.parse(localStorage.getItem('user'))
-         if (data?.id === localUser?.id && data?.isOnline === false) {
-            // console.log(data.id, localUser.id)
+         if (data?.id === localUser?.id && data?.isOnline == false) {
             localStorage.removeItem('user')
-            await dispatch(resetUser())
+            dispatch(resetUser())
          }
       })
    })
@@ -150,6 +150,7 @@ const App = () => {
             </Route>
             <Route path='/auth' element={<AuthLayout />}>
                <Route path='/auth' element={<LoginPage />} />
+               <Route path='/auth/request' element={<ForgotPassword />} />
                <Route path='/auth/register' element={<RegisterPage />} />
                <Route path='/auth/success' element={<RegisterSuccessPage />} />
                <Route path='/auth/verify/:token' element={<VerifyPage />} />

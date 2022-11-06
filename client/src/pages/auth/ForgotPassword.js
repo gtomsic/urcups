@@ -5,11 +5,11 @@ import ErrorMessage from '../../components/ErrorMessage'
 import TextInput from '../../components/forms/TextInput'
 import Loader from '../../components/loader/Loader'
 import Modal from '../../components/Modal'
+import PrimaryButton from '../../components/PrimaryButton'
 import { login, selectUser } from '../../store/features/user/userSlice'
 
-const LoginPage = () => {
+const ForgotPassword = () => {
    const [email, setEmail] = useState('')
-   const [password, setPassword] = useState('')
    const { user } = useSelector(selectUser)
    const { isLoading, isSuccess, isError, message } = useSelector(selectUser)
    const navigate = useNavigate()
@@ -19,22 +19,10 @@ const LoginPage = () => {
          navigate('/')
       }
    }, [user])
-   useEffect(() => {
-      const redirect = JSON.parse(localStorage.getItem('redirect'))
-      if (isSuccess) {
-         if (redirect) {
-            navigate(redirect)
-            localStorage.removeItem('redirect')
-            return
-         } else {
-            navigate('/')
-         }
-      }
-   }, [isSuccess, dispatch, navigate])
    const onSubmitHandler = (e) => {
       e.preventDefault()
-      const data = { email, password }
-      dispatch(login(data))
+      e.stopPropagation()
+      console.log('Submited')
    }
    return (
       <form onSubmit={onSubmitHandler} className='relative'>
@@ -44,22 +32,16 @@ const LoginPage = () => {
                <Loader>Checking Credentials...</Loader>
             </Modal>
          ) : null}
+         <div className='text-white text-center'>
+            <h3>Request New Password</h3>
+         </div>
          <TextInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type='text'
             name='username'
             label='Email'
-            title='Email'
-         />
-
-         <TextInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            type='password'
-            name='password'
-            label='Password'
-            title='Password'
+            title='Your Email'
          />
          <div className='p-4'>
             <p className='text-light'>
@@ -69,24 +51,18 @@ const LoginPage = () => {
                </Link>
             </p>
          </div>
-         <TextInput
-            type='submit'
-            name='submit'
-            title='Submit'
-            value='Login'
-            label=''
-            bg='bg-gradient-to-tr from-primary bg-secondary text-white hover:from-warning duration-300 cursor-pointer'
-         />
-         <div className='p-4'>
-            <p className='text-light'>
-               Forgot password{' '}
-               <Link to='/auth/request' className='text-secondary ml-3'>
-                  Reset your password here!
-               </Link>
-            </p>
+         <div className='w-full grid grid-cols-2 gap-2'>
+            <PrimaryButton
+               onClick={() => navigate('/auth')}
+               type='button'
+               add='from-gray to-dark'
+            >
+               Back
+            </PrimaryButton>
+            <PrimaryButton type='submit'>Submit</PrimaryButton>
          </div>
       </form>
    )
 }
 
-export default LoginPage
+export default ForgotPassword

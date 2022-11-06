@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -7,8 +8,8 @@ function UserCard({ user }) {
       <div
          className={
             user?.isOnline
-               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-dark to-primary hover:from-primary hover:to-primary pb-[100px]'
-               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-primary hover:to-primary  pb-[100px]'
+               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-dark to-primary hover:from-primary hover:to-primary pb-[150px]'
+               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-primary hover:to-primary  pb-[150px]'
          }
       >
          <div
@@ -19,14 +20,7 @@ function UserCard({ user }) {
                backgroundRepeat: 'no-repeat',
                backgroundPosition: 'center',
             }}
-         >
-            {user?.isOnline ? (
-               <>
-                  <span className='z-10 absolute top-5 right-5 w-6 h-6 border-4 border-white rounded-full bg-secondary'></span>
-                  <span className='animate-ping z-0 absolute top-5 right-5 w-6 h-6  inline-flex rounded-full bg-white opacity-75'></span>
-               </>
-            ) : null}
-         </div>
+         ></div>
          <div
             className={
                user?.isOnline
@@ -62,6 +56,21 @@ function UserCard({ user }) {
                      <small>Country:</small>
                      <small>{user?.country}</small>
                   </div>
+               </div>
+            </div>
+            <div className='relative flex justify-center gap-1 pb-5'>
+               {user?.isOnline ? (
+                  <div className='relative w-10'>
+                     <span className='z-10 absolute right-0 top-1 w-4 h-4 border-2 border-white rounded-full bg-secondary'></span>
+                     <span className='animate-ping z-0 absolute right-0 top-1 w-4 h-4  inline-flex rounded-full bg-white opacity-75'></span>
+                  </div>
+               ) : null}
+               <div>
+                  <small>
+                     {`${user?.isOnline ? 'Online' : 'Offline'} ${moment(
+                        user?.updatedAt
+                     ).fromNow()}`}{' '}
+                  </small>
                </div>
             </div>
          </div>

@@ -35,7 +35,8 @@ const MenuItems = () => {
    }, [user, bellsLimit, bellsOffset])
 
    const logoutHandler = async () => {
-      socket.emit('user', { ...user, isOnline: false })
+      const localUser = JSON.parse(localStorage.getItem('user'))
+      socket.emit('user', { ...localUser, isOnline: false })
       await dispatch(logout(user.id))
    }
    return (

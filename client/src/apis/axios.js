@@ -1,5 +1,6 @@
 import axios from 'axios'
+import { serverUrl } from '../url'
 
 export default axios.create({
-   baseURL: 'http://10.0.0.50:8000',
+   baseURL: serverUrl,
 })

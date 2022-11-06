@@ -115,7 +115,7 @@ const ProfileReader = () => {
          {userStories?.rows < 1 && user?.id !== profile?.id ? (
             <AttentionMessage title={`No stories for ${profile?.username}.`}>
                <p>Please try to check later.</p>
-               <p>Good luck with you search.</p>
+               <p>Good luck with your search.</p>
             </AttentionMessage>
          ) : null}
          <div className='relative grid grid-cols-1 gap-3 lg:gap-4 xl:gap-3 md:grid-cols-2 lg:grid-cols-3'>

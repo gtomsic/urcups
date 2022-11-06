@@ -87,7 +87,7 @@ const BellsItem = ({ bell, onDelete }) => {
          <div className='my-2 flex-1 text-white'>
             <h4>{profile?.username}</h4>
             <p>{bell?.body}</p>
-            <small>{moment(bell?.updatedAt).fromNow()}</small>
+            <small>{moment(bell?.createdAt).fromNow()}</small>
          </div>
          <div
             onClick={onDeleteBellHandler}

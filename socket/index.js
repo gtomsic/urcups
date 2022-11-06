@@ -57,6 +57,9 @@ io.on('connection', (socket) => {
    socket.on('user', (data) => {
       addUser(data, socket.id)
       socket.broadcast.emit('user', data)
+      if (data?.isOnline == false) {
+         io.emit('user', data)
+      }
    })
 
    // Send receive messages

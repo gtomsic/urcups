@@ -18,7 +18,7 @@ module.exports.controllerFavoritesGetByLimit = asyncHandler(
          })
          const getUsers = await db.user.findAndCountAll({
             where: { id: userIds },
-            order: [['createdAt', 'ASC']],
+            order: [['updatedAt', 'DESC']],
             offset: Number(offset) * Number(limit),
             limit: Number(limit),
             subQuery: false,

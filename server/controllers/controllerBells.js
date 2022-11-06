@@ -19,7 +19,7 @@ module.exports.controllerReadBells = asyncHandler(async (req, res) => {
    )
    const bells = await db.bell.findAndCountAll({
       where: { receiver: req.user.id, isRead: false },
-      order: [['createdAt', 'DESC']],
+      order: [['updatedAt', 'DESC']],
       offset: Number(req.body.offset) * Number(req.body.limit),
       limit: Number(req.body.limit),
       subQuery: false,
