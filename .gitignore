@@ -1,4 +1,9 @@
-/server/users/*
+!server/users/
+!server/users/defaults/
+server/users/*
+!server/uploads/defaults/
+server/uploads/*
+
 node_modules
 /node_modules
 /node_modules/*
