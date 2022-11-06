@@ -1,8 +1,8 @@
 !server/users/
-!server/users/defaults/
 server/users/*
-!server/uploads/defaults/
+!server/users/defaults/
 server/uploads/*
+!server/uploads/defaults/
 
 node_modules
 /node_modules
