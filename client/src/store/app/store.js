@@ -10,6 +10,8 @@ import favoritesReducer from '../features/favorites/favoritesSlice'
 import storySlice from '../features/stories/storySlice'
 import commentsSlice from '../features/comments/commentsSlice'
 import bellsSlice from '../features/bells/bellsSlice'
+import authSlice from '../features/auth/authSlice'
+
 import { serverUrl } from '../../url'
 
 export const store = configureStore({
@@ -25,5 +27,6 @@ export const store = configureStore({
       story: storySlice,
       comments: commentsSlice,
       bells: bellsSlice,
+      auth: authSlice,
    },
 })
