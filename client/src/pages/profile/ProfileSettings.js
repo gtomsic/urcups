@@ -1,36 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import { FaUserEdit } from 'react-icons/fa'
-import { IoLogOut } from 'react-icons/io5'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { FaUserEdit } from 'react-icons/fa';
+import { IoLogOut } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
-import Button from '../../components/Button'
-import Card from '../../components/Card'
-import SelectOptions from '../../components/forms/SelectOptions'
-import UserCard from '../../components/UserCard'
-import { selectProfile } from '../../store/features/profile/profileSlice'
-import { logout, selectUser } from '../../store/features/user/userSlice'
-import { selectUsers } from '../../store/features/users/usersSlice'
-import { isRightUser } from '../../utils/check'
+import Button from '../../components/Button';
+import Card from '../../components/Card';
+import SelectOptions from '../../components/forms/SelectOptions';
+import SelectOptionBox from '../../components/options/SelectOptionBox';
+import UserCard from '../../components/UserCard';
+import { selectProfile } from '../../store/features/profile/profileSlice';
+import { logout, selectUser } from '../../store/features/user/userSlice';
+import { selectUsers } from '../../store/features/users/usersSlice';
+import { isRightUser } from '../../utils/check';
+
+const ages = [];
+for (let i = 18; i <= 100; i++) {
+   ages.push({ value: i, label: i });
+   i = i + 5;
+}
 
 const ProfileSettings = () => {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
-   const { users } = useSelector(selectUsers)
-   const [status, setStatus] = useState(user?.status)
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
+   const { users } = useSelector(selectUsers);
+   const [status, setStatus] = useState(user?.status);
    const price = [
       { price: 20, label: '3 Months' },
       { price: 30, label: '6 Months' },
       { price: 50, label: '1 year' },
-   ]
+   ];
    useEffect(() => {
-      isRightUser(user, profile, navigate)
-   }, [user, profile, navigate])
+      isRightUser(user, profile, navigate);
+   }, [user, profile, navigate]);
    const logoutHandler = () => {
-      dispatch(logout(user.id))
-   }
+      dispatch(logout(user.id));
+   };
    return (
       <div className='flex flex-col gap-20'>
          <Card>
@@ -60,6 +67,27 @@ const ProfileSettings = () => {
                      >
                         <IoLogOut /> Logout
                      </Button>
+                  </div>
+                  <div className='flex flex-col gap-4'>
+                     <h4>Search Filter Options</h4>
+                     <div className='grid grid-cols-2 gap-3'>
+                        <SelectOptionBox
+                           label='Age From'
+                           addClass='text-dark'
+                           data={[
+                              { value: 'Age From', label: 'Age From' },
+                              ...ages,
+                           ]}
+                        ></SelectOptionBox>
+                        <SelectOptionBox
+                           label='Age To'
+                           addClass='text-dark'
+                           data={[
+                              { value: 'Age To', label: 'Age To' },
+                              ...ages,
+                           ]}
+                        ></SelectOptionBox>
+                     </div>
                   </div>
                   <div className='flex flex-col gap-11'>
                      <div>
@@ -110,7 +138,7 @@ const ProfileSettings = () => {
             </div>
          </Card>
       </div>
-   )
-}
+   );
+};
 
-export default ProfileSettings
+export default ProfileSettings;
