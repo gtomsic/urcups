@@ -1,34 +1,37 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import ErrorMessage from '../../components/ErrorMessage'
-import TextInput from '../../components/forms/TextInput'
-import Loader from '../../components/loader/Loader'
-import Modal from '../../components/Modal'
-import PrimaryButton from '../../components/PrimaryButton'
-import { login, selectUser } from '../../store/features/user/userSlice'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import ErrorMessage from '../../components/ErrorMessage';
+import TextInput from '../../components/forms/TextInput';
+import Loader from '../../components/loader/Loader';
+import Modal from '../../components/Modal';
+import PrimaryButton from '../../components/PrimaryButton';
+import { selectAuth } from '../../store/features/auth/authSlice';
+import { selectUser } from '../../store/features/user/userSlice';
 
 const ForgotPassword = () => {
-   const [email, setEmail] = useState('')
-   const { user } = useSelector(selectUser)
-   const { isLoading, isSuccess, isError, message } = useSelector(selectUser)
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const [email, setEmail] = useState('');
+   const { user } = useSelector(selectUser);
+   const { auth, authLoading, authError, authMessage } =
+      useSelector(selectAuth);
    useEffect(() => {
       if (user?.id) {
-         navigate('/')
+         navigate('/');
       }
-   }, [user])
+   }, [user]);
    const onSubmitHandler = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      console.log('Submited')
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      if (!Boolean(email.trim())) return;
+      console.log('Submited');
+   };
    return (
       <form onSubmit={onSubmitHandler} className='relative'>
-         {isError ? <ErrorMessage>{message}</ErrorMessage> : null}
-         {isLoading ? (
-            <Modal isActive={true}>
+         {authError ? <ErrorMessage>{authMessage}</ErrorMessage> : null}
+         {authLoading ? (
+            <Modal>
                <Loader>Checking Credentials...</Loader>
             </Modal>
          ) : null}
@@ -62,7 +65,7 @@ const ForgotPassword = () => {
             <PrimaryButton type='submit'>Submit</PrimaryButton>
          </div>
       </form>
-   )
-}
+   );
+};
 
-export default ForgotPassword
+export default ForgotPassword;
