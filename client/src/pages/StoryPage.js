@@ -1,101 +1,101 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
-import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
-import { MdOutlineDeleteOutline, MdEditNote } from 'react-icons/md'
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
+import { MdOutlineDeleteOutline, MdEditNote } from 'react-icons/md';
 
-import Loader from '../components/loader/Loader'
+import Loader from '../components/loader/Loader';
 import {
    deleteStory,
    getStoryById,
    selectStory,
-} from '../store/features/stories/storySlice'
-import { selectUser } from '../store/features/user/userSlice'
+} from '../store/features/stories/storySlice';
+import { selectUser } from '../store/features/user/userSlice';
 import {
    serviceAddRemoveLoves,
    serviceCheckLove,
    serviceCountLoves,
-} from '../store/features/loves/serviceLove'
-import Modal from '../components/Modal'
+} from '../store/features/loves/serviceLove';
+import Modal from '../components/Modal';
 
-import StoryEdit from './stories/StoryEdit'
-import Comments from '../components/comments/Comments'
-import { selectComments } from '../store/features/comments/commentsSlice'
-import { serviceCountComments } from '../store/features/comments/serviceComments'
-import { fetchUser } from '../store/features/user/userService'
-import Avatar from '../components/Avatar'
-import moment from 'moment'
-import { socket } from '../socket'
-import { countBells } from '../store/features/bells/bellsSlice'
+import StoryEdit from './stories/StoryEdit';
+import Comments from '../components/comments/Comments';
+import { selectComments } from '../store/features/comments/commentsSlice';
+import { serviceCountComments } from '../store/features/comments/serviceComments';
+import { fetchUser } from '../store/features/user/userService';
+import Avatar from '../components/Avatar';
+import moment from 'moment';
+import { socket } from '../socket';
+import { countBells } from '../store/features/bells/bellsSlice';
 
 const StoryPage = () => {
-   const scrollView = useRef(null)
-   const params = useParams()
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const [isLove, setIsLove] = useState(0)
-   const [isOpen, setIsOpen] = useState(false)
-   const [loves, setLoves] = useState(0)
-   const { story, storyIsLoading } = useSelector(selectStory)
-   const { comments } = useSelector(selectComments)
-   const [countComments, setCountComments] = useState(comments.count)
-   const { user } = useSelector(selectUser)
-   const [profile, setProfile] = useState({})
-   const url = useSelector((state) => state.url)
+   const scrollView = useRef(null);
+   const params = useParams();
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+   const [isLove, setIsLove] = useState(0);
+   const [isOpen, setIsOpen] = useState(false);
+   const [loves, setLoves] = useState(0);
+   const { story, storyIsLoading } = useSelector(selectStory);
+   const { comments } = useSelector(selectComments);
+   const [countComments, setCountComments] = useState(comments.count);
+   const { user } = useSelector(selectUser);
+   const [profile, setProfile] = useState({});
+   const url = useSelector((state) => state.url);
    useEffect(() => {
-      dispatch(getStoryById(params.story_id))
-   }, [params, dispatch])
+      dispatch(getStoryById(params.story_id));
+   }, [params, dispatch]);
    useEffect(() => {
-      setCountComments(comments.count)
-   }, [comments.count])
+      setCountComments(comments.count);
+   }, [comments.count]);
    useEffect(() => {
       const timerId = setTimeout(() => {
          const fetchStory = async () => {
-            const fetchLoves = await serviceCountLoves({ story_id: story.id })
-            setLoves(fetchLoves)
+            const fetchLoves = await serviceCountLoves({ story_id: story.id });
+            setLoves(fetchLoves);
             if (user?.id) {
                const checkLove = await serviceCheckLove({
                   story_id: story.id,
                   token: user?.token,
-               })
-               setIsLove(checkLove)
-               dispatch(countBells({ token: user?.token }))
+               });
+               setIsLove(checkLove);
+               dispatch(countBells({ token: user?.token }));
             }
-            const response = await serviceCountComments(story.id)
-            setCountComments(response.count)
-            const getProfile = await fetchUser(story.user_id)
-            setProfile(getProfile)
-            scrollView.current.scrollIntoView()
-         }
-         fetchStory()
-      }, 500)
+            const response = await serviceCountComments(story.id);
+            setCountComments(response.count);
+            const getProfile = await fetchUser(story.user_id);
+            setProfile(getProfile);
+            scrollView.current.scrollIntoView();
+         };
+         fetchStory();
+      }, 500);
       return () => {
-         clearTimeout(timerId)
-      }
-   })
+         clearTimeout(timerId);
+      };
+   }, []);
    const loveClickHandler = async (e) => {
-      e.stopPropagation()
-      e.preventDefault()
-      if (!user?.id) return
+      e.stopPropagation();
+      e.preventDefault();
+      if (!user?.id) return;
       const response = await serviceAddRemoveLoves({
          story_id: story.id,
          token: user?.token,
-      })
+      });
       const checkLove = await serviceCheckLove({
          story_id: story.id,
          token: user?.token,
-      })
-      setIsLove(checkLove)
-      setLoves(response)
-      socket.emit('stories', { ...story, path: `/love/${story.id}` })
-   }
+      });
+      setIsLove(checkLove);
+      setLoves(response);
+      socket.emit('stories', { ...story, path: `/love/${story.id}` });
+   };
    const onDeleteHandler = async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const data = { story_id: story.id, token: user?.token }
-      await dispatch(deleteStory(data))
-      navigate(-1)
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      const data = { story_id: story.id, token: user?.token };
+      await dispatch(deleteStory(data));
+      navigate(-1);
+   };
    return (
       <div className='relative'>
          <div ref={scrollView} />
@@ -202,7 +202,7 @@ const StoryPage = () => {
          )}
          <Comments profile={profile} story={story} />
       </div>
-   )
-}
+   );
+};
 
-export default StoryPage
+export default StoryPage;

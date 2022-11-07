@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import _ from 'lodash';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -10,13 +11,15 @@ const LastTwelveItem = ({ user_id }) => {
    const navigate = useNavigate();
    const [user, setUser] = useState({});
    const url = useSelector((state) => state.url);
+
+   const fetchingUser = async (id) => {
+      const reponse = await fetchUser(id);
+      setUser(reponse);
+   };
+
    useEffect(() => {
       if (isFetch.current === false) {
-         const fetchingUser = async () => {
-            const reponse = await fetchUser(user_id);
-            setUser(reponse);
-         };
-         fetchingUser();
+         fetchingUser(user_id);
       }
       return () => {
          isFetch.current = true;
