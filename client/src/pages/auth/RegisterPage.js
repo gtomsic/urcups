@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { MdArrowBackIos } from 'react-icons/md'
-import TextInput from '../../components/forms/TextInput'
-import ErrorMessage from '../../components/ErrorMessage'
-import SelectOptions from '../../components/forms/SelectOptions'
-import Loader from '../../components/loader/Loader'
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { MdArrowBackIos } from 'react-icons/md';
+import TextInput from '../../components/forms/TextInput';
+import ErrorMessage from '../../components/ErrorMessage';
+import SelectOptions from '../../components/forms/SelectOptions';
+import Loader from '../../components/loader/Loader';
 
-import { countries } from '../../data/countries'
-import { register, selectUser } from '../../store/features/user/userSlice'
-import Modal from '../../components/Modal'
+import { countries } from '../../data/countries';
+import { register, selectUser } from '../../store/features/user/userSlice';
+import Modal from '../../components/Modal';
+import PrimaryButton from '../../components/PrimaryButton';
 
 const RegisterPage = () => {
-   const [steps, setSteps] = useState('one')
-   const [ageAllowed, setAgeAllowed] = useState(null)
-   const [message, setMessage] = useState('')
-   const [ageLimit] = useState(18)
-   const y = new Date().toLocaleDateString().split('/')[2]
-   const m = new Date().toLocaleDateString().split('/')[0]
-   const d = new Date().toLocaleDateString().split('/')[1]
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
+   const [steps, setSteps] = useState('one');
+   const [ageAllowed, setAgeAllowed] = useState(null);
+   const [message, setMessage] = useState('');
+   const [ageLimit] = useState(18);
+   const y = new Date().toLocaleDateString().split('/')[2];
+   const m = new Date().toLocaleDateString().split('/')[0];
+   const d = new Date().toLocaleDateString().split('/')[1];
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
    const [data, setData] = useState({
       username: '',
       email: '',
@@ -33,19 +34,19 @@ const RegisterPage = () => {
       country: '',
       password: '',
       confirmPassword: '',
-   })
+   });
    const {
       isLoading,
       isSuccess,
       message: errorMessage,
       isError,
-   } = useSelector(selectUser)
+   } = useSelector(selectUser);
    useEffect(() => {
       if (isError) {
-         setMessage(errorMessage)
+         setMessage(errorMessage);
       }
       if (isSuccess) {
-         navigate('/auth/success')
+         navigate('/auth/success');
          setData({
             username: '',
             email: '',
@@ -56,47 +57,47 @@ const RegisterPage = () => {
             country: '',
             password: '',
             confirmPassword: '',
-         })
+         });
       }
-   }, [isError, errorMessage, isSuccess, navigate])
+   }, [isError, errorMessage, isSuccess, navigate]);
 
    useEffect(() => {
       const isYear =
          y - Number(data?.dateOfBirth.split('-')[0]) >= ageLimit &&
          data?.dateOfBirth
             ? true
-            : false
+            : false;
       const isMonth =
          Number(data?.dateOfBirth.split('-')[0]) >= ageLimit &&
          Number(data?.dateOfBirth.split('-')[1]) <= Number(m)
             ? true
-            : false
+            : false;
       const isDay =
          Number(data?.dateOfBirth.split('-')[1]) < Number(m)
             ? true
-            : Number(data?.dateOfBirth.split('-')[2]) <= Number(d)
+            : Number(data?.dateOfBirth.split('-')[2]) <= Number(d);
 
       // console.log(isYear, isMonth, isDay)
       if (isYear && isMonth && isDay && data?.dateOfBirth) {
-         setAgeAllowed(true)
-         setMessage('')
-         return
+         setAgeAllowed(true);
+         setMessage('');
+         return;
       } else {
          if (data?.dateOfBirth) {
-            setAgeAllowed(false)
-            setMessage('Under 18 years old is not allowed.')
-            return
+            setAgeAllowed(false);
+            setMessage('Under 18 years old is not allowed.');
+            return;
          } else {
-            setAgeAllowed(false)
-            setMessage('')
-            return
+            setAgeAllowed(false);
+            setMessage('');
+            return;
          }
       }
-   }, [data.dateOfBirth, d, m, y, ageLimit])
+   }, [data.dateOfBirth, d, m, y, ageLimit]);
 
    const onNextHandler = () => {
       if (!ageAllowed) {
-         return
+         return;
       }
       if (
          (Boolean(!data.username.trim()) ||
@@ -105,15 +106,15 @@ const RegisterPage = () => {
             Boolean(!data.sex.trim()),
          Boolean(!data.sexualOrientation.trim()))
       ) {
-         setMessage('All fields are required.')
-         return
+         setMessage('All fields are required.');
+         return;
       } else {
-         setMessage('')
-         setSteps('two')
+         setMessage('');
+         setSteps('two');
       }
-   }
+   };
    const submitHandler = (e) => {
-      e.preventDefault()
+      e.preventDefault();
       if (
          Boolean(!data.hugot.trim()) ||
          Boolean(!data.city.trim()) ||
@@ -122,14 +123,14 @@ const RegisterPage = () => {
          Boolean(!data.password.trim()) ||
          Boolean(!data.confirmPassword.trim())
       ) {
-         setMessage('All fields are required.')
-         return
+         setMessage('All fields are required.');
+         return;
       } else {
-         setMessage('')
-         setSteps('two')
+         setMessage('');
+         setSteps('two');
       }
-      dispatch(register(data))
-   }
+      dispatch(register(data));
+   };
    return (
       <>
          {isLoading ? (
@@ -291,27 +292,23 @@ const RegisterPage = () => {
                      </p>
                   </div>
                   <div className='flex items-center w-full gap-1'>
-                     <div
+                     <PrimaryButton
                         onClick={() => setSteps('one')}
-                        className='p-[18px] w-[150px] flex items-center justify-center rounded-md bg-gradient-to-tr from-dark bg-primary text-white hover:from-secondary duration-300 cursor-pointer text-center '
+                        type='button'
+                        add='w-full from-dark to-primary'
                      >
                         <MdArrowBackIos /> <span>Previous</span>
-                     </div>
-                     <div className='flex-1'>
-                        <TextInput
-                           type='submit'
-                           name='submit'
-                           title='Submit'
-                           value='Signup'
-                           bg='bg-gradient-to-tr from-primary bg-secondary text-white hover:from-warning duration-300 text-center cursor-pointer'
-                        />
-                     </div>
+                     </PrimaryButton>
+
+                     <PrimaryButton type='submit' add='w-full'>
+                        Register
+                     </PrimaryButton>
                   </div>
                </div>
             )}
          </form>
       </>
-   )
-}
+   );
+};
 
-export default RegisterPage
+export default RegisterPage;

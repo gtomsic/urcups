@@ -11,7 +11,7 @@ const { auth } = require('../middlewares/middlewareAuth');
 
 const router = require('express').Router();
 
-router.put('/last_twelve', auth, controllerLastTwelve);
+router.get('/last_twelve', auth, controllerLastTwelve);
 router.put('/read', auth, controllerReadBells);
 router.post('/action', auth, controllerBellAction);
 router.post('/profile', auth, controllerViewedProfiles);

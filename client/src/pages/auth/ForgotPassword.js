@@ -79,7 +79,7 @@ const ForgotPassword = () => {
                   <PrimaryButton
                      onClick={() => navigate('/auth')}
                      type='button'
-                     add='from-gray to-dark'
+                     add='from-gray to-dark hover:from-primary'
                   >
                      Back
                   </PrimaryButton>

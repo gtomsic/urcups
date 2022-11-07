@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { fetchUser } from '../../store/features/user/userService';
 
-const LastTwelveItem = ({ user }) => {
+const LastTwelveItem = ({ user_id }) => {
+   const isFetch = useRef(false);
+   const navigate = useNavigate();
+   const [user, setUser] = useState({});
    const url = useSelector((state) => state.url);
+   useEffect(() => {
+      if (isFetch.current === false) {
+         const fetchingUser = async () => {
+            const reponse = await fetchUser(user_id);
+            setUser(reponse);
+         };
+         fetchingUser();
+      }
+      return () => {
+         isFetch.current = true;
+      };
+   }, [user_id]);
+
    return (
-      <div className='flex justify-center items-center'>
+      <div
+         onClick={() => navigate(`/messages/${user?.id}`)}
+         className='flex justify-center items-center cursor-pointer'
+      >
          <div
             className='relative w-[70px] h-[70px] rounded-full border-4 border-white mr-1'
             style={{

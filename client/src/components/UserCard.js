@@ -1,15 +1,15 @@
-import moment from 'moment'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import moment from 'moment';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 function UserCard({ user }) {
-   const url = useSelector((state) => state.url)
+   const url = useSelector((state) => state.url);
    return (
       <div
          className={
             user?.isOnline
-               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-dark to-primary hover:from-primary hover:to-primary pb-[150px]'
-               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-primary hover:to-primary  pb-[150px]'
+               ? 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-dark to-primary hover:from-primary hover:to-danger pb-[150px]'
+               : 'relative group overflow-hidden rounded-3xl p-4 bg-gradient-to-b from-darker to-dark hover:from-primary hover:to-danger  pb-[150px]'
          }
       >
          <div
@@ -75,7 +75,7 @@ function UserCard({ user }) {
             </div>
          </div>
       </div>
-   )
+   );
 }
 
-export default UserCard
+export default UserCard;
