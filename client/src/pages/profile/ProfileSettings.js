@@ -3,21 +3,25 @@ import { FaUserEdit } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import BorderedCard from '../../components/BorderedCard';
 
-import Button from '../../components/Button';
 import Card from '../../components/Card';
-import SelectOptions from '../../components/forms/SelectOptions';
+import LastTwelve from '../../components/lastTwelve/LastTwelve';
 import SelectOptionBox from '../../components/options/SelectOptionBox';
-import UserCard from '../../components/UserCard';
+import PrimaryButton from '../../components/PrimaryButton';
 import { selectProfile } from '../../store/features/profile/profileSlice';
 import { logout, selectUser } from '../../store/features/user/userSlice';
-import { selectUsers } from '../../store/features/users/usersSlice';
 import { isRightUser } from '../../utils/check';
 
 const ages = [];
-for (let i = 18; i <= 100; i++) {
+const limits = [];
+for (let i = 21; i <= 100; i++) {
    ages.push({ value: i, label: i });
    i = i + 5;
+}
+for (let i = 18; i <= 76; i++) {
+   limits.push({ value: i, label: i });
+   i = i + 18;
 }
 
 const ProfileSettings = () => {
@@ -25,8 +29,6 @@ const ProfileSettings = () => {
    const navigate = useNavigate();
    const { user } = useSelector(selectUser);
    const { profile } = useSelector(selectProfile);
-   const { users } = useSelector(selectUsers);
-   const [status, setStatus] = useState(user?.status);
    const price = [
       { price: 20, label: '3 Months' },
       { price: 30, label: '6 Months' },
@@ -44,52 +46,88 @@ const ProfileSettings = () => {
             <div className='flex flex-col gap-3'>
                <h3>General Settings</h3>
                <div className='grid grid-cols-1 gap-11 lg:gap-5 lg:grid-cols-2'>
-                  <div className='flex flex-col gap-11'>
-                     <SelectOptions
-                        value={user?.isOnline}
-                        onChange={(e) => setStatus(e.target.value)}
-                        label='Active Status'
-                        data={[{ name: 'Online' }, { name: 'Hidden' }]}
-                        bg={
-                           !user?.isOnline
-                              ? 'bg-white text-dark'
-                              : 'bg-secondary text-white'
-                        }
-                     />
-                     <Link to={`/profile/${user?.username}/edit`}>
-                        <Button color='bg-gradient-to-tr from-secondary bg-accent hover:bg-primary hover:from-dark'>
-                           <FaUserEdit /> Edit Profile
-                        </Button>
-                     </Link>
-                     <Button
-                        onClick={logoutHandler}
-                        color='bg-gradient-to-tr from-primary bg-danger hover:from-warning'
-                     >
-                        <IoLogOut /> Logout
-                     </Button>
-                  </div>
                   <div className='flex flex-col gap-4'>
-                     <h4>Search Filter Options</h4>
-                     <div className='grid grid-cols-2 gap-3'>
-                        <SelectOptionBox
-                           label='Age From'
-                           addClass='text-dark'
-                           data={[
-                              { value: 'Age From', label: 'Age From' },
-                              ...ages,
-                           ]}
-                        ></SelectOptionBox>
-                        <SelectOptionBox
-                           label='Age To'
-                           addClass='text-dark'
-                           data={[
-                              { value: 'Age To', label: 'Age To' },
-                              ...ages,
-                           ]}
-                        ></SelectOptionBox>
-                     </div>
+                     <BorderedCard>
+                        <div className='grid grid-cols-1 gap-4'>
+                           <SelectOptionBox
+                              label='Active Status'
+                              addClass={
+                                 user?.isOnline
+                                    ? 'text-white bg-secondary border border-light'
+                                    : 'bg-dark text-white border border-light'
+                              }
+                              data={[
+                                 { value: true, label: 'Online' },
+                                 { value: false, label: 'Hidden' },
+                              ]}
+                           />
+                           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                              <PrimaryButton
+                                 onClick={() =>
+                                    navigate(`/profile/${user?.username}/edit`)
+                                 }
+                              >
+                                 <FaUserEdit /> Edit Profile
+                              </PrimaryButton>
+
+                              <PrimaryButton
+                                 onClick={logoutHandler}
+                                 add='from-danger to-primary'
+                              >
+                                 <IoLogOut /> Logout
+                              </PrimaryButton>
+                           </div>
+                        </div>
+                     </BorderedCard>
+                     <LastTwelve />
                   </div>
-                  <div className='flex flex-col gap-11'>
+
+                  <div>
+                     <BorderedCard>
+                        <div className='flex flex-col gap-4'>
+                           <h4>Search Filter Options</h4>
+                           <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                              <SelectOptionBox
+                                 label='Age From'
+                                 addClass='text-dark bg-white'
+                                 data={[...ages]}
+                              ></SelectOptionBox>
+                              <SelectOptionBox
+                                 label='Age To'
+                                 addClass='text-dark bg-white'
+                                 data={[{ value: 100, label: 100 }, ...ages]}
+                              ></SelectOptionBox>
+                              <SelectOptionBox
+                                 label='Is Online'
+                                 addClass='text-dark bg-white'
+                                 data={[
+                                    { value: 'All', label: 'All' },
+                                    { value: true, label: 'Online' },
+                                 ]}
+                              ></SelectOptionBox>
+                              <SelectOptionBox
+                                 label='Limit Per Page'
+                                 addClass='text-dark bg-white'
+                                 data={[...limits]}
+                              ></SelectOptionBox>
+                              <div className='col-span-1 md:col-span-2'>
+                                 <SelectOptionBox
+                                    label='Sexual Orientation'
+                                    addClass='text-dark bg-white'
+                                    data={[
+                                       { value: 'All', label: 'All' },
+                                       { value: 'Straight', label: 'Straight' },
+                                    ]}
+                                 ></SelectOptionBox>
+                              </div>
+                           </div>
+                           <div className='col-span-1 md:col-span-2'>
+                              <PrimaryButton add='w-full'>Save</PrimaryButton>
+                           </div>
+                        </div>
+                     </BorderedCard>
+                  </div>
+                  <div className='flex flex-col gap-8 p-3 border border-light rounded-xl'>
                      <div>
                         <h3>Free account</h3>
                         <ul>
