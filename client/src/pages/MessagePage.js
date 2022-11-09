@@ -1,87 +1,89 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import PrimaryButton from '../components/PrimaryButton'
-import MessageFormInput from '../components/messages/MessageFormInput'
-import RightMessage from '../components/messages/RightMessage'
-import LeftMessage from '../components/messages/LeftMessage'
-import { useDispatch, useSelector } from 'react-redux'
+import PrimaryButton from '../components/PrimaryButton';
+import MessageFormInput from '../components/messages/MessageFormInput';
+import RightMessage from '../components/messages/RightMessage';
+import LeftMessage from '../components/messages/LeftMessage';
+import { useDispatch, useSelector } from 'react-redux';
 import {
    clearRoomProfile,
    countAllUnreadMessages,
    getMessageUserProfile,
    getMoreRoomMessages,
    getRoomMessages,
+   resetMessage,
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
    setMessageOffset,
-} from '../store/features/messages/messagesSlice'
-import { selectUser } from '../store/features/user/userSlice'
-import AttentionMessage from '../components/AttentionMessage'
-import MessageProfileCard from '../components/messages/MessageProfileCard'
-import Messages from '../components/messages/Messages'
-import Avatar from '../components/Avatar'
-import { actionBells, countBells } from '../store/features/bells/bellsSlice'
-import { socket } from '../socket'
+} from '../store/features/messages/messagesSlice';
+import { selectUser } from '../store/features/user/userSlice';
+import AttentionMessage from '../components/AttentionMessage';
+import MessageProfileCard from '../components/messages/MessageProfileCard';
+import Messages from '../components/messages/Messages';
+import Avatar from '../components/Avatar';
+import { actionBells, countBells } from '../store/features/bells/bellsSlice';
+import { socket } from '../socket';
 
 const MessagePage = () => {
-   const isFetch = useRef(false)
-   const scrollEnd = useRef(null)
-   const params = useParams()
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
-   const [send, setSend] = useState(false)
-   const [onInputFocus, setOnInputFocus] = useState(false)
-   const [openInput, setOpenInput] = useState(false)
-   const [body, setBody] = useState('')
-   const [attachment, setAttachment] = useState([])
-   const [userTyping, setUserTyping] = useState(false)
-   const { user } = useSelector(selectUser)
-   const { userProfile } = useSelector(selectMessageUserProfile)
-   const { message, messageOffset, messageLimit } = useSelector(selectMessage)
+   const isFetch = useRef(false);
+   const scrollEnd = useRef(null);
+   const params = useParams();
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const [send, setSend] = useState(false);
+   const [onInputFocus, setOnInputFocus] = useState(false);
+   const [openInput, setOpenInput] = useState(false);
+   const [body, setBody] = useState('');
+   const [attachment, setAttachment] = useState([]);
+   const [userTyping, setUserTyping] = useState(false);
+   const { user } = useSelector(selectUser);
+   const { userProfile } = useSelector(selectMessageUserProfile);
+   const { message, messageOffset, messageLimit } = useSelector(selectMessage);
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    if (!user?.id) {
-      localStorage.setItem('redirect', JSON.stringify(`/messages`))
-      navigate('/auth')
+      localStorage.setItem('redirect', JSON.stringify(`/messages`));
+      navigate('/auth');
    }
 
    useEffect(() => {
       const timerId = setTimeout(() => {
          socket.on(`${user?.id}/${params.id}/typing`, (data) => {
-            setUserTyping(data.typing)
-            scrollEnd.current?.scrollIntoView()
-         })
-      }, 5000)
+            setUserTyping(data.typing);
+            scrollEnd.current?.scrollIntoView();
+         });
+      }, 5000);
       return () => {
-         clearTimeout(timerId)
-      }
-   }, [])
+         clearTimeout(timerId);
+         dispatch(resetMessage());
+      };
+   }, []);
 
    useEffect(() => {
-      let insedeTimer
-      if (!Boolean(body.trim())) return
+      let insedeTimer;
+      if (!Boolean(body.trim())) return;
       const timerId = setTimeout(() => {
          socket.emit('typing', {
             typing: true,
             receiver: `${params.id}/${user?.id}/typing`,
-         })
+         });
          insedeTimer = setTimeout(() => {
             socket.emit('typing', {
                typing: false,
                receiver: `${params.id}/${user?.id}/typing`,
-            })
-         }, 3000)
-      }, 200)
+            });
+         }, 3000);
+      }, 200);
       return () => {
-         clearTimeout(timerId)
-         clearTimeout(insedeTimer)
-      }
-   }, [body])
+         clearTimeout(timerId);
+         clearTimeout(insedeTimer);
+      };
+   }, [body]);
 
    useEffect(() => {
-      let time = userProfile?.isOnline == false ? 0 : 60000 * 2
+      let time = userProfile?.isOnline == false ? 0 : 60000 * 2;
       const timerId = setTimeout(() => {
          if (send === true) {
             dispatch(
@@ -95,25 +97,25 @@ const MessagePage = () => {
                   } message? 😄`,
                   token: user?.token,
                })
-            )
+            );
          }
-      }, time)
+      }, time);
       return () => {
-         clearTimeout(timerId)
-      }
-   }, [send, message])
+         clearTimeout(timerId);
+      };
+   }, [send, message]);
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
-      setOpenInput(true)
+      setOpenInput(true);
       return () => {
-         setOpenInput(false)
-         dispatch(clearRoomProfile())
-      }
-   }, [])
+         setOpenInput(false);
+         dispatch(clearRoomProfile());
+      };
+   }, []);
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
-      scrollEnd.current?.scrollIntoView()
-   }, [onInputFocus])
+      scrollEnd.current?.scrollIntoView();
+   }, [onInputFocus]);
 
    // USE EFFECT THAT THAT IN CHARGE OF GETTING USER PROFILE CURRENT
    // AND GETTING THE ROOM MESSAGES
@@ -123,7 +125,7 @@ const MessagePage = () => {
          if (isFetch.current === true) {
             await dispatch(
                getMessageUserProfile({ user_id: params.id, token: user?.token })
-            )
+            );
             await dispatch(
                getRoomMessages({
                   offset: 0,
@@ -131,39 +133,39 @@ const MessagePage = () => {
                   token: user?.token,
                   user_id: params.id,
                })
-            )
+            );
             await dispatch(
                countAllUnreadMessages({ token: user?.token, user_id: user.id })
-            )
-            dispatch(countBells({ token: user?.token }))
-            scrollEnd.current?.scrollIntoView()
+            );
+            dispatch(countBells({ token: user?.token }));
+            scrollEnd.current?.scrollIntoView();
          }
-      }
-      fetchSync()
+      };
+      fetchSync();
       return () => {
-         isFetch.current = true
-      }
-   }, [params, user, dispatch])
+         isFetch.current = true;
+      };
+   }, [params, user, dispatch]);
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
+      e.preventDefault();
+      e.stopPropagation();
       const data = {
          body,
          attachment: attachment.length > 0 ? attachment.join(',') : '',
          receiver: params.id,
-      }
-      if (!Boolean(body.trim())) return
-      await dispatch(sendMessage({ data, token: user?.token }))
-      setSend(true)
-      setBody('')
+      };
+      if (!Boolean(body.trim())) return;
+      await dispatch(sendMessage({ data, token: user?.token }));
+      setSend(true);
+      setBody('');
       socket.emit('typing', {
          typing: false,
          receiver: `${params.id}/${user?.id}/typing`,
-      })
-      scrollEnd.current?.scrollIntoView()
-   }
+      });
+      scrollEnd.current?.scrollIntoView();
+   };
    const onMoreMessage = async () => {
       await dispatch(
          getMoreRoomMessages({
@@ -172,9 +174,9 @@ const MessagePage = () => {
             token: user?.token,
             user_id: params.id,
          })
-      )
-      await dispatch(setMessageOffset(messageOffset + 1))
-   }
+      );
+      await dispatch(setMessageOffset(messageOffset + 1));
+   };
    return (
       <div className='flex gap-8'>
          <div
@@ -228,7 +230,7 @@ const MessagePage = () => {
                            >
                               {content.body}
                            </LeftMessage>
-                        )
+                        );
                      } else {
                         return (
                            <RightMessage
@@ -238,7 +240,7 @@ const MessagePage = () => {
                            >
                               {content.body}
                            </RightMessage>
-                        )
+                        );
                      }
                   })}
                </>
@@ -279,7 +281,7 @@ const MessagePage = () => {
             />
          )}
       </div>
-   )
-}
+   );
+};
 
-export default MessagePage
+export default MessagePage;

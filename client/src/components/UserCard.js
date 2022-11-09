@@ -1,9 +1,18 @@
 import moment from 'moment';
 import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 function UserCard({ user }) {
    const url = useSelector((state) => state.url);
+   const [timeAgo, setTimeAgo] = useState({
+      time: user?.updatedAt,
+      isOnline: user?.isOnline,
+   });
+   useEffect(() => {
+      setTimeAgo({ time: user?.updatedAt, isOnline: user?.isOnline });
+   }, []);
    return (
       <div
          className={
@@ -68,7 +77,7 @@ function UserCard({ user }) {
                <div>
                   <small>
                      {`${user?.isOnline ? 'Online' : 'Offline'} ${moment(
-                        user?.updatedAt
+                        timeAgo.time
                      ).fromNow()}`}{' '}
                   </small>
                </div>

@@ -1,26 +1,39 @@
 module.exports = (sequelize, DataTypes) => {
    const setting = sequelize.define('setting', {
-      filter: {
+      limit: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         defaultValue: 25,
+      },
+      ageFrom: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         defaultValue: 20,
+      },
+      ageTo: {
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         defaultValue: 25,
+      },
+      isOnline: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+         defaultValue: false,
+      },
+      maritalStatus: {
          type: DataTypes.STRING,
          allowNull: false,
-         defaultValue: '25',
+         defaultValue: 'All',
       },
-      city: {
+      sexualOrientation: {
          type: DataTypes.STRING,
-         allowNull: true,
-      },
-      country: {
-         type: DataTypes.STRING,
-         allowNull: true,
-      },
-      sexualType: {
-         type: DataTypes.STRING,
-         allowNull: true,
+         allowNull: false,
+         defaultValue: 'All',
       },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   })
-   return setting
-}
+   });
+   return setting;
+};

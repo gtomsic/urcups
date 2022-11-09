@@ -2,32 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { FaUserEdit } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BorderedCard from '../../components/BorderedCard';
 
 import Card from '../../components/Card';
 import LastTwelve from '../../components/lastTwelve/LastTwelve';
 import SelectOptionBox from '../../components/options/SelectOptionBox';
 import PrimaryButton from '../../components/PrimaryButton';
+import { socket } from '../../socket';
 import { selectProfile } from '../../store/features/profile/profileSlice';
-import { logout, selectUser } from '../../store/features/user/userSlice';
+import {
+   actionChangeOnlineStatus,
+   logout,
+   selectUser,
+} from '../../store/features/user/userSlice';
 import { isRightUser } from '../../utils/check';
 
 const ages = [];
 const limits = [];
-for (let i = 21; i <= 100; i++) {
+for (let i = 20; i <= 100; i++) {
    ages.push({ value: i, label: i });
-   i = i + 5;
+   i = i + 4;
 }
-for (let i = 18; i <= 76; i++) {
+for (let i = 25; i <= 100; i++) {
    limits.push({ value: i, label: i });
-   i = i + 18;
+   i = i + 9;
 }
 
 const ProfileSettings = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const { user } = useSelector(selectUser);
+   const [status, setStatus] = useState(user?.isOnline);
    const { profile } = useSelector(selectProfile);
    const price = [
       { price: 20, label: '3 Months' },
@@ -38,7 +44,15 @@ const ProfileSettings = () => {
       isRightUser(user, profile, navigate);
    }, [user, profile, navigate]);
    const logoutHandler = () => {
+      const localUser = JSON.parse(localStorage.getItem('user'));
+      socket.emit('user', { ...localUser, isOnline: false });
       dispatch(logout(user.id));
+   };
+   const onChangeStatusHandler = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setStatus(e.target.value);
+      dispatch(actionChangeOnlineStatus({ token: user?.token, status }));
    };
    return (
       <div className='flex flex-col gap-20'>
@@ -50,9 +64,11 @@ const ProfileSettings = () => {
                      <BorderedCard>
                         <div className='grid grid-cols-1 gap-4'>
                            <SelectOptionBox
+                              value={status}
+                              onChange={onChangeStatusHandler}
                               label='Active Status'
                               addClass={
-                                 user?.isOnline
+                                 status
                                     ? 'text-white bg-secondary border border-light'
                                     : 'bg-dark text-white border border-light'
                               }
@@ -110,16 +126,36 @@ const ProfileSettings = () => {
                                  addClass='text-dark bg-white'
                                  data={[...limits]}
                               ></SelectOptionBox>
-                              <div className='col-span-1 md:col-span-2'>
-                                 <SelectOptionBox
-                                    label='Sexual Orientation'
-                                    addClass='text-dark bg-white'
-                                    data={[
-                                       { value: 'All', label: 'All' },
-                                       { value: 'Straight', label: 'Straight' },
-                                    ]}
-                                 ></SelectOptionBox>
-                              </div>
+                              <SelectOptionBox
+                                 label='Marital Status'
+                                 addClass='text-dark bg-white'
+                                 data={[
+                                    { value: 'All', label: 'All' },
+                                    { value: 'Single', label: 'Single' },
+                                    { value: 'Married', label: 'Married' },
+                                    { value: 'Window', label: 'Window' },
+                                    { value: 'Divorced', label: 'Divorced' },
+                                    {
+                                       value: 'Complicated',
+                                       label: 'Complicated',
+                                    },
+                                 ]}
+                              ></SelectOptionBox>
+                              <SelectOptionBox
+                                 label='Sexual Orientation'
+                                 addClass='text-dark bg-white'
+                                 data={[
+                                    { value: 'All', label: 'All' },
+                                    { value: 'Straight', label: 'Straight' },
+                                    { value: 'Gay', label: 'Gay' },
+                                    { value: 'Bi', label: 'Bi' },
+                                    { value: 'Lesbian', label: 'Lesbian' },
+                                    {
+                                       value: 'Transgender',
+                                       label: 'Transgender',
+                                    },
+                                 ]}
+                              ></SelectOptionBox>
                            </div>
                            <div className='col-span-1 md:col-span-2'>
                               <PrimaryButton add='w-full'>Save</PrimaryButton>

@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
    const message = sequelize.define('message', {
       attachment: {
-         type: DataTypes.TEXT,
+         type: DataTypes.STRING,
          allowNull: true,
       },
       body: {
@@ -15,12 +15,21 @@ module.exports = (sequelize, DataTypes) => {
       isRead: {
          type: DataTypes.BOOLEAN,
          allowNull: false,
-         deafultValue: false,
+         defaultValue: false,
+      },
+      receiver: {
+         type: DataTypes.UUID,
+         allowNull: false,
       },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   })
-   return message
-}
+      isDeleted: {
+         type: DataTypes.BOOLEAN,
+         allowNull: false,
+         defaultValue: false,
+      },
+   });
+   return message;
+};

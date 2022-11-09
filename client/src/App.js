@@ -47,11 +47,6 @@ const App = () => {
       socket.on('user', async (data) => {
          if (!data?.id) return;
          await dispatch(socketUpdateUser(data));
-         const localUser = JSON.parse(localStorage.getItem('user'));
-         if (data?.id === localUser?.id && data?.isOnline == false) {
-            localStorage.removeItem('user');
-            dispatch(resetUser());
-         }
       });
    });
    useEffect(() => {

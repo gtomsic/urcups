@@ -5,6 +5,19 @@ export const fetchUser = async (user_id) => {
    return response.data;
 };
 
+export const serviceChangeStatus = async (formData) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${formData.token}`,
+      },
+   };
+   const response = await axios.post('/api/users/status', formData, config);
+   if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+   }
+   return response.data;
+};
 export const serviceUpdateWallpaper = async (formData) => {
    const config = {
       headers: {
