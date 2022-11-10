@@ -3,6 +3,7 @@ import { FaUserEdit } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import AccountStatus from '../../components/AccountStatus';
 import BorderedCard from '../../components/BorderedCard';
 
 import Card from '../../components/Card';
@@ -35,11 +36,7 @@ const ProfileSettings = () => {
    const { user } = useSelector(selectUser);
    const [status, setStatus] = useState(user?.isOnline);
    const { profile } = useSelector(selectProfile);
-   const price = [
-      { price: 20, label: '3 Months' },
-      { price: 30, label: '6 Months' },
-      { price: 50, label: '1 year' },
-   ];
+
    useEffect(() => {
       isRightUser(user, profile, navigate);
    }, [user, profile, navigate]);
@@ -163,50 +160,8 @@ const ProfileSettings = () => {
                         </div>
                      </BorderedCard>
                   </div>
-                  <div className='flex flex-col gap-8 p-3 border border-light rounded-xl'>
-                     <div>
-                        <h3>Free account</h3>
-                        <ul>
-                           <li>All free account can enjoy unlimited chat.</li>
-                           <li>You can views unlimited user profile.</li>
-                           <li>Limited to 2 private messages a day.</li>
-                           <li>Not allowed to view public photos.</li>
-                           <li>
-                              Not allowed to interact and view readers activity.
-                           </li>
-                           <li>Not allowed to block any users.</li>
-                        </ul>
-                     </div>
-                     <div>
-                        <h3>Supporters account</h3>
-                        <ul>
-                           <li>
-                              Besides the benefits of free account more to
-                              follows
-                           </li>
-                           <li>
-                              Supported member can have unlimited private
-                              messages.
-                           </li>
-                           <li>Supported member can view public photos.</li>
-                           <li>Supported member can bookmark user profile.</li>
-                           <li>
-                              Supported member can view loves and comment to
-                              stories activity.
-                           </li>
-                        </ul>
-                     </div>
-                     <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>
-                        {price.map((support) => (
-                           <div
-                              key={support.price}
-                              className='flex flex-col gap-1 p-5 justify-center items-center cursor-pointer rounded-lg bg-gradient-to-bl from-primary bg-secondary hover:bg-danger duration-300'
-                           >
-                              <h3>${support.price} USD</h3>
-                              <p>{support.label}</p>
-                           </div>
-                        ))}
-                     </div>
+                  <div>
+                     <AccountStatus />
                   </div>
                </div>
             </div>

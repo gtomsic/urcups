@@ -4,7 +4,7 @@ const SelectOptionBox = ({ label, data, addClass, value, onChange }) => {
    return (
       <div>
          {label ? <p className='p-1'>{label}</p> : null}
-         <div className={`py-4 pl-4 rounded-md ${addClass}`}>
+         <div className={`p-4 rounded-md ${addClass}`}>
             <select
                value={value}
                onChange={onChange}

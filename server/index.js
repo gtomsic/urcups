@@ -35,6 +35,7 @@ const loveRoutes = require('./routes/routeLoves');
 const commentsRoutes = require('./routes/routeComments');
 const bellsRoutes = require('./routes/routeBells');
 const authRoutes = require('./routes/routeAuths');
+const paymentRoutes = require('./routes/routePayment');
 
 app.use('/api/users', userRoutes);
 app.use('/api/public', publicRoutes);
@@ -46,6 +47,7 @@ app.use('/api/loves', loveRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/bells', bellsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.use(errorHandler);
 app.use(notFound);

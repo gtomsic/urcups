@@ -1,18 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
    const payment = sequelize.define('payment', {
-      name: {
+      firstName: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      lastFour: {
+      lastName: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      type: {
+      email: {
          type: DataTypes.STRING,
          allowNull: false,
       },
-      security: {
+      amount: {
+         type: DataTypes.STRING,
+         allowNull: false,
+      },
+      orderId: {
          type: DataTypes.STRING,
          allowNull: false,
       },
@@ -20,6 +24,6 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   })
-   return payment
-}
+   });
+   return payment;
+};
