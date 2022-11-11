@@ -9,7 +9,7 @@ import { selectUser } from '../store/features/user/userSlice';
 import AttentionMessage from './AttentionMessage';
 import { AiOutlineClose } from 'react-icons/ai';
 
-const PaypalPayment = ({ support, onClose }) => {
+const PaypalPayment = ({ support, onClose, onSubmit }) => {
    const [clientId, setClientId] = useState(null);
    const { user } = useSelector(selectUser);
    useEffect(() => {
@@ -33,14 +33,15 @@ const PaypalPayment = ({ support, onClose }) => {
    const onApproveHandler = async (data, actions) => {
       return actions.order.capture().then((details) => {
          const data = {
-            name: details.payer.name.given_name,
-            surname: details.payer.name.surname,
+            firstName: details.payer.name.given_name,
+            lastName: details.payer.name.surname,
             email: details.payer.email_address,
             amount: details.purchase_units[0].amount.value,
-            payerOrderId: details.id,
+            orderId: details.id,
+            user_id: user?.id,
+            token: user?.token,
          };
-         console.log(details);
-         console.log(data);
+         onSubmit(data);
       });
    };
    if (!clientId) return;

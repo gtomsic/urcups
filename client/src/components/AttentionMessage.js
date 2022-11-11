@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 const AttentionMessage = ({ title, children, profile }) => {
    return (
-      <div className='rounded-3xl overflow-hidden max-w-[100%] w-full'>
+      <div className='rounded-2xl overflow-hidden max-w-[100%] w-full'>
          <div className='bg-gradient-to-tr from-primary to-secondary p-5'>
             <h3 className='text-white'>{title}</h3>
          </div>
@@ -15,7 +15,7 @@ const AttentionMessage = ({ title, children, profile }) => {
             <p>Urcups Administrator</p>
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default AttentionMessage
+export default AttentionMessage;

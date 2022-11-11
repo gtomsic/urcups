@@ -6,6 +6,7 @@ module.exports = {
       colors: {
          primary: '#6d28d9',
          secondary: '#06b6d4',
+         positive: '#0ea5e9',
          accent: '#8b5cf6',
          warning: '#fcd34d',
          danger: '#dc2626',
@@ -18,4 +19,4 @@ module.exports = {
       },
    },
    plugins: [],
-}
+};

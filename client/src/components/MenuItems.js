@@ -1,44 +1,46 @@
-import React, { useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { FaBell, FaUserPlus } from 'react-icons/fa'
-import { BsShieldLockFill } from 'react-icons/bs'
-import { MdMessage } from 'react-icons/md'
-import { BsBookmarkStarFill } from 'react-icons/bs'
-import { MdAutoStories } from 'react-icons/md'
-import { IoLogOut } from 'react-icons/io5'
-import { HiUsers } from 'react-icons/hi'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout, selectUser } from '../store/features/user/userSlice'
-import Button from './Button'
-import { selectUnreadMessages } from '../store/features/messages/messagesSlice'
-import { countBells, selectBells } from '../store/features/bells/bellsSlice'
-import { socket } from '../socket'
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaBell, FaUserPlus } from 'react-icons/fa';
+import { BsShieldLockFill } from 'react-icons/bs';
+import { MdMessage } from 'react-icons/md';
+import { BsBookmarkStarFill } from 'react-icons/bs';
+import { MdAutoStories } from 'react-icons/md';
+import { IoLogOut } from 'react-icons/io5';
+import { HiUsers } from 'react-icons/hi';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from '../store/features/user/userSlice';
+import Button from './Button';
+import { selectUnreadMessages } from '../store/features/messages/messagesSlice';
+import { countBells, selectBells } from '../store/features/bells/bellsSlice';
+import { socket } from '../socket';
+import { fetchUser } from '../store/features/user/userService';
 
 const MenuItems = () => {
-   const location = useLocation()
-   const dispatch = useDispatch()
-   const { user } = useSelector(selectUser)
-   const { unreadMessages } = useSelector(selectUnreadMessages)
-   const { bellsOffset, bellsLimit, count } = useSelector(selectBells)
+   const location = useLocation();
+   const dispatch = useDispatch();
+   const { user } = useSelector(selectUser);
+   const { unreadMessages } = useSelector(selectUnreadMessages);
+   const { bellsOffset, bellsLimit, count } = useSelector(selectBells);
    useEffect(() => {
-      if (!user?.id) return
+      if (!user?.id) return;
       const timerId = setTimeout(() => {
          dispatch(
             countBells({
                token: user?.token,
             })
-         )
-      }, 500)
+         );
+      }, 500);
       return () => {
-         clearTimeout(timerId)
-      }
-   }, [user, bellsLimit, bellsOffset])
+         clearTimeout(timerId);
+      };
+   }, [user, bellsLimit, bellsOffset]);
 
    const logoutHandler = async () => {
-      const localUser = JSON.parse(localStorage.getItem('user'))
-      socket.emit('user', { ...localUser, isOnline: false })
-      await dispatch(logout(user.id))
-   }
+      const localUser = JSON.parse(localStorage.getItem('user'));
+      await dispatch(logout(user.id));
+      const response = await fetchUser(localUser?.id);
+      socket.emit('user', response);
+   };
    return (
       <div className='sticky top-[85px]'>
          <div className='bg-gradient-to-tr from-primary bg-secondary z-0 flex flex-row lg:flex-col relative rounded-2xl overflow-hidden'>
@@ -168,7 +170,7 @@ const MenuItems = () => {
             </Button>
          ) : null}
       </div>
-   )
-}
+   );
+};
 
-export default MenuItems
+export default MenuItems;

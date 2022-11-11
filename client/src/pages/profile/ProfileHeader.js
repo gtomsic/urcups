@@ -1,43 +1,43 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { BsBookmarkStarFill } from 'react-icons/bs'
-import { MdPhotoSizeSelectActual } from 'react-icons/md'
-import { FaUserAlt, FaCamera, FaLock } from 'react-icons/fa'
-import { IoSettingsSharp, IoReader } from 'react-icons/io5'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BsBookmarkStarFill } from 'react-icons/bs';
+import { MdPhotoSizeSelectActual } from 'react-icons/md';
+import { FaUserAlt, FaCamera, FaLock } from 'react-icons/fa';
+import { IoSettingsSharp, IoReader } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
 import {
    selectUser,
    updateAvatar,
    updateWallpaper,
-} from '../../store/features/user/userSlice'
-import Loader from '../../components/loader/Loader'
-import ImageViewer from '../../components/photos/ImageViewer'
-import Modal from '../../components/Modal'
-import { check } from '../../utils/check'
-import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice'
-import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice'
-import MessageMenuHandler from '../../components/profile/MessageMenuHandler'
+} from '../../store/features/user/userSlice';
+import Loader from '../../components/loader/Loader';
+import ImageViewer from '../../components/photos/ImageViewer';
+import Modal from '../../components/Modal';
+import { check } from '../../utils/check';
+import { selectPublicPhotos } from '../../store/features/publicPhotos/publicPhotosSlice';
+import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice';
+import MessageMenuHandler from '../../components/profile/MessageMenuHandler';
 import {
    addRemoveFavorites,
    checkIsFavorite,
    selectFavorite,
-} from '../../store/features/favorites/favoritesSlice'
-import { actionBells } from '../../store/features/bells/bellsSlice'
+} from '../../store/features/favorites/favoritesSlice';
+import { actionBells } from '../../store/features/bells/bellsSlice';
 const ProfileHeader = ({ profile }) => {
-   const isFetch = useRef(false)
-   const location = useLocation()
-   const url = useSelector((state) => state.url)
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const [isOpen, setIsOpen] = useState(false)
-   const [images, setImages] = useState([])
-   const [avatar, setAvatar] = useState(profile?.avatar)
-   const [wallpaper, setWallpaper] = useState(profile?.wallpaper)
-   const { user } = useSelector(selectUser)
-   const { loadingAvatar, loadingWallpaper } = useSelector(selectUser)
-   const { publicPhotos } = useSelector(selectPublicPhotos)
-   const { privatePhotos } = useSelector(selectPrivatePhotos)
-   const { favorite } = useSelector(selectFavorite)
+   const isFetch = useRef(false);
+   const location = useLocation();
+   const url = useSelector((state) => state.url);
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+   const [isOpen, setIsOpen] = useState(false);
+   const [images, setImages] = useState([]);
+   const [avatar, setAvatar] = useState(profile?.avatar);
+   const [wallpaper, setWallpaper] = useState(profile?.wallpaper);
+   const { user } = useSelector(selectUser);
+   const { loadingAvatar, loadingWallpaper } = useSelector(selectUser);
+   const { publicPhotos } = useSelector(selectPublicPhotos);
+   const { privatePhotos } = useSelector(selectPrivatePhotos);
+   const { favorite } = useSelector(selectFavorite);
 
    useEffect(() => {
       if (isFetch.current === false) {
@@ -45,24 +45,24 @@ const ProfileHeader = ({ profile }) => {
             const data = {
                token: user?.token,
                profileId: profile?.id,
-            }
-            dispatch(checkIsFavorite(data))
+            };
+            dispatch(checkIsFavorite(data));
          }
       }
       return () => {
-         isFetch.current = true
-      }
-   }, [profile])
+         isFetch.current = true;
+      };
+   }, [profile]);
 
    const addRemoveFavoritesHandler = async (e) => {
-      e.stopPropagation()
-      e.preventDefault()
+      e.stopPropagation();
+      e.preventDefault();
       await dispatch(
          addRemoveFavorites({
             token: user?.token,
             profileId: profile?.id,
          })
-      )
+      );
       if (!favorite) {
          dispatch(
             actionBells({
@@ -75,46 +75,46 @@ const ProfileHeader = ({ profile }) => {
                } added you as favorite? ✅`,
                token: user?.token,
             })
-         )
+         );
       }
-      navigate('/favorites')
-   }
+      navigate('/favorites');
+   };
 
    const onAvatarChange = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const data = new FormData()
-      data.append('avatar', e.target.files[0])
-      setAvatar(URL.createObjectURL(e.target.files[0]))
-      dispatch(updateAvatar({ data: data, token: user.token }))
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      const data = new FormData();
+      data.append('avatar', e.target.files[0]);
+      setAvatar(URL.createObjectURL(e.target.files[0]));
+      dispatch(updateAvatar({ data: data, token: user.token }));
+   };
    const onWallpaperChange = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const data = new FormData()
-      data.append('wallpaper', e.target.files[0])
-      setWallpaper(URL.createObjectURL(e.target.files[0]))
-      dispatch(updateWallpaper({ data: data, token: user.token }))
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      const data = new FormData();
+      data.append('wallpaper', e.target.files[0]);
+      setWallpaper(URL.createObjectURL(e.target.files[0]));
+      dispatch(updateWallpaper({ data: data, token: user.token }));
+   };
    const viewProfilePhotoHandler = (e) => {
-      e.stopPropagation()
-      const isInclude = profile.avatar.includes('/avatar.jpg')
-      if (isInclude) return
-      const newLink = profile.avatar.replace('avatar', 'public')
-      setImages([`${url + newLink}`])
-      setIsOpen(true)
-   }
+      e.stopPropagation();
+      const isInclude = profile.avatar.includes('/avatar.jpg');
+      if (isInclude) return;
+      const newLink = profile.avatar.replace('avatar', 'public');
+      setImages([`${url + newLink}`]);
+      setIsOpen(true);
+   };
    const viewProfileWallpaper = (e) => {
-      e.stopPropagation()
-      const isInclude = profile.wallpaper.includes('/wallpaper.jpg')
-      if (isInclude) return
-      const newLink = profile.wallpaper.replace('wallpaper', 'public')
-      setImages([`${url + newLink}`])
-      setIsOpen(true)
-   }
+      e.stopPropagation();
+      const isInclude = profile.wallpaper.includes('/wallpaper.jpg');
+      if (isInclude) return;
+      const newLink = profile.wallpaper.replace('wallpaper', 'public');
+      setImages([`${url + newLink}`]);
+      setIsOpen(true);
+   };
    const stopPropagationHandler = (e) => {
-      e.stopPropagation()
-   }
+      e.stopPropagation();
+   };
    return (
       <>
          <div
@@ -345,7 +345,7 @@ const ProfileHeader = ({ profile }) => {
                   className={
                      !favorite
                         ? 'absolute top-0 bg-gradient-to-b from-dark lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
-                        : 'absolute top-0 bg-gradient-to-b from-secondary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
+                        : 'absolute top-0 rounded-b-2xl bg-gradient-to-b from-positive lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
                   }
                >
                   <BsBookmarkStarFill />
@@ -362,7 +362,7 @@ const ProfileHeader = ({ profile }) => {
             </Modal>
          )}
       </>
-   )
-}
+   );
+};
 
-export default ProfileHeader
+export default ProfileHeader;

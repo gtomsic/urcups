@@ -288,6 +288,7 @@ module.exports.controllerVerifyUser = asyncHandler(async (req, res) => {
 module.exports.controllerLoginUser = asyncHandler(async (req, res) => {
    const { email, password } = req.body;
    const config = await db.config.findOne({ where: { email: email } });
+   if (!config?.email) throw new Error(`No account found!`);
    if (config?.isActivated) {
       const verifyPassword = bcrypt.compareSync(password, config.password);
       if (verifyPassword) {
@@ -307,6 +308,8 @@ module.exports.controllerLoginUser = asyncHandler(async (req, res) => {
             token: makeToken(user.id),
          });
       }
+      if (!verifyPassword)
+         throw new Error(`User email or password don't match.`);
    } else {
       throw new Error(
          'User is not verified. Please verify your email to login.'

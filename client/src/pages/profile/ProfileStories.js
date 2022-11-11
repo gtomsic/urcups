@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { FaPlus, FaCamera } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectProfile } from '../../store/features/profile/profileSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import { AiOutlineClose } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react';
+import { FaPlus, FaCamera } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProfile } from '../../store/features/profile/profileSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import { AiOutlineClose } from 'react-icons/ai';
 
-import StoryItem from '../stories/StoryItem'
-import Modal from '../../components/Modal'
-import Container from '../../components/Container'
-import PrimaryButton from '../../components/PrimaryButton'
-import TextInput from '../../components/forms/TextInput'
+import StoryItem from '../stories/StoryItem';
+import Modal from '../../components/Modal';
+import Container from '../../components/Container';
+import PrimaryButton from '../../components/PrimaryButton';
+import TextInput from '../../components/forms/TextInput';
 import {
    createStory,
    createStoryText,
@@ -18,32 +18,30 @@ import {
    selectStory,
    selectUserStories,
    setUserStoriesOffset,
-} from '../../store/features/stories/storySlice'
-import Loader from '../../components/loader/Loader'
-import { useNavigate } from 'react-router-dom'
-import AttentionMessage from '../../components/AttentionMessage'
+} from '../../store/features/stories/storySlice';
+import Loader from '../../components/loader/Loader';
+import { useNavigate } from 'react-router-dom';
+import AttentionMessage from '../../components/AttentionMessage';
 
 const ProfileReader = () => {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const [isOpen, setIsOpen] = useState(false)
-   const [messageBox, setMessageBox] = useState(false)
-   const [limit, setLimit] = useState(100)
-   const [offset, setOffset] = useState(0)
-   const [image, setImage] = useState(null)
-   const [file, setFile] = useState(null)
-   const [title, setTitle] = useState('')
-   const [body, setBody] = useState('')
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
-   const { story, storyIsLoading } = useSelector(selectStory)
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+   const [isOpen, setIsOpen] = useState(false);
+   const [messageBox, setMessageBox] = useState(false);
+   const [image, setImage] = useState(null);
+   const [file, setFile] = useState(null);
+   const [title, setTitle] = useState('');
+   const [body, setBody] = useState('');
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
+   const { story, storyIsLoading } = useSelector(selectStory);
    const {
       userStories,
       userStoriesIsLoading,
       userStoriesOffset,
       userStoriesLimit,
-   } = useSelector(selectUserStories)
-   const url = useSelector((state) => state.url)
+   } = useSelector(selectUserStories);
+   const url = useSelector((state) => state.url);
    useEffect(() => {
       dispatch(
          getAllUserStories({
@@ -51,44 +49,45 @@ const ProfileReader = () => {
             offset: userStoriesOffset,
             id: profile?.id,
          })
-      )
-   }, [story])
+      );
+   }, [story]);
    const onClickHandler = (e, id) => {
-      e.preventDefault()
-      e.stopPropagation()
-      navigate(`/stories/${id}`)
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      navigate(`/stories/${id}`);
+   };
    const onCloseHandler = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsOpen(false)
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      setIsOpen(false);
+   };
    const onCancelHandler = (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsOpen(false)
-      setImage(null)
-      setBody('')
-      setTitle('')
-   }
-   const onChangeImageHandler = (e) => {
-      setFile(e.target.files[0])
-      setImage(URL.createObjectURL(e.target.files[0]))
-   }
+      e.preventDefault();
+      e.stopPropagation();
+      setIsOpen(false);
+      setImage(null);
+      setBody('');
+      setTitle('');
+   };
+   const onImageChange = (e) => {
+      setFile(e.target.files[0]);
+      setImage(URL.createObjectURL(e.target.files[0]));
+      console.log('I am click');
+   };
    const onSubmitHandler = async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const data = new FormData()
-      data.append('story', file)
+      e.preventDefault();
+      e.stopPropagation();
+      const data = new FormData();
+      data.append('story', file);
       if (!Boolean(file) || !Boolean(title.trim()) || !Boolean(body.trim())) {
-         setMessageBox(true)
-         return
+         setMessageBox(true);
+         return;
       }
       const createPhoto = await dispatch(
          createStory({ token: user?.token, data })
-      )
+      );
       if (createPhoto) {
-         const newBody = body?.split('\n').join('<br/>')
+         const newBody = body?.split('\n').join('<br/>');
          await dispatch(
             createStoryText({
                token: user?.token,
@@ -96,10 +95,10 @@ const ProfileReader = () => {
                body: newBody,
                id: createPhoto?.payload?.id,
             })
-         )
+         );
       }
-      onCancelHandler(e)
-   }
+      onCancelHandler(e);
+   };
    const onMoreStoriesHandler = async () => {
       await dispatch(
          getMoreUserStories({
@@ -107,9 +106,9 @@ const ProfileReader = () => {
             offset: userStoriesOffset + 1,
             id: profile?.id,
          })
-      )
-      await dispatch(setUserStoriesOffset(userStoriesOffset + 1))
-   }
+      );
+      await dispatch(setUserStoriesOffset(userStoriesOffset + 1));
+   };
    return (
       <>
          {userStories?.rows < 1 && user?.id !== profile?.id ? (
@@ -157,13 +156,19 @@ const ProfileReader = () => {
                      >
                         <div className='md:col-span-8 rounded-3xl bg-light bg-opacity-20 p-5'>
                            <div className='relative flex justify-center items-center p-5 rounded-md text-white bg-gradient-to-tr from-secondary to-primary hover:from-danger hover:to-primary cursor-pointer overflow-hidden'>
-                              {!image ? <FaCamera /> : 'Change Image'}
+                              {!image ? (
+                                 <span>
+                                    <FaCamera />
+                                 </span>
+                              ) : (
+                                 'Change Image'
+                              )}
                               <input
-                                 onChange={onChangeImageHandler}
+                                 onChange={(e) => onImageChange(e)}
                                  type='file'
                                  name='image'
                                  accept='.png, .jpg, .JPEG'
-                                 className='h-full absolute w-full overflow-hidden cursor-pointer'
+                                 className='h-full z-10 absolute w-full overflow-hidden cursor-pointer'
                               />
                            </div>
                            <TextInput
@@ -219,7 +224,7 @@ const ProfileReader = () => {
             )}
          </div>
       </>
-   )
-}
+   );
+};
 
-export default ProfileReader
+export default ProfileReader;

@@ -43,56 +43,58 @@ const StoryPage = () => {
    const [profile, setProfile] = useState({});
    const url = useSelector((state) => state.url);
    useEffect(() => {
+      const fetchingUser = async () => {
+         const getProfile = await fetchUser(story.user_id);
+         setProfile(getProfile);
+      };
+      fetchingUser();
+   }, [story]);
+   useEffect(() => {
       dispatch(getStoryById(params.story_id));
    }, [params, dispatch]);
    useEffect(() => {
       setCountComments(comments.count);
    }, [comments.count]);
    useEffect(() => {
-      const timerId = setTimeout(() => {
-         const fetchStory = async () => {
-            const fetchLoves = await serviceCountLoves({ story_id: story.id });
-            setLoves(fetchLoves);
-            if (user?.id) {
-               const checkLove = await serviceCheckLove({
-                  story_id: story.id,
-                  token: user?.token,
-               });
-               setIsLove(checkLove);
-               dispatch(countBells({ token: user?.token }));
-            }
-            const response = await serviceCountComments(story.id);
-            setCountComments(response.count);
-            const getProfile = await fetchUser(story.user_id);
-            setProfile(getProfile);
-            scrollView.current.scrollIntoView();
-         };
-         fetchStory();
-      }, 500);
-      return () => {
-         clearTimeout(timerId);
-      };
-   }, []);
+      fetchStory();
+   }, [params]);
+   const fetchStory = async () => {
+      const fetchLoves = await serviceCountLoves({
+         story_id: params?.story_id,
+      });
+      setLoves(fetchLoves);
+      if (user?.id) {
+         const checkLove = await serviceCheckLove({
+            story_id: params?.story_id,
+            token: user?.token,
+         });
+         setIsLove(checkLove);
+         dispatch(countBells({ token: user?.token }));
+      }
+      const response = await serviceCountComments(params?.story_id);
+      setCountComments(response.count);
+      scrollView.current.scrollIntoView();
+   };
    const loveClickHandler = async (e) => {
       e.stopPropagation();
       e.preventDefault();
       if (!user?.id) return;
       const response = await serviceAddRemoveLoves({
-         story_id: story.id,
+         story_id: params?.story_id,
          token: user?.token,
       });
       const checkLove = await serviceCheckLove({
-         story_id: story.id,
+         story_id: params?.story_id,
          token: user?.token,
       });
       setIsLove(checkLove);
       setLoves(response);
-      socket.emit('stories', { ...story, path: `/love/${story.id}` });
+      socket.emit('stories', { ...story, path: `/love/${params?.story_id}` });
    };
    const onDeleteHandler = async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const data = { story_id: story.id, token: user?.token };
+      const data = { story_id: params?.story_id, token: user?.token };
       await dispatch(deleteStory(data));
       navigate(-1);
    };

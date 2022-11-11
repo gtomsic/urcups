@@ -77,7 +77,7 @@ const LoginPage = () => {
             <p className='text-light'>
                Forgot password{' '}
                <Link to='/auth/request' className='text-secondary ml-3'>
-                  Reset your password here!
+                  Request here!
                </Link>
             </p>
          </div>
