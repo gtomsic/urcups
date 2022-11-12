@@ -23,6 +23,7 @@ import {
    selectFavorite,
 } from '../../store/features/favorites/favoritesSlice';
 import { actionBells } from '../../store/features/bells/bellsSlice';
+import { selectPayment } from '../../store/features/payment/paymentSlice';
 const ProfileHeader = ({ profile }) => {
    const isFetch = useRef(false);
    const location = useLocation();
@@ -38,6 +39,7 @@ const ProfileHeader = ({ profile }) => {
    const { publicPhotos } = useSelector(selectPublicPhotos);
    const { privatePhotos } = useSelector(selectPrivatePhotos);
    const { favorite } = useSelector(selectFavorite);
+   const { paid } = useSelector(selectPayment);
 
    useEffect(() => {
       if (isFetch.current === false) {
@@ -57,6 +59,7 @@ const ProfileHeader = ({ profile }) => {
    const addRemoveFavoritesHandler = async (e) => {
       e.stopPropagation();
       e.preventDefault();
+      if (paid?.days < 1) return;
       await dispatch(
          addRemoveFavorites({
             token: user?.token,
@@ -166,7 +169,7 @@ const ProfileHeader = ({ profile }) => {
                            backgroundSize: 'cover',
                            backgroundPosition: 'center',
                         }}
-                        className='absolute lg:relative left-[50%] lg:left-0 translate-x-[-50%] lg:translate-x-0 top-[-210px] lg:top-0  w-[200px] h-[200px] aspect-square rounded-full border-4 border-white cursor-pointer'
+                        className='absolute z-10 lg:relative left-[50%] lg:left-0 translate-x-[-50%] lg:translate-x-0 top-[-210px] lg:top-0  w-[200px] h-[200px] aspect-square rounded-full border-4 border-white cursor-pointer'
                      >
                         {profile.isOnline ? (
                            <>
@@ -339,13 +342,13 @@ const ProfileHeader = ({ profile }) => {
                </div>
             </div>
             {/* BOOKMARK PROFILE */}
-            {user?.id === profile?.id || !user?.id ? null : (
+            {user?.id === profile?.id || !user?.id || paid?.days < 1 ? null : (
                <div
                   onClick={addRemoveFavoritesHandler}
                   className={
                      !favorite
                         ? 'absolute top-0 bg-gradient-to-b from-dark lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
-                        : 'absolute top-0 rounded-b-2xl bg-gradient-to-b from-positive lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
+                        : 'absolute top-0 rounded-b-2xl bg-gradient-to-b from-danger to-primary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
                   }
                >
                   <BsBookmarkStarFill />

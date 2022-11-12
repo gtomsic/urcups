@@ -17,7 +17,7 @@ const FavoritesItem = ({ user }) => {
             }}
          >
             {/* Favorite Tags */}
-            <div className='absolute top-0 bg-gradient-to-b from-positive to-primary text-3xl pt-5 px-1 h-full'>
+            <div className='absolute top-0 bg-gradient-to-b from-danger to-primary text-3xl pt-5 px-1 h-full'>
                <BsBookmarkStarFill />
             </div>
             {user?.isOnline ? (

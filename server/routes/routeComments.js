@@ -4,16 +4,17 @@ const {
    controllerCountComments,
    controllerUpdateComments,
    controllerDeleteComments,
-} = require('../controllers/controllerComments')
+} = require('../controllers/controllerComments');
 
-const { auth } = require('../middlewares/middlewareAuth')
+const { auth } = require('../middlewares/middlewareAuth');
+const { isPaid } = require('../middlewares/middlewareIsPaid');
 
-const router = require('express').Router()
+const router = require('express').Router();
 
-router.get('/single/:story_id', controllerCountComments)
-router.get('/:limit/:offset/:story_id', controllerGetComments)
-router.delete('/:id', auth, controllerDeleteComments)
-router.put('/', auth, controllerUpdateComments)
-router.post('/', auth, controllerCreateComments)
+router.get('/single/:story_id', controllerCountComments);
+router.get('/:limit/:offset/:story_id', controllerGetComments);
+router.delete('/:id', auth, controllerDeleteComments);
+router.put('/', auth, controllerUpdateComments);
+router.post('/', auth, isPaid, controllerCreateComments);
 
-module.exports = router
+module.exports = router;

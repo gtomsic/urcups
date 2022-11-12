@@ -1,31 +1,33 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import AttentionMessage from '../components/AttentionMessage'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import AttentionMessage from '../components/AttentionMessage';
 
-import FavoritesItem from '../components/favorites/FavoritesItem'
-import PrimaryButton from '../components/PrimaryButton'
+import FavoritesItem from '../components/favorites/FavoritesItem';
+import PrimaryButton from '../components/PrimaryButton';
 import {
    getAllUserFavorites,
    selectFavorites,
-} from '../store/features/favorites/favoritesSlice'
-import { selectUser } from '../store/features/user/userSlice'
+} from '../store/features/favorites/favoritesSlice';
+import { selectPayment } from '../store/features/payment/paymentSlice';
+import { selectUser } from '../store/features/user/userSlice';
 
 const FavoritesPage = () => {
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
-   const { user } = useSelector(selectUser)
-   const { favorites, favsOffset, favsLimit } = useSelector(selectFavorites)
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+   const { user } = useSelector(selectUser);
+   const { favorites, favsOffset, favsLimit } = useSelector(selectFavorites);
+   const { paid } = useSelector(selectPayment);
    useEffect(() => {
-      if (!user?.id) return navigate('/')
+      if (!user?.id || paid?.days < 1) return navigate('/');
       dispatch(
          getAllUserFavorites({
             token: user.token,
             offset: favsOffset,
             limit: favsLimit,
          })
-      )
-   }, [user])
+      );
+   }, [user, paid]);
    if (favorites?.length <= 0) {
       return (
          <AttentionMessage title={`No favorites profile`}>
@@ -36,7 +38,7 @@ const FavoritesPage = () => {
                <PrimaryButton>Browse Profiles</PrimaryButton>
             </Link>
          </AttentionMessage>
-      )
+      );
    }
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8'>
@@ -46,7 +48,7 @@ const FavoritesPage = () => {
             </Link>
          ))}
       </div>
-   )
-}
+   );
+};
 
-export default FavoritesPage
+export default FavoritesPage;

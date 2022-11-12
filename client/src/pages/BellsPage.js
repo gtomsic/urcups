@@ -1,41 +1,41 @@
-import React, { useEffect } from 'react'
-import { useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import AttentionMessage from '../components/AttentionMessage'
-import Loader from '../components/loader/Loader'
+import React, { useEffect } from 'react';
+import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import AttentionMessage from '../components/AttentionMessage';
+import Loader from '../components/loader/Loader';
 import {
    deleteBell,
    getBells,
    getMoreBells,
    selectBells,
    setBellsOffset,
-} from '../store/features/bells/bellsSlice'
-import { selectUser } from '../store/features/user/userSlice'
-import BellsItem from './bells/BellsItem'
+} from '../store/features/bells/bellsSlice';
+import { selectUser } from '../store/features/user/userSlice';
+import BellsItem from './bells/BellsItem';
 
 const BellsPage = () => {
-   const isFetch = useRef(false)
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
-   const { user } = useSelector(selectUser)
+   const isFetch = useRef(false);
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const { user } = useSelector(selectUser);
    const { bellsOffset, bellsLimit, bellsLoading, bells } =
-      useSelector(selectBells)
+      useSelector(selectBells);
    useEffect(() => {
-      if (!user?.id) return navigate('/')
+      if (!user?.id) return navigate('/');
       if (isFetch.current === false) {
          dispatch(
             getBells({
                limit: bellsLimit,
-               offset: bellsOffset,
+               offset: 0,
                token: user?.token,
             })
-         )
+         );
       }
       return () => {
-         isFetch.current = true
-      }
-   }, [user])
+         isFetch.current = true;
+      };
+   }, [user]);
 
    const onMoreBellsHandler = async () => {
       await dispatch(
@@ -44,9 +44,9 @@ const BellsPage = () => {
             limit: bellsLimit,
             token: user?.token,
          })
-      )
-      await dispatch(setBellsOffset(bellsOffset + 1))
-   }
+      );
+      await dispatch(setBellsOffset(bellsOffset + 1));
+   };
 
    const onDeleteBellHandler = (id) => {
       dispatch(
@@ -56,12 +56,12 @@ const BellsPage = () => {
             offset: bellsOffset,
             token: user?.token,
          })
-      )
-   }
+      );
+   };
 
-   if (!user?.id) return
+   if (!user?.id) return;
    if (bells?.rows?.length < 1) {
-      if (!user?.id) return
+      if (!user?.id) return;
       return (
          <AttentionMessage title={`You don't have bells right now`}>
             <p>Sorry you don't have bells notification at the moment.</p>
@@ -71,7 +71,7 @@ const BellsPage = () => {
             <p>Upload more photos of you at photos.</p>
             <p>Make the first move.</p>
          </AttentionMessage>
-      )
+      );
    }
    return (
       <>
@@ -100,7 +100,7 @@ const BellsPage = () => {
             </div>
          )}
       </>
-   )
-}
+   );
+};
 
-export default BellsPage
+export default BellsPage;
