@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Loader from '../../components/loader/Loader'
-import { selectProfile } from '../../store/features/profile/profileSlice'
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../../components/loader/Loader';
+import { selectProfile } from '../../store/features/profile/profileSlice';
 import {
    addPublicPhotos,
    deletePublicPhotos,
@@ -9,27 +9,35 @@ import {
    resetPhotos,
    selectPublicPhotos,
    setPublicPhotosOffset,
-} from '../../store/features/publicPhotos/publicPhotosSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import AttentionMessage from '../../components/AttentionMessage'
-import PhotoLayout from '../../components/photos/PhotoLayout'
-import { useParams } from 'react-router-dom'
+} from '../../store/features/publicPhotos/publicPhotosSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import AttentionMessage from '../../components/AttentionMessage';
+import PhotoLayout from '../../components/photos/PhotoLayout';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ProfilePhotos = () => {
-   const [pages, setPages] = useState(null)
-   const [select, setSelect] = useState(false)
-   const [toDelete, setToDelete] = useState([])
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
-   const dispatch = useDispatch()
-   const params = useParams()
+   const [pages, setPages] = useState(null);
+   const [select, setSelect] = useState(false);
+   const [toDelete, setToDelete] = useState([]);
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
+   const dispatch = useDispatch();
+   const params = useParams();
+   const navigate = useNavigate();
    const {
       publicPhotos,
       isPublicPhotosLoading,
       isPublicPhotosError,
       publicPhotosOffset,
       publicPhotosLimit,
-   } = useSelector(selectPublicPhotos)
+   } = useSelector(selectPublicPhotos);
+
+   useEffect(() => {
+      if (!user?.id) {
+         return navigate('/');
+      }
+   }, [user]);
+
    useEffect(() => {
       const timerId = setTimeout(() => {
          dispatch(
@@ -39,61 +47,61 @@ const ProfilePhotos = () => {
                offset: publicPhotosOffset,
                limit: publicPhotosLimit,
             })
-         )
-      }, 200)
+         );
+      }, 200);
       return () => {
-         dispatch(resetPhotos())
-         clearTimeout(timerId)
-      }
+         dispatch(resetPhotos());
+         clearTimeout(timerId);
+      };
    }, [
       dispatch,
       publicPhotosOffset,
       publicPhotosLimit,
       profile?.id,
       user?.token,
-   ])
+   ]);
 
    useEffect(() => {
-      dispatch(setPublicPhotosOffset(0))
-   }, [params?.username])
+      dispatch(setPublicPhotosOffset(0));
+   }, [params?.username]);
 
    useEffect(() => {
       if (publicPhotos?.count) {
-         const num = Math.ceil(publicPhotos?.count / publicPhotosLimit)
-         setPages(num)
+         const num = Math.ceil(publicPhotos?.count / publicPhotosLimit);
+         setPages(num);
       }
-   }, [publicPhotos?.count, publicPhotosLimit])
+   }, [publicPhotos?.count, publicPhotosLimit]);
 
    const onSaveHandler = () => {
       if (select) {
          if (toDelete?.length > 0) {
             dispatch(
                deletePublicPhotos({ photos: toDelete, token: user.token })
-            )
+            );
          }
-         return setSelect(false)
+         return setSelect(false);
       }
-      setSelect(true)
-   }
+      setSelect(true);
+   };
    const addToDelete = (photo) => {
-      setToDelete((previousValue) => [...previousValue, photo])
-   }
+      setToDelete((previousValue) => [...previousValue, photo]);
+   };
    const removeToDelte = (photo) => {
-      const newArr = toDelete.filter((item) => item !== photo)
-      setToDelete(newArr)
-   }
+      const newArr = toDelete.filter((item) => item !== photo);
+      setToDelete(newArr);
+   };
    const onCancelHandler = () => {
-      setToDelete([])
-      setSelect(false)
-   }
+      setToDelete([]);
+      setSelect(false);
+   };
    const onAddImagesHandler = (e) => {
-      e.stopPropagation()
-      const data = new FormData()
+      e.stopPropagation();
+      const data = new FormData();
       for (let i = 0; i < e.target.files.length; i++) {
-         data.append('images', e.target.files[i])
+         data.append('images', e.target.files[i]);
       }
-      dispatch(addPublicPhotos({ data, token: user.token }))
-   }
+      dispatch(addPublicPhotos({ data, token: user.token }));
+   };
 
    return (
       <div>
@@ -140,7 +148,7 @@ const ProfilePhotos = () => {
             ) : null}
          </> */}
       </div>
-   )
-}
+   );
+};
 
-export default ProfilePhotos
+export default ProfilePhotos;

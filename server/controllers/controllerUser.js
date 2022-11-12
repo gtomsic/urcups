@@ -389,6 +389,13 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       about: '<br>',
    });
 
+   // CREATE ACCESS
+   await db.access.create({
+      granted: 'free',
+      membership: 'f',
+      user_id: id,
+   });
+
    // Create a user folder
    // Link to users_id
    let dir = `./users/${user.id}`;

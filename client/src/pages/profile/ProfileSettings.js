@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { FaUserEdit } from 'react-icons/fa';
 import { IoLogOut } from 'react-icons/io5';
@@ -14,10 +13,7 @@ import SelectOptionBox from '../../components/options/SelectOptionBox';
 import PaymentBadge from '../../components/PaymentBadge';
 import PrimaryButton from '../../components/PrimaryButton';
 import { socket } from '../../socket';
-import {
-   actionGetAccessStatus,
-   selectPayment,
-} from '../../store/features/payment/paymentSlice';
+import { selectPayment } from '../../store/features/payment/paymentSlice';
 import { selectProfile } from '../../store/features/profile/profileSlice';
 import {
    actionChangeOnlineStatus,
@@ -38,7 +34,6 @@ for (let i = 25; i <= 100; i++) {
 }
 
 const ProfileSettings = () => {
-   const isFetch = useRef(false);
    const dispatch = useDispatch();
    const navigate = useNavigate();
    const { user } = useSelector(selectUser);
@@ -46,14 +41,6 @@ const ProfileSettings = () => {
    const { profile } = useSelector(selectProfile);
    const { paid } = useSelector(selectPayment);
 
-   useEffect(() => {
-      if (isFetch.current === false && user?.id) {
-         dispatch(actionGetAccessStatus(user?.token));
-      }
-      return () => {
-         isFetch.current = true;
-      };
-   }, [user]);
    useEffect(() => {
       isRightUser(user, profile, navigate);
    }, [user, profile, navigate]);

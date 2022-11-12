@@ -36,12 +36,24 @@ import { socket } from './socket';
 import { socketUpdateUser } from './store/features/users/usersSlice';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import NewPassword from './pages/auth/NewPassword';
+import { actionGetAccessStatus } from './store/features/payment/paymentSlice';
+import { useRef } from 'react';
 
 const App = () => {
    const dispatch = useDispatch();
    const { user } = useSelector(selectUser);
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages);
+   useEffect(() => {
+      const timerId = setTimeout(() => {
+         if (user?.id) {
+            dispatch(actionGetAccessStatus(user?.token));
+         }
+      }, 500);
+      return () => {
+         clearTimeout(timerId);
+      };
+   }, [user]);
 
    useEffect(() => {
       socket.on('user', async (data) => {

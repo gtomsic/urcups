@@ -1,39 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Loader from '../../components/loader/Loader'
-import { selectProfile } from '../../store/features/profile/profileSlice'
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../../components/loader/Loader';
+import { selectProfile } from '../../store/features/profile/profileSlice';
 import {
    selectPrivatePhotos,
    getPrivatePhotos,
    resetPrivatePhotos,
    deletePrivatePhotos,
    addPrivatePhotos,
-} from '../../store/features/privatePhotos/privatePhotosSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import AttentionMessage from '../../components/AttentionMessage'
-import PhotoLayout from '../../components/photos/PhotoLayout'
-import { useNavigate } from 'react-router-dom'
-import { isRightUser } from '../../utils/check'
+} from '../../store/features/privatePhotos/privatePhotosSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import AttentionMessage from '../../components/AttentionMessage';
+import PhotoLayout from '../../components/photos/PhotoLayout';
+import { useNavigate } from 'react-router-dom';
+import { isRightUser } from '../../utils/check';
 
 const ProfilePrivatePhotos = () => {
-   const isFetch = useRef(false)
-   const [pages, setPages] = useState(null)
-   const [select, setSelect] = useState(false)
-   const [toDelete, setToDelete] = useState([])
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
-   const dispatch = useDispatch()
-   const navigate = useNavigate()
+   const isFetch = useRef(false);
+   const [pages, setPages] = useState(null);
+   const [select, setSelect] = useState(false);
+   const [toDelete, setToDelete] = useState([]);
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
    const {
       privatePhotos,
       privatePhotosLoading,
       privatePhotosError,
       privatePhotosOffset,
       privatePhotosLimit,
-   } = useSelector(selectPrivatePhotos)
+   } = useSelector(selectPrivatePhotos);
    useEffect(() => {
-      isRightUser(user, profile, navigate)
-   }, [user, profile, navigate])
+      isRightUser(user, profile, navigate);
+   }, [user, profile, navigate]);
    useEffect(() => {
       dispatch(
          getPrivatePhotos({
@@ -42,56 +42,56 @@ const ProfilePrivatePhotos = () => {
             offset: privatePhotosOffset,
             limit: privatePhotosLimit,
          })
-      )
+      );
       return () => {
-         isFetch.current = true
-         dispatch(resetPrivatePhotos())
-      }
+         isFetch.current = true;
+         dispatch(resetPrivatePhotos());
+      };
    }, [
       dispatch,
       privatePhotosOffset,
       privatePhotosLimit,
       profile?.id,
       user?.token,
-   ])
+   ]);
 
    useEffect(() => {
       if (privatePhotos?.count) {
-         const num = Math.ceil(privatePhotos?.count / privatePhotosLimit)
-         setPages(num)
+         const num = Math.ceil(privatePhotos?.count / privatePhotosLimit);
+         setPages(num);
       }
-   }, [privatePhotos?.count, privatePhotosLimit])
+   }, [privatePhotos?.count, privatePhotosLimit]);
 
    const onSaveHandler = () => {
       if (select) {
          if (toDelete?.length > 0) {
             dispatch(
                deletePrivatePhotos({ photos: toDelete, token: user.token })
-            )
+            );
          }
-         return setSelect(false)
+         return setSelect(false);
       }
-      setSelect(true)
-   }
+      setSelect(true);
+   };
    const addToDelete = (photo) => {
-      setToDelete((previousValue) => [...previousValue, photo])
-   }
+      setToDelete((previousValue) => [...previousValue, photo]);
+   };
    const removeToDelte = (photo) => {
-      const newArr = toDelete.filter((item) => item !== photo)
-      setToDelete(newArr)
-   }
+      const newArr = toDelete.filter((item) => item !== photo);
+      setToDelete(newArr);
+   };
    const onCancelHandler = () => {
-      setToDelete([])
-      setSelect(false)
-   }
+      setToDelete([]);
+      setSelect(false);
+   };
    const onAddImagesHandler = (e) => {
-      e.stopPropagation()
-      const data = new FormData()
+      e.stopPropagation();
+      const data = new FormData();
       for (let i = 0; i < e.target.files.length; i++) {
-         data.append('images', e.target.files[i])
+         data.append('images', e.target.files[i]);
       }
-      dispatch(addPrivatePhotos({ data, token: user.token }))
-   }
+      dispatch(addPrivatePhotos({ data, token: user.token }));
+   };
 
    return (
       <div>
@@ -136,7 +136,7 @@ const ProfilePrivatePhotos = () => {
             ) : null}
          </> */}
       </div>
-   )
-}
+   );
+};
 
-export default ProfilePrivatePhotos
+export default ProfilePrivatePhotos;

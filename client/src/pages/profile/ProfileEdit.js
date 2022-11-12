@@ -1,72 +1,77 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Card from '../../components/Card'
-import TextInput from '../../components/forms/TextInput'
-import SelectOptions from '../../components/forms/SelectOptions'
-import { countries } from '../../data/countries'
-import { useNavigate, useParams } from 'react-router-dom'
-import Button from '../../components/Button'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Card from '../../components/Card';
+import TextInput from '../../components/forms/TextInput';
+import SelectOptions from '../../components/forms/SelectOptions';
+import { countries } from '../../data/countries';
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from '../../components/Button';
 import {
    selectProfile,
    updateProfileInfo,
-} from '../../store/features/profile/profileSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import { isRightUser } from '../../utils/check'
+} from '../../store/features/profile/profileSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import { isRightUser } from '../../utils/check';
 
 const ProfileEdit = () => {
-   const navigate = useNavigate()
-   const params = useParams()
-   const dispatch = useDispatch()
-   const { profile } = useSelector(selectProfile)
-   const { user } = useSelector(selectUser)
-   const [username, setUserName] = useState(profile?.username || '')
-   const [age, setAge] = useState(profile?.age || '')
-   const [dateOfBirth, setDateOfBirth] = useState(profile?.dateOfBirth || '')
-   const [sex, setSex] = useState(profile?.sex || '')
-   const [city, setCity] = useState(profile?.city || '')
+   const navigate = useNavigate();
+   const params = useParams();
+   const dispatch = useDispatch();
+   const { profile } = useSelector(selectProfile);
+   const { user } = useSelector(selectUser);
+   const [username, setUserName] = useState(profile?.username || '');
+   const [age, setAge] = useState(profile?.age || '');
+   const [dateOfBirth, setDateOfBirth] = useState(profile?.dateOfBirth || '');
+   const [sex, setSex] = useState(profile?.sex || '');
+   const [city, setCity] = useState(profile?.city || '');
    const [stateProvince, setStateProvince] = useState(
       profile?.stateProvince || ''
-   )
-   const [country, setCountry] = useState(profile?.country || '')
-   const [hugot, setHugot] = useState(profile?.hugot || '')
+   );
+   const [country, setCountry] = useState(profile?.country || '');
+   const [hugot, setHugot] = useState(profile?.hugot || '');
    const [maritalStatus, setMaritalStatus] = useState(
       profile?.maritalStatus || ''
-   )
+   );
    const [sexualOrientation, setSexualOrientation] = useState(
       profile?.sexualOrientation || ''
-   )
-   const [children, setChildren] = useState(profile?.children || '')
-   const [lookingFor, setLookingFor] = useState(profile?.lookingFor || '')
+   );
+   const [children, setChildren] = useState(profile?.children || '');
+   const [lookingFor, setLookingFor] = useState(profile?.lookingFor || '');
    const [foot, setFoot] = useState(
       profile?.height?.split("'")[0] ? profile.height.split("'")[0] + "'" : ''
-   )
-   const [inches, setInches] = useState(profile?.height?.split("'")[1] || '')
-   const [race, setRace] = useState(profile?.race || '')
-   const [bodyType, setBodyType] = useState(profile?.bodyType || '')
-   const [education, setEducation] = useState(profile?.education || '')
-   const [occupation, setOccupation] = useState(profile?.occupation || '')
-   const [smoking, setSmoking] = useState(profile?.smoking || '')
-   const [dringking, setDringking] = useState(profile?.dringking || '')
-   const [language, setLanguage] = useState(profile?.language || '')
-   const [astrology, setAstrology] = useState(profile?.astrology || '')
-   const [hairColor, setHairColor] = useState(profile?.hairColor || '')
-   const [eyeColor, setEyeColor] = useState(profile?.eyeColor || '')
-   const [religion, setReligion] = useState(profile?.religion || '')
-   const [hobbies, setHobbies] = useState(profile?.hobbies || '')
+   );
+   const [inches, setInches] = useState(profile?.height?.split("'")[1] || '');
+   const [race, setRace] = useState(profile?.race || '');
+   const [bodyType, setBodyType] = useState(profile?.bodyType || '');
+   const [education, setEducation] = useState(profile?.education || '');
+   const [occupation, setOccupation] = useState(profile?.occupation || '');
+   const [smoking, setSmoking] = useState(profile?.smoking || '');
+   const [dringking, setDringking] = useState(profile?.dringking || '');
+   const [language, setLanguage] = useState(profile?.language || '');
+   const [astrology, setAstrology] = useState(profile?.astrology || '');
+   const [hairColor, setHairColor] = useState(profile?.hairColor || '');
+   const [eyeColor, setEyeColor] = useState(profile?.eyeColor || '');
+   const [religion, setReligion] = useState(profile?.religion || '');
+   const [hobbies, setHobbies] = useState(profile?.hobbies || '');
    const [idealPartner, setIdealPartner] = useState(
       profile?.idealPartner?.split('<br>').join('\n' || '')
-   )
+   );
    const [about, setAbout] = useState(
       profile?.about?.split('<br>').join('\n') || ''
-   )
+   );
    useEffect(() => {
-      isRightUser(user, profile, navigate)
-   }, [user, profile, navigate])
+      if (!user?.id) {
+         return navigate('/');
+      }
+   }, [user]);
+   useEffect(() => {
+      isRightUser(user, profile, navigate);
+   }, [user, profile, navigate]);
    useEffect(() => {
       if (!profile?.id) {
-         navigate(`/profile/${params.username}`)
+         navigate(`/profile/${params.username}`);
       }
-   }, [profile, navigate, params.username])
+   }, [profile, navigate, params.username]);
 
    const onSaveHandler = async () => {
       // const newAbout = about.split('\n').join('<br>')
@@ -97,14 +102,14 @@ const ProfileEdit = () => {
          idealPartner: idealPartner?.split('\n').join('<br>'),
          about: about?.split('\n').join('<br>'),
          token: user.token,
-      }
-      await dispatch(updateProfileInfo(data))
-      navigate(`/profile/${user.username}`)
-   }
+      };
+      await dispatch(updateProfileInfo(data));
+      navigate(`/profile/${user.username}`);
+   };
 
    const onCancelHandler = () => {
-      navigate(`/profile/${user.username}`)
-   }
+      navigate(`/profile/${user.username}`);
+   };
 
    return (
       <div className='flex flex-col gap-5 lg:gap-11'>
@@ -416,7 +421,7 @@ const ProfileEdit = () => {
             </div>
          </Card>
       </div>
-   )
-}
+   );
+};
 
-export default ProfileEdit
+export default ProfileEdit;

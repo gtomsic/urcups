@@ -1,30 +1,30 @@
-import React, { useEffect, useReducer, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useReducer, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import CommentsForm from './CommentsForm'
-import CommentItem from './CommentItem'
-import { commentAction } from './commentsContant'
-import { commentReducers } from './commentsReducers'
-import { selectUser } from '../../store/features/user/userSlice'
+import CommentsForm from './CommentsForm';
+import CommentItem from './CommentItem';
+import { commentAction } from './commentsContant';
+import { commentReducers } from './commentsReducers';
+import { selectUser } from '../../store/features/user/userSlice';
 import {
    countComments,
    createComments,
    getComments,
    moreComments,
    selectComments,
-} from '../../store/features/comments/commentsSlice'
-import AttentionMessage from '../AttentionMessage'
-import Loader from '../loader/Loader'
-import { useParams } from 'react-router-dom'
-import { actionBells } from '../../store/features/bells/bellsSlice'
-import { socket } from '../../socket'
+} from '../../store/features/comments/commentsSlice';
+import AttentionMessage from '../AttentionMessage';
+import Loader from '../loader/Loader';
+import { useParams } from 'react-router-dom';
+import { actionBells } from '../../store/features/bells/bellsSlice';
+import { socket } from '../../socket';
+import { selectPayment } from '../../store/features/payment/paymentSlice';
 
 const Comments = ({ profile, story }) => {
-   const reduxDispatch = useDispatch()
-   const params = useParams()
-   const isFetch = useRef(false)
-   const { user } = useSelector(selectUser)
-   const { comments, commentsLoading } = useSelector(selectComments)
+   const reduxDispatch = useDispatch();
+   const params = useParams();
+   const isFetch = useRef(false);
+   const { user } = useSelector(selectUser);
    const [state, dispatch] = useReducer(commentReducers, {
       story_id: params.story_id,
       body: '',
@@ -32,7 +32,10 @@ const Comments = ({ profile, story }) => {
       token: user?.token,
       offset: 0,
       limit: 10,
-   })
+   });
+   const { comments, commentsLoading } = useSelector(selectComments);
+   const { paid } = useSelector(selectPayment);
+
    useEffect(() => {
       if (isFetch.current === false) {
          reduxDispatch(
@@ -42,15 +45,15 @@ const Comments = ({ profile, story }) => {
                offset: state.offset,
                limit: state.limit,
             })
-         )
+         );
       }
       return () => {
-         isFetch.current = true
-      }
-   }, [params, state.limit, state.offset, user, reduxDispatch])
+         isFetch.current = true;
+      };
+   }, [params, state.limit, state.offset, user, reduxDispatch]);
    const onMoreButtonHandler = async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
+      e.preventDefault();
+      e.stopPropagation();
       reduxDispatch(
          moreComments({
             story_id: params.story_id,
@@ -58,24 +61,24 @@ const Comments = ({ profile, story }) => {
             offset: state.offset + 1,
             limit: state.limit,
          })
-      )
+      );
       dispatch({
          type: commentAction.SET_OFFSET,
          payload: state.offset + 1,
-      })
-   }
+      });
+   };
    const onSubmitHandler = async (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      if (!Boolean(state.body.trim())) return
-      await reduxDispatch(createComments(state))
-      dispatch({ type: commentAction.SET_BODY, payload: '' })
-      reduxDispatch(countComments(params.story_id))
+      e.preventDefault();
+      e.stopPropagation();
+      if (!Boolean(state.body.trim())) return;
+      await reduxDispatch(createComments(state));
+      dispatch({ type: commentAction.SET_BODY, payload: '' });
+      reduxDispatch(countComments(params.story_id));
       socket.emit('stories', {
          id: params.story_id,
          path: `/comments/${params.story_id}`,
-      })
-      if (story?.user_id === user?.id) return
+      });
+      if (story?.user_id === user?.id) return;
       reduxDispatch(
          actionBells({
             subject: 'New comment!',
@@ -87,12 +90,12 @@ const Comments = ({ profile, story }) => {
             } comment? 😄`,
             token: user?.token,
          })
-      )
-   }
+      );
+   };
    return (
       <>
          <div className='relative w-full'>
-            {!user?.id ? null : (
+            {!user?.id || paid?.days < 1 ? null : (
                <CommentsForm
                   onSubmit={onSubmitHandler}
                   value={state.body}
@@ -141,7 +144,7 @@ const Comments = ({ profile, story }) => {
             </div>
          </div>
       </>
-   )
-}
+   );
+};
 
-export default Comments
+export default Comments;

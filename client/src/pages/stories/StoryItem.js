@@ -1,76 +1,76 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
-import { socket } from '../../socket'
-import { serviceCountComments } from '../../store/features/comments/serviceComments'
+import React, { useEffect, useRef, useState } from 'react';
+import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import { socket } from '../../socket';
+import { serviceCountComments } from '../../store/features/comments/serviceComments';
 import {
    serviceAddRemoveLoves,
    serviceCheckLove,
    serviceCountLoves,
-} from '../../store/features/loves/serviceLove'
-import { selectUser } from '../../store/features/user/userSlice'
+} from '../../store/features/loves/serviceLove';
+import { selectUser } from '../../store/features/user/userSlice';
 
 const StoryItem = ({ story }) => {
-   const isFetch = useRef(false)
-   const [loves, setLoves] = useState(0)
-   const [comments, setComments] = useState(0)
-   const [isLove, setIsLove] = useState(false)
-   const { user } = useSelector(selectUser)
-   const newBody = story?.body?.split('<br/>').join('\n')
+   const isFetch = useRef(false);
+   const [loves, setLoves] = useState(0);
+   const [comments, setComments] = useState(0);
+   const [isLove, setIsLove] = useState(false);
+   const { user } = useSelector(selectUser);
+   const newBody = story?.body?.split('<br/>').join('\n');
    useEffect(() => {
       const timerId = setTimeout(() => {
          socket.on(`/stories/love/${story.id}`, async (msg) => {
-            if (story.id !== msg.id) return
-            const countLoves = await serviceCountLoves({ story_id: msg.id })
-            setLoves(countLoves)
-         })
+            if (story.id !== msg.id) return;
+            const countLoves = await serviceCountLoves({ story_id: msg.id });
+            setLoves(countLoves);
+         });
          socket.on(`/stories/comments/${story.id}`, async (msg) => {
-            if (story.id != msg.id) return
-            const response = await serviceCountComments(msg.id)
-            setComments(response.count)
-         })
-      }, 500)
+            if (story.id != msg.id) return;
+            const response = await serviceCountComments(msg.id);
+            setComments(response.count);
+         });
+      }, 500);
       return () => {
-         clearTimeout(timerId)
-      }
-   })
+         clearTimeout(timerId);
+      };
+   });
    useEffect(() => {
       if (isFetch.current === false) {
          const fetchingLove = async () => {
-            const countLoves = await serviceCountLoves({ story_id: story.id })
-            setLoves(countLoves)
+            const countLoves = await serviceCountLoves({ story_id: story.id });
+            setLoves(countLoves);
             if (user?.id) {
                const response = await serviceCheckLove({
                   story_id: story.id,
                   token: user?.token,
-               })
-               setIsLove(response)
+               });
+               setIsLove(response);
             }
-            const response = await serviceCountComments(story.id)
-            setComments(response.count)
-         }
-         fetchingLove()
+            const response = await serviceCountComments(story.id);
+            setComments(response.count);
+         };
+         fetchingLove();
       }
       return () => {
-         isFetch.current = true
-      }
-   })
+         isFetch.current = true;
+      };
+   });
    const loveClickHandler = async (e) => {
-      e.stopPropagation()
-      e.preventDefault()
-      if (!user?.id) return
+      e.stopPropagation();
+      e.preventDefault();
+      if (!user?.id) return;
       const response = await serviceAddRemoveLoves({
          story_id: story.id,
          token: user?.token,
-      })
+      });
       const checkLove = await serviceCheckLove({
          story_id: story.id,
          token: user?.token,
-      })
-      setIsLove(checkLove)
-      setLoves(response)
-      socket.emit('stories', { ...story, path: `/love/${story.id}` })
-   }
+      });
+      setIsLove(checkLove);
+      setLoves(response);
+      socket.emit('stories', { ...story, path: `/love/${story.id}` });
+   };
    return (
       <div className='group relative flex flex-col rounded-3xl p-4 bg-gradient-to-b from-primary hover:bg-gradient-to-t hover:to-danger duration-300 text-light cursor-pointer'>
          {!story?.image ? (
@@ -105,7 +105,11 @@ const StoryItem = ({ story }) => {
          <div className='flex gap-3 mt-2'>
             <div
                onClick={(e) => loveClickHandler(e)}
-               className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+               className={
+                  !user?.id
+                     ? 'flex gap-2 items-center p-2 '
+                     : 'flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+               }
             >
                <span>Loves</span>
                {!isLove ? (
@@ -119,7 +123,13 @@ const StoryItem = ({ story }) => {
                )}
                <small>{loves}</small>
             </div>
-            <div className='flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'>
+            <div
+               className={
+                  !user?.id
+                     ? 'flex gap-2 items-center p-2 '
+                     : 'flex gap-2 items-center p-2 rounded-md hover:bg-secondary hover:bg-opacity-30 duration-300 cursor-pointer'
+               }
+            >
                <span>Comments</span>
                <span className='text-secondary group-hover:text-white'>
                   <FaRegCommentDots />
@@ -128,7 +138,7 @@ const StoryItem = ({ story }) => {
             </div>
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default StoryItem
+export default StoryItem;

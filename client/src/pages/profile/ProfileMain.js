@@ -1,28 +1,29 @@
-import React, { useRef } from 'react'
-import { useEffect } from 'react'
+import React, { useRef } from 'react';
+import { useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux'
-import { selectProfile } from '../../store/features/profile/profileSlice'
-import { selectUser } from '../../store/features/user/userSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProfile } from '../../store/features/profile/profileSlice';
+import { selectUser } from '../../store/features/user/userSlice';
 import {
+   actionBells,
    countBells,
    createBells,
    readBell,
    selectBells,
-} from '../../store/features/bells/bellsSlice'
+} from '../../store/features/bells/bellsSlice';
 
-import Card from '../../components/Card'
-import MoreInformation from './MoreInformation'
+import Card from '../../components/Card';
+import MoreInformation from './MoreInformation';
 
 const Profile = () => {
-   const isFetch = useRef(false)
-   const dispatch = useDispatch()
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
-   const { bellsOffset, bellsLimit } = useSelector(selectBells)
+   const isFetch = useRef(false);
+   const dispatch = useDispatch();
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
+   const { bellsOffset, bellsLimit } = useSelector(selectBells);
    useEffect(() => {
       if (isFetch.current === false) {
-         if (!user?.id) return
+         if (!user?.id) return;
          dispatch(
             readBell({
                user_id: profile?.id,
@@ -30,31 +31,36 @@ const Profile = () => {
                offset: bellsOffset,
                token: user?.token,
             })
-         )
-         dispatch(countBells({ token: user?.token }))
+         );
+         dispatch(countBells({ token: user?.token }));
       }
       return () => {
-         isFetch.current = true
-      }
-   }, [profile, bellsLimit, bellsOffset, user, dispatch])
+         isFetch.current = true;
+      };
+   }, [profile, bellsLimit, bellsOffset, user, dispatch]);
    useEffect(() => {
-      let timerId
+      let timerId;
       if (profile?.id !== user?.id && user?.id && isFetch.current === false) {
          timerId = setTimeout(() => {
             dispatch(
-               createBells({
-                  title: 'viewedProfiles',
+               actionBells({
+                  subject: `${user?.username} view your profile`,
+                  title: `${user?.username} view your profile`,
+                  link: `/profile/${user?.username}`,
                   user_id: profile?.id,
+                  body: `Check ${
+                     user?.sex === 'Male' ? 'his' : 'her'
+                  } profile? 😄`,
                   token: user?.token,
                })
-            )
-         }, 500)
+            );
+         }, 500);
       }
       return () => {
-         clearTimeout(timerId)
-      }
-   })
-   if (!profile?.id) return
+         clearTimeout(timerId);
+      };
+   });
+   if (!profile?.id) return;
    return (
       <>
          <Card>
@@ -91,7 +97,7 @@ const Profile = () => {
             <div dangerouslySetInnerHTML={{ __html: profile?.about }}></div>
          </Card>
       </>
-   )
-}
+   );
+};
 
-export default Profile
+export default Profile;

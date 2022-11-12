@@ -113,13 +113,13 @@ module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
          user.email,
          `Hi ${req.user.username} just visit you.`,
          viewedProfile({
-            title: 'Hey there!',
-            body: bell.body,
+            title,
+            body,
             avatar: process.env.SERVER_HOST + req.user.avatar,
-            link: process.env.WEB_HOST + `/profile/${req.user.username}`,
+            link: process.env.WEB_HOST + link,
             webHost: process.env.WEB_HOST,
             serverHost: process.env.SERVER_HOST,
-            button: `${req.user.username} profile`.toUpperCase(),
+            button: `View Now`,
          })
       );
       res.status(201).json(bell);

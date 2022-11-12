@@ -26,7 +26,7 @@ const NewPassword = () => {
       useSelector(selectAuth);
 
    useEffect(() => {
-      if (user?.id) {
+      if (!params.token || !params.email || user?.id) {
          navigate('/');
       }
    }, [user]);

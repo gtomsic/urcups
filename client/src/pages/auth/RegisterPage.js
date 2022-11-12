@@ -100,11 +100,11 @@ const RegisterPage = () => {
          return;
       }
       if (
-         (Boolean(!data.username.trim()) ||
-            Boolean(!data.email.trim()) ||
-            Boolean(!data.dateOfBirth.trim()) ||
-            Boolean(!data.sex.trim()),
-         Boolean(!data.sexualOrientation.trim()))
+         Boolean(!data.username.trim()) ||
+         Boolean(!data.email.trim()) ||
+         Boolean(!data.dateOfBirth.trim()) ||
+         Boolean(!data.sex.trim()) ||
+         Boolean(!data.sexualOrientation.trim())
       ) {
          setMessage('All fields are required.');
          return;
