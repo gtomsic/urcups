@@ -22,7 +22,7 @@ import MessagePage from './pages/MessagePage';
 import FavoritesPage from './pages/FavoritesPage';
 import StoriesPage from './pages/StoriesPage';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetUser, selectUser } from './store/features/user/userSlice';
+import { selectUser } from './store/features/user/userSlice';
 import {
    countAllUnreadMessages,
    getAllMessages,

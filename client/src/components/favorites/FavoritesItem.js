@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 const FavoritesItem = ({ user }) => {
    const url = useSelector((state) => state.url);
    return (
-      <div className='relative rounded-2xl overflow-hidden pb-[100px] bg-gradient-to-b from-positive to-primary hover:to-danger'>
+      <div className='relative rounded-2xl overflow-hidden pb-[100px] bg-gradient-to-b from-secondary to-primary hover:from-danger hover:to-danger'>
          <div
             className='relative m-3 bg-gradient-to-tr from-secondary to-primary  text-white rounded-2xl h-[250px] cursor-pointer overflow-hidden'
             style={{
@@ -17,7 +17,7 @@ const FavoritesItem = ({ user }) => {
             }}
          >
             {/* Favorite Tags */}
-            <div className='absolute top-0 bg-gradient-to-b from-danger to-primary text-3xl pt-5 px-1 h-full'>
+            <div className='absolute top-0 bg-gradient-to-b from-positive to-primary text-3xl pt-5 px-1 h-full'>
                <BsBookmarkStarFill />
             </div>
             {user?.isOnline ? (

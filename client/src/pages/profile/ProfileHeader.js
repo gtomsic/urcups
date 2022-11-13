@@ -348,7 +348,7 @@ const ProfileHeader = ({ profile }) => {
                   className={
                      !favorite
                         ? 'absolute top-0 bg-gradient-to-b from-dark lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
-                        : 'absolute top-0 rounded-b-2xl bg-gradient-to-b from-danger to-primary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
+                        : 'absolute top-0 rounded-b-2xl bg-gradient-to-b from-positive to-primary lg:rounded-tl-2xl text-4xl pt-5 px-2 h-full cursor-pointer'
                   }
                >
                   <BsBookmarkStarFill />

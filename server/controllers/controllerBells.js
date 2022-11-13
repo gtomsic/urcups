@@ -111,12 +111,12 @@ module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
       });
       sendEmail(
          user.email,
-         `Hi ${req.user.username} just visit you.`,
+         `${req.user.username} just visit you.`,
          viewedProfile({
-            title,
-            body,
+            title: req.body.title,
+            body: req.body.body,
             avatar: process.env.SERVER_HOST + req.user.avatar,
-            link: process.env.WEB_HOST + link,
+            link: process.env.WEB_HOST + req.body.link,
             webHost: process.env.WEB_HOST,
             serverHost: process.env.SERVER_HOST,
             button: `View Now`,

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectProfile } from '../../store/features/profile/profileSlice';
 import { selectUser } from '../../store/features/user/userSlice';
 import {
-   actionBells,
    countBells,
    createBells,
    readBell,
@@ -39,11 +38,10 @@ const Profile = () => {
       };
    }, [profile, bellsLimit, bellsOffset, user, dispatch]);
    useEffect(() => {
-      let timerId;
-      if (profile?.id !== user?.id && user?.id && isFetch.current === false) {
-         timerId = setTimeout(() => {
+      const timerId = setTimeout(() => {
+         if (profile?.id !== user?.id && user?.id) {
             dispatch(
-               actionBells({
+               createBells({
                   subject: `${user?.username} view your profile`,
                   title: `${user?.username} view your profile`,
                   link: `/profile/${user?.username}`,
@@ -54,12 +52,12 @@ const Profile = () => {
                   token: user?.token,
                })
             );
-         }, 500);
-      }
+         }
+      }, 500);
       return () => {
          clearTimeout(timerId);
       };
-   });
+   }, []);
    if (!profile?.id) return;
    return (
       <>

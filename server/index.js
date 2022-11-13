@@ -36,6 +36,7 @@ const commentsRoutes = require('./routes/routeComments');
 const bellsRoutes = require('./routes/routeBells');
 const authRoutes = require('./routes/routeAuths');
 const paymentRoutes = require('./routes/routePayment');
+const settingsRoutes = require('./routes/routeSettings');
 
 app.use('/api/users', userRoutes);
 app.use('/api/public', publicRoutes);
@@ -48,6 +49,7 @@ app.use('/api/comments', commentsRoutes);
 app.use('/api/bells', bellsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.use(errorHandler);
 app.use(notFound);
@@ -127,6 +129,15 @@ db.sequelize.sync().then(() => server);
 //          await db.access.create({
 //             granted: randomValue === 1 ? 'paid' : 'free',
 //             membership: randomValue === 1 ? 'a' : 'f',
+//             user_id: id,
+//          });
+//          await db.setting.create({
+//             ageFrom: 18,
+//             ageTo: 100,
+//             limit: 25,
+//             isOnline: false,
+//             maritalStatus: 'All',
+//             sexualOrientation: 'All',
 //             user_id: id,
 //          });
 //       }
