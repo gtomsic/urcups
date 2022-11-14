@@ -38,13 +38,18 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import NewPassword from './pages/auth/NewPassword';
 import { actionGetAccessStatus } from './store/features/payment/paymentSlice';
 import { useRef } from 'react';
+import { actionGetSearchOptionSettings } from './store/features/settings/settingsSlice';
 
 const App = () => {
+   const isFetch = useRef(false);
    const dispatch = useDispatch();
    const { user } = useSelector(selectUser);
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages);
    useEffect(() => {
+      if (isFetch.current === false) {
+         dispatch(actionGetSearchOptionSettings({ token: user?.token }));
+      }
       const timerId = setTimeout(() => {
          if (user?.id) {
             dispatch(actionGetAccessStatus(user?.token));
@@ -52,6 +57,7 @@ const App = () => {
       }, 500);
       return () => {
          clearTimeout(timerId);
+         isFetch.current = true;
       };
    }, [user]);
 
@@ -60,7 +66,7 @@ const App = () => {
          if (!data?.id) return;
          await dispatch(socketUpdateUser(data));
       });
-   });
+   }, [user]);
    useEffect(() => {
       const timerId = setTimeout(() => {
          if (!user?.id) return;

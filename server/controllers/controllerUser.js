@@ -59,12 +59,20 @@ module.exports.controllerUpdateUserInfo = asyncHandler(async (req, res) => {
       about,
    } = req.body;
    await db.user.update(
-      { isOnline, sex, hugot, sexualOrientation, city, stateProvince, country },
+      {
+         isOnline,
+         sex,
+         hugot,
+         sexualOrientation,
+         city,
+         stateProvince,
+         country,
+         maritalStatus,
+      },
       { where: { id: req.user.id } }
    );
    await db.info.update(
       {
-         maritalStatus,
          children,
          lookingFor,
          height,
@@ -330,6 +338,7 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       sex,
       hugot,
       sexualOrientation,
+      maritalStatus,
       city,
       stateProvince,
       country,
@@ -344,6 +353,7 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       !Boolean(sex.trim()) ||
       !Boolean(hugot.trim()) ||
       !Boolean(sexualOrientation.trim()) ||
+      !Boolean(maritalStatus.trim()) ||
       !Boolean(password.trim()) ||
       !Boolean(confirmPassword.trim()) ||
       !Boolean(city.trim()) ||
@@ -368,6 +378,7 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       sex,
       hugot,
       sexualOrientation,
+      maritalStatus,
       thumbnail: `/avatar.jpg`,
       avatar: `/avatar.jpg`,
       wallpaper: `/wallpaper.jpg`,

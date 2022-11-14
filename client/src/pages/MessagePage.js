@@ -185,7 +185,7 @@ const MessagePage = () => {
          >
             {message?.rows?.length < 1 ? (
                <AttentionMessage
-                  title={`Are you interested to ${userProfile?.username}`}
+                  title={`Are you interested in ${userProfile?.username}`}
                >
                   <p>
                      Send {userProfile?.sex === 'Male' ? 'him' : 'her'} your

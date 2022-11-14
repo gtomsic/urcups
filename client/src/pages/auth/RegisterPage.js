@@ -28,6 +28,7 @@ const RegisterPage = () => {
       dateOfBirth: '',
       sex: '',
       sexualOrientation: '',
+      maritalStatus: '',
       hugot: '',
       city: '',
       stateProvince: '',
@@ -104,7 +105,8 @@ const RegisterPage = () => {
          Boolean(!data.email.trim()) ||
          Boolean(!data.dateOfBirth.trim()) ||
          Boolean(!data.sex.trim()) ||
-         Boolean(!data.sexualOrientation.trim())
+         Boolean(!data.sexualOrientation.trim()) ||
+         Boolean(!data.maritalStatus.trim())
       ) {
          setMessage('All fields are required.');
          return;
@@ -172,6 +174,24 @@ const RegisterPage = () => {
                      type='date'
                      name='date'
                      label='Date of Birth'
+                  />
+                  <SelectOptions
+                     value={data.maritalStatus}
+                     onChange={(e) =>
+                        setData({
+                           ...data,
+                           maritalStatus: e.target.value,
+                        })
+                     }
+                     label='Marital Status'
+                     data={[
+                        { name: '-' },
+                        { name: 'Single' },
+                        { name: 'Married' },
+                        { name: 'Widow' },
+                        { name: 'Divorced' },
+                        { name: 'Complicated' },
+                     ]}
                   />
                   <SelectOptions
                      value={data.sex}

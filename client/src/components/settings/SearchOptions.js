@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+   actionAddUpdateSearchOption,
+   selectSearchOptionSettings,
+} from '../../store/features/settings/settingsSlice';
 import { selectUser } from '../../store/features/user/userSlice';
 import BorderedCard from '../BorderedCard';
 import SelectOptionBox from '../options/SelectOptionBox';
@@ -22,13 +27,23 @@ for (let i = 25; i <= 100; i++) {
 }
 
 const SearchOptions = () => {
-   const [from, setFrom] = useState(ages[0].value);
-   const [to, setTo] = useState(agesTo[agesTo.length - 1].value);
-   const [isOnline, setIsOnline] = useState('All');
-   const [limit, setLimit] = useState(25);
-   const [maritalStatus, setMaritalStatus] = useState('All');
-   const [sexualOrientation, setSexualOrientation] = useState('All');
+   const isFetch = useRef(false);
+   const dispatch = useDispatch();
    const { user } = useSelector(selectUser);
+   const { searchOptions } = useSelector(selectSearchOptionSettings);
+   const [from, setFrom] = useState(searchOptions?.ageFrom);
+   const [to, setTo] = useState(searchOptions?.ageTo);
+   const [isOnline, setIsOnline] = useState(
+      searchOptions?.isOnline ? true : 'All'
+   );
+   const [limit, setLimit] = useState(searchOptions?.limit);
+   const [maritalStatus, setMaritalStatus] = useState(
+      searchOptions?.maritalStatus
+   );
+   const [sexualOrientation, setSexualOrientation] = useState(
+      searchOptions?.sexualOrientation
+   );
+
    const onChangeFromHandler = (e) => {
       const value = e.target.value;
       setFrom(Number(value));
@@ -49,14 +64,14 @@ const SearchOptions = () => {
       const data = {
          ageFrom: from,
          ageTo: to,
-         isOnline,
+         isOnline: isOnline === 'All' ? false : true,
          limit,
          maritalStatus,
          sexualOrientation,
          user_id: user?.id,
          token: user?.token,
       };
-      console.log(data);
+      dispatch(actionAddUpdateSearchOption({ ...data, token: user?.token }));
    };
    return (
       <BorderedCard>

@@ -289,6 +289,7 @@ const messagesSlice = createSlice({
                'asc'
             );
             state.message.message.rows = sortedMessage;
+            state.message.message.count = state.message.message.count + 1;
             socket.emit(`message`, {
                ...action.payload,
             });

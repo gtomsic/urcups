@@ -1,9 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
    const info = sequelize.define('info', {
-      maritalStatus: {
-         type: DataTypes.STRING,
-         allowNull: true,
-      },
       children: {
          type: DataTypes.STRING,
          allowNull: true,
@@ -78,6 +74,6 @@ module.exports = (sequelize, DataTypes) => {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   })
-   return info
-}
+   });
+   return info;
+};

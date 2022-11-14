@@ -12,6 +12,7 @@ import commentsSlice from '../features/comments/commentsSlice';
 import bellsSlice from '../features/bells/bellsSlice';
 import authSlice from '../features/auth/authSlice';
 import paymentSlice from '../features/payment/paymentSlice';
+import settingsSlice from '../features/settings/settingsSlice';
 
 import { serverUrl } from '../../url';
 
@@ -30,5 +31,6 @@ export const store = configureStore({
       bells: bellsSlice,
       auth: authSlice,
       paid: paymentSlice,
+      settings: settingsSlice,
    },
 });

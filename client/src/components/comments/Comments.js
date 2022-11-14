@@ -110,7 +110,12 @@ const Comments = ({ profile, story }) => {
             <div className='flex flex-col gap-1 p-3 bg-dark bg-opacity-50 rounded-lg mb-[100px]'>
                {comments.rows?.length < 1 ? (
                   <AttentionMessage title='No comments at moment.'>
-                     <p>Start your comment here.</p>
+                     <p>Comment's features only availble for supporters.</p>
+                     <p>
+                        {paid?.days < 1
+                           ? 'Sorry your not allowed to this features.'
+                           : 'Start your comment here.'}
+                     </p>
                      <p>Please respect each other's privacy.</p>
                   </AttentionMessage>
                ) : null}

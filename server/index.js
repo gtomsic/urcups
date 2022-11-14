@@ -96,6 +96,13 @@ db.sequelize.sync().then(() => server);
 //          `Server running on http://10.0.0.50:${PORT}`.yellow.bold.inverse
 //       );
 //       const orientation = ['Straight', 'Gay', 'Bi', 'Lesbian', 'Transgender'];
+//       const civilStatus = [
+//          'Single',
+//          'Married',
+//          'Divorced',
+//          'Widow',
+//          'Complicated',
+//       ];
 //       for (let i = 0; i < 100; i++) {
 //          let id = uuid();
 //          let randomValue = Math.floor(Math.random() * 2 + 1);
@@ -107,6 +114,7 @@ db.sequelize.sync().then(() => server);
 //             wallpaper: '/wallpaper.jpg',
 //             age: i,
 //             sex: Math.floor(Math.random() * 2 + 1) === 1 ? 'Male' : 'Female',
+//             maritalStatus: civilStatus[Math.floor(Math.random() * 3 + 1)],
 //             sexualOrientation: orientation[Math.floor(Math.random() * 5)],
 //             hugot: 'Wake me up when september ends!',
 //             dateOfBirth: '1983-08-23',
