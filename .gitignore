@@ -2,6 +2,8 @@ server/users/*
 !server/users/
 server/uploads/*
 !server/uploads/
+server/config/dev.js
+server/config/prod.js
 
 node_modules
 /node_modules
