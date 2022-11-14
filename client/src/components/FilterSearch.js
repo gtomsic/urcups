@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import SelectOptions from './forms/SelectOptions'
-import PrimaryButton from './PrimaryButton'
+import SelectOptions from './forms/SelectOptions';
+import PrimaryButton from './PrimaryButton';
 
 const FilterSearch = ({
    limit,
@@ -45,15 +45,12 @@ const FilterSearch = ({
             input='py-[6px] md:py-[14px]'
          />
          <div className='flex flex-col justify-center'>
-            <PrimaryButton
-               onClick={onSaveFilter}
-               add='py-[15px] md:p-[14px] from-dark bg-primary'
-            >
+            <PrimaryButton onClick={onSaveFilter} add='py-[15px] md:p-[14px]'>
                Close
             </PrimaryButton>
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default FilterSearch
+export default FilterSearch;
