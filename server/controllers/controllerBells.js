@@ -89,8 +89,8 @@ module.exports.controllerBellAction = asyncHandler(async (req, res) => {
 });
 
 module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
-   const TODAY_START = new Date().setHours(0, 0, 0, 0);
-   const NOW = new Date();
+   const START_DATE_TIME = new Date().setHours(0, 0, 0, 0);
+   const END_DATE_TIME = new Date();
    const user = await db.config.findOne({
       where: { user_id: req.body.user_id },
    });
@@ -98,7 +98,7 @@ module.exports.controllerViewedProfiles = asyncHandler(async (req, res) => {
       where: {
          user_id: req.user.id,
          receiver: req.body.user_id,
-         createdAt: { [Op.gt]: TODAY_START, [Op.lt]: NOW },
+         createdAt: { [Op.gt]: START_DATE_TIME, [Op.lt]: END_DATE_TIME },
       },
    });
    if (Number(countViews) < 1) {

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/PrimaryButton';
 import { actionResetAuth } from '../../store/features/auth/authSlice';
+import { resetUser } from '../../store/features/user/userSlice';
 
 const RegisterSuccessPage = () => {
    const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const RegisterSuccessPage = () => {
 
    const onClickHandler = () => {
       dispatch(actionResetAuth());
+      dispatch(resetUser());
       navigate('/auth');
    };
    return (

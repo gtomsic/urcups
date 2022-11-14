@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const TextInput = ({
    value,
@@ -11,20 +11,20 @@ const TextInput = ({
    required,
    disabled,
 }) => {
-   const date = new Date().toLocaleDateString()
+   const date = new Date().toLocaleDateString();
    const min =
       date.split('/')[2] -
       100 +
       '-' +
       date.split('/')[0] +
       '-' +
-      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1])
+      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
    const max =
       date.split('/')[2] +
       '-' +
       date.split('/')[0] +
       '-' +
-      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1])
+      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
    return (
       <div className='flex flex-col gap-2 text-lg my-2'>
          {label ? (
@@ -43,6 +43,7 @@ const TextInput = ({
                value={value}
                onChange={onChange}
                name={name}
+               id={name}
                type={type}
                placeholder={title}
                className='w-full px-4 py-3 block h-[60px]'
@@ -53,8 +54,8 @@ const TextInput = ({
             />
          </div>
       </div>
-   )
-}
+   );
+};
 
 TextInput.defaultProps = {
    required: false,
@@ -63,6 +64,6 @@ TextInput.defaultProps = {
    title: 'placeholder',
    disabled: false,
    color: 'text-dark',
-}
+};
 
-export default TextInput
+export default TextInput;

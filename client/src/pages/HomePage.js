@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import FilterSearch from '../components/FilterSearch'
-import { BiFilterAlt } from 'react-icons/bi'
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import FilterSearch from '../components/FilterSearch';
+import { BiFilterAlt } from 'react-icons/bi';
 
-import UserCard from '../components/UserCard'
+import UserCard from '../components/UserCard';
 import {
    getUsersByLimit,
    selectUsers,
@@ -12,35 +12,49 @@ import {
    setOffset,
    setOnline,
    setSexualOrientation,
-} from '../store/features/users/usersSlice'
-import Loader from '../components/loader/Loader'
-import Pagination from '../components/Pagination'
-import PrimaryButton from '../components/PrimaryButton'
+} from '../store/features/users/usersSlice';
+import Loader from '../components/loader/Loader';
+import Pagination from '../components/Pagination';
+import PrimaryButton from '../components/PrimaryButton';
+import { selectUser } from '../store/features/user/userSlice';
 
 const HomePage = () => {
-   const isFetch = useRef(false)
-   const scrollView = useRef(null)
-   const dispatch = useDispatch()
-   const [isShowFilter, setIsShowFilter] = useState(false)
-   const { users, isLoading, filter, count } = useSelector(selectUsers)
-   const { offset, limit, online, sexualOrientation } = filter
+   const isFetch = useRef(false);
+   const scrollView = useRef(null);
+   const dispatch = useDispatch();
+   const [isShowFilter, setIsShowFilter] = useState(false);
+   const { users, isLoading, filter, count } = useSelector(selectUsers);
+   const { offset, limit, online, sexualOrientation } = filter;
+   const { user } = useSelector(selectUser);
 
    useEffect(() => {
-      if (limit) {
-         dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
-         scrollView?.current.scrollIntoView()
-      }
-      if (isFetch.current === false) {
-         scrollView?.current.scrollIntoView()
-         dispatch(getUsersByLimit({ offset, limit, online, sexualOrientation }))
-      }
+      const timerId = setTimeout(() => {
+         dispatch(setOffset(0));
+      }, 500);
       return () => {
-         isFetch.current = true
-      }
-   }, [isFetch, limit, offset, dispatch, online, sexualOrientation])
+         clearTimeout(timerId);
+      };
+   }, [count]);
+
    useEffect(() => {
-      dispatch(setOffset(0))
-   }, [count])
+      const timerId = setTimeout(() => {
+         scrollView?.current.scrollIntoView();
+         dispatch(
+            getUsersByLimit({
+               offset,
+               limit,
+               online,
+               sexualOrientation,
+               user_id: user?.id,
+            })
+         );
+      }, 200);
+
+      return () => {
+         clearTimeout(timerId);
+      };
+   }, [isFetch, limit, offset, dispatch, online, sexualOrientation]);
+
    return (
       <div className='relative'>
          {/* Auto scroll to view */}
@@ -78,7 +92,7 @@ const HomePage = () => {
                            <Link key={user.id} to={`profile/${user.username}`}>
                               <UserCard user={user} />
                            </Link>
-                        )
+                        );
                      })}
                   </div>
                </>
@@ -91,7 +105,7 @@ const HomePage = () => {
             count={count}
          />
       </div>
-   )
-}
+   );
+};
 
-export default HomePage
+export default HomePage;

@@ -23,8 +23,8 @@ const PaymentBadge = ({ paid }) => {
    }, [paid]);
    return (
       <div className='flex flex-col gap-3'>
-         <div className='p-5 flex justify-center items-center'>
-            <div className='text-[130px] text-positive'>
+         <div className='p-5 flex justify-center items-center '>
+            <div className='flex justify-center items-center text-[130px] text-white rounded-3xl shadow-xl shadow-secondary w-[150px] h-[150px] bg-gradient-to-br from-primary to-positive'>
                <GiRibbonMedal />
             </div>
          </div>

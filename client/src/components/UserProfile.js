@@ -1,13 +1,12 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import urcups from '../assets/avatar.jpg'
-import { selectUser } from '../store/features/user/userSlice'
+import { selectUser } from '../store/features/user/userSlice';
 
 const UserProfile = () => {
-   const { user } = useSelector(selectUser)
-   const url = useSelector((state) => state.url)
+   const { user } = useSelector(selectUser);
+   const url = useSelector((state) => state.url);
    const address =
       `${user?.city}, ${user?.stateProvince}, ${user?.country}`.split('')
          .length > 30
@@ -15,7 +14,7 @@ const UserProfile = () => {
               .split('')
               .splice(0, 30)
               .join('') + '...'
-         : `${user?.city}, ${user?.stateProvince}, ${user?.country}`
+         : `${user?.city}, ${user?.stateProvince}, ${user?.country}`;
    return (
       <Link to={`/profile/${user?.username}`}>
          <div className='flex  gap-3  items-center justify-center bg-gradient-to-tr from-secondary  to-primary p-5 rounded-xl mb-5'>
@@ -44,12 +43,12 @@ const UserProfile = () => {
             </div>
          </div>
       </Link>
-   )
-}
+   );
+};
 
 UserProfile.defaultProps = {
    user: {
-      avatar: urcups,
+      avatar: './avatar.jpg',
       username: 'urcups',
       age: 39,
       time: '1m ago',
@@ -57,6 +56,6 @@ UserProfile.defaultProps = {
       isOnline: true,
       isRead: true,
    },
-}
+};
 
-export default UserProfile
+export default UserProfile;

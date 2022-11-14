@@ -105,6 +105,17 @@ const ProfilePhotos = () => {
 
    return (
       <div>
+         {publicPhotos?.rows?.length < 1 ? (
+            <AttentionMessage title={`Upload more photos to attract people.`}>
+               <p>
+                  Please be aware all public photos is visible to supporters.
+               </p>
+               <p>
+                  Urcups is not reponsible for any use of your public photos.
+               </p>
+               <p>Be aware to people have no photos.</p>
+            </AttentionMessage>
+         ) : null}
          {isPublicPhotosLoading ? <Loader>Loading photos...</Loader> : null}
          {isPublicPhotosError ? (
             <AttentionMessage title='Only for sponsored users!'>

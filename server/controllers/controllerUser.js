@@ -396,6 +396,17 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       user_id: id,
    });
 
+   // CREATE DEFAULT SEARCH OPTIONS
+   await db.setting.create({
+      ageFrom: 18,
+      ageTo: 100,
+      limit: 25,
+      isOnline: false,
+      maritalStatus: 'All',
+      sexualOrientation: 'All',
+      user_id: id,
+   });
+
    // Create a user folder
    // Link to users_id
    let dir = `./users/${user.id}`;

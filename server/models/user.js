@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
          allowNull: true,
       },
       age: {
-         type: DataTypes.DECIMAL,
+         type: DataTypes.INTEGER,
          allowNull: false,
       },
       dateOfBirth: {
@@ -59,6 +59,6 @@ module.exports = (sequelize, DataTypes) => {
          allowNull: false,
          defaultValue: false,
       },
-   })
-   return user
-}
+   });
+   return user;
+};
