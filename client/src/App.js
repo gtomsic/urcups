@@ -14,7 +14,7 @@ import ProfileMain from './pages/profile/ProfileMain';
 import ProfilePage from './pages/ProfilePage';
 import ProfilePhotos from './pages/profile/ProfilePhotos';
 import ProfilePrivatePhotos from './pages/profile/ProfilePivatePhotos';
-import SettingsPage from './pages/SettingsPage';
+import AboutPage from './pages/AboutPage';
 import ProfileSettings from './pages/profile/ProfileSettings';
 import ProfileStories from './pages/profile/ProfileStories';
 import ProfileEdit from './pages/profile/ProfileEdit';
@@ -133,7 +133,7 @@ const App = () => {
                <Route path='/favorites' element={<FavoritesPage />} />
                <Route path='/stories' element={<StoriesPage />} />
                <Route path='/stories/:story_id' element={<StoryPage />} />
-               <Route path='/settings' element={<SettingsPage />} />
+               <Route path='/about' element={<AboutPage />} />
             </Route>
             <Route path='/profile' element={<ProfileLayout />}>
                <Route path='/profile/:username' element={<ProfilePage />}>

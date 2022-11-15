@@ -1,36 +1,36 @@
-import React, { useState } from 'react'
-import { AiOutlineClose } from 'react-icons/ai'
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
-import { useSelector } from 'react-redux'
+import React, { useState } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
+import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 
 const ImageViewer = ({ images, index, onClose }) => {
-   let [imageIndex, setImageIndex] = useState(index)
-   const url = useSelector((state) => state.url)
+   let [imageIndex, setImageIndex] = useState(index);
+   const url = useSelector((state) => state.url);
    const onCloseHandler = (e) => {
-      e.stopPropagation()
-      onClose()
-   }
+      e.stopPropagation();
+      onClose();
+   };
    const stopClose = (e) => {
-      e.stopPropagation()
-   }
+      e.stopPropagation();
+   };
    const onNextHandler = (e) => {
-      e.stopPropagation()
+      e.stopPropagation();
       if (imageIndex === Number(images.length - 1)) {
-         setImageIndex(0)
-         return
+         setImageIndex(0);
+         return;
       } else {
-         setImageIndex((imageIndex = imageIndex + 1))
+         setImageIndex((imageIndex = imageIndex + 1));
       }
-   }
+   };
    const onPreviousHandler = (e) => {
-      e.stopPropagation()
+      e.stopPropagation();
       if (imageIndex === 0) {
-         setImageIndex(Number(images.length - 1))
-         return
+         setImageIndex(Number(images.length - 1));
+         return;
       } else {
-         setImageIndex((imageIndex = imageIndex - 1))
+         setImageIndex((imageIndex = imageIndex - 1));
       }
-   }
+   };
    return (
       <div
          onClick={stopClose}
@@ -65,18 +65,20 @@ const ImageViewer = ({ images, index, onClose }) => {
             <>
                {!images[imageIndex]?.fileName ? (
                   <img
-                     src={images[index]}
+                     src={
+                        images[index].includes('thumbnail')
+                           ? images[index].replace('thumbnail', 'public')
+                           : images[index]
+                     }
                      alt={images[index]}
                      className='w-full h-auto xl:w-auto xl:h-full'
                   />
                ) : (
                   <img
                      src={
-                        url +
-                        images[imageIndex]?.fileName.replace(
-                           'thumbnail',
-                           'public'
-                        )
+                        url + images[index].includes('thumbnail')
+                           ? images[index].replace('thumbnail', 'public')
+                           : images[index]
                      }
                      alt={images[imageIndex]?.fileName}
                      className='w-full h-auto xl:w-auto xl:h-full'
@@ -91,7 +93,7 @@ const ImageViewer = ({ images, index, onClose }) => {
             <AiOutlineClose />
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default ImageViewer
+export default ImageViewer;

@@ -26,6 +26,8 @@ import Avatar from '../components/Avatar';
 import { actionBells, countBells } from '../store/features/bells/bellsSlice';
 import { socket } from '../socket';
 import { serviceCountMessagePerday } from '../store/features/messages/serviceMessages';
+import ImageViewer from '../components/photos/ImageViewer';
+import Modal from '../components/Modal';
 
 const MessagePage = () => {
    const isFetch = useRef(false);
@@ -33,15 +35,17 @@ const MessagePage = () => {
    const params = useParams();
    const navigate = useNavigate();
    const dispatch = useDispatch();
+   const [image, setImage] = useState([]);
+   const [isImageOpen, setIsImageOpen] = useState(false);
    const [limitPerday, setLimitPerday] = useState(false);
    const [send, setSend] = useState(false);
    const [onInputFocus, setOnInputFocus] = useState(false);
    const [body, setBody] = useState('');
-   const [attachment, setAttachment] = useState([]);
    const [userTyping, setUserTyping] = useState(false);
    const { user } = useSelector(selectUser);
    const { userProfile } = useSelector(selectMessageUserProfile);
    const { message, messageOffset, messageLimit } = useSelector(selectMessage);
+   const url = useSelector((state) => state.url);
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
    useEffect(() => {
@@ -174,13 +178,27 @@ const MessagePage = () => {
       e.stopPropagation();
       const data = {
          body,
-         attachment: attachment.length > 0 ? attachment.join(',') : '',
+         attachment: '',
          receiver: params.id,
       };
       if (!Boolean(body.trim())) return;
       await dispatch(sendMessage({ data, token: user?.token }));
       setSend(true);
       setBody('');
+      socket.emit('typing', {
+         typing: false,
+         receiver: `${params.id}/${user?.id}/typing`,
+      });
+      scrollEnd.current?.scrollIntoView();
+   };
+   const onSendImagehandler = async (image) => {
+      const data = {
+         body,
+         attachment: image,
+         receiver: params.id,
+      };
+      await dispatch(sendMessage({ data, token: user?.token }));
+      setSend(true);
       socket.emit('typing', {
          typing: false,
          receiver: `${params.id}/${user?.id}/typing`,
@@ -197,6 +215,12 @@ const MessagePage = () => {
          })
       );
       await dispatch(setMessageOffset(messageOffset + 1));
+   };
+   const onImageOpenViewer = (e, image) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setImage([image]);
+      setIsImageOpen(true);
    };
    if (!user?.id) return;
    return (
@@ -250,6 +274,19 @@ const MessagePage = () => {
                               profile={userProfile}
                               message={content}
                            >
+                              {!content?.attachment ? null : (
+                                 <img
+                                    onClick={(e) =>
+                                       onImageOpenViewer(
+                                          e,
+                                          url + content.attachment
+                                       )
+                                    }
+                                    src={url + content.attachment}
+                                    alt={content?.attachment}
+                                    className='max-w-[300px] rounded-xl'
+                                 />
+                              )}
                               {content?.body}
                            </LeftMessage>
                         );
@@ -260,6 +297,19 @@ const MessagePage = () => {
                               profile={user}
                               message={content}
                            >
+                              {!content?.attachment ? null : (
+                                 <img
+                                    onClick={(e) =>
+                                       onImageOpenViewer(
+                                          e,
+                                          url + content.attachment
+                                       )
+                                    }
+                                    src={url + content.attachment}
+                                    alt={content?.attachment}
+                                    className='max-w-[300px] rounded-xl'
+                                 />
+                              )}
                               {content?.body}
                            </RightMessage>
                         );
@@ -309,13 +359,20 @@ const MessagePage = () => {
          {!limitPerday ? null : (
             <MessageFormInput
                onSubmit={onSendHandler}
-               attachment={(item) =>
-                  setAttachment((currentValues) => [...currentValues, item])
-               }
+               onSendImage={onSendImagehandler}
                onFocus={() => setOnInputFocus(!onInputFocus)}
                body={body}
                onChange={(e) => setBody(e.target.value)}
             />
+         )}
+         {!isImageOpen ? null : (
+            <Modal>
+               <ImageViewer
+                  images={image}
+                  index={0}
+                  onClose={() => setIsImageOpen(false)}
+               />
+            </Modal>
          )}
       </div>
    );
