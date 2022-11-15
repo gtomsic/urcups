@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
    serviceAddUpdateSearchOptions,
    serviceGetSearchOptions,
+   serviceSettingsUpdatePassword,
 } from './settingsService';
 
 const initialState = {
@@ -10,8 +11,29 @@ const initialState = {
    searchOptionsSuccess: false,
    searchOptionsError: false,
    searchOptionsMessage: '',
+   password: null,
+   passwordLoading: false,
+   passwordSuccess: false,
+   passwordError: false,
+   passwordMessage: '',
 };
 
+export const actionUpdatePasswordSettings = createAsyncThunk(
+   'settings/actionUpdatePasswordSettings',
+   async (data, thunkApi) => {
+      try {
+         return await serviceSettingsUpdatePassword(data);
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString();
+         return thunkApi.rejectWithValue(message);
+      }
+   }
+);
 export const actionGetSearchOptionSettings = createAsyncThunk(
    'settings/actionGetSearchOptionSettings',
    async (data, thunkApi) => {
@@ -56,6 +78,13 @@ const settingsSlice = createSlice({
          state.searchOptionsError = false;
          state.searchOptionsMessage = '';
       },
+      actionResetPassowrd: (state) => {
+         state.password = null;
+         state.passwordLoading = false;
+         state.passwordSuccess = false;
+         state.passwordError = false;
+         state.passwordMessage = '';
+      },
    },
    extraReducers: (builder) => {
       builder
@@ -84,12 +113,33 @@ const settingsSlice = createSlice({
             state.searchOptionsLoading = false;
             state.searchOptionsError = true;
             state.searchOptionsMessage = action.payload;
+         })
+         .addCase(actionUpdatePasswordSettings.pending, (state) => {
+            state.password = null;
+            state.passwordLoading = true;
+            state.passwordSuccess = false;
+            state.passwordError = false;
+            state.passwordMessage = '';
+         })
+         .addCase(actionUpdatePasswordSettings.fulfilled, (state, action) => {
+            state.passwordLoading = false;
+            state.passwordSuccess = true;
+            state.passwordError = false;
+            state.password = action.payload;
+         })
+         .addCase(actionUpdatePasswordSettings.rejected, (state, action) => {
+            state.passwordLoading = false;
+            state.passwordSuccess = false;
+            state.passwordError = true;
+            state.passwordMessage = action.payload;
          });
    },
 });
 
-export const { actionResetSearchOption } = settingsSlice.actions;
+export const { actionResetSearchOption, actionResetPassowrd } =
+   settingsSlice.actions;
 export default settingsSlice.reducer;
 
 // SELECTORS
 export const selectSearchOptionSettings = (state) => state.settings;
+export const selectSettings = (state) => state.settings;

@@ -101,6 +101,8 @@ module.exports.controllerGetAllMessages = asyncHandler(async (req, res) => {
 
 module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
    const { body, attachment, receiver } = req.body;
+   const countMessages = await countMessagePerday(req.user.id);
+   if (!countMessages) throw new Error('Limit exceed perday');
    const sender = req.user.id;
    if (receiver === req.user.id)
       throw new Error('Receiver should not be the sender.');
@@ -143,3 +145,77 @@ module.exports.controllerSendMessage = asyncHandler(async (req, res) => {
       return res.status(201).json({ ...message.dataValues, receiver });
    }
 });
+
+module.exports.controllerCountMessagesPerDay = asyncHandler(
+   async (req, res) => {
+      const response = await countMessagePerday(req.user.id);
+      res.send(response);
+   }
+);
+
+const countMessagePerday = async (id) => {
+   const START_DATE_TIME = new Date().setHours(0, 0, 0, 0);
+   const END_DATE_TIME = new Date();
+   const status = await db.access.findOne({
+      where: { user_id: id },
+      order: [['createdAt', 'DESC']],
+      subQuery: false,
+   });
+   const diff = Math.abs(new Date() - status.createdAt);
+   const days = Math.ceil(diff / (1000 * 3600 * 24));
+   if (status.membership === 'a') {
+      if (days < 95) return true;
+      const counts = await db.message.count({
+         where: {
+            user_id: id,
+            createdAt: { [Op.gt]: START_DATE_TIME, [Op.lt]: END_DATE_TIME },
+         },
+      });
+      if (counts < 2) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+   if (status.membership === 'b') {
+      if (days < 185) return true;
+      const counts = await db.message.count({
+         where: {
+            user_id: id,
+            createdAt: { [Op.gt]: START_DATE_TIME, [Op.lt]: END_DATE_TIME },
+         },
+      });
+      if (counts < 2) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+   if (status.membership === 'c') {
+      if (days < 370) return true;
+      const counts = await db.message.count({
+         where: {
+            user_id: id,
+            createdAt: { [Op.gt]: START_DATE_TIME, [Op.lt]: END_DATE_TIME },
+         },
+      });
+      if (counts < 2) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+   if (status.membership === 'f') {
+      const counts = await db.message.count({
+         where: {
+            user_id: id,
+            createdAt: { [Op.gt]: START_DATE_TIME, [Op.lt]: END_DATE_TIME },
+         },
+      });
+      if (counts < 2) {
+         return true;
+      } else {
+         return false;
+      }
+   }
+};

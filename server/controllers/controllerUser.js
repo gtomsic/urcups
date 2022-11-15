@@ -409,7 +409,7 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
 
    // CREATE DEFAULT SEARCH OPTIONS
    await db.setting.create({
-      ageFrom: 18,
+      ageFrom: 19,
       ageTo: 100,
       limit: 25,
       isOnline: false,

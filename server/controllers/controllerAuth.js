@@ -1,12 +1,12 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
+const { v4: uuid } = require('uuid');
 const db = require('../models');
 const { makeToken } = require('../utils/middlewareJwt');
 const { sendEmail } = require('../utils/nodemailer');
 const { viewedProfile } = require('../public/htmls');
 
 module.exports.controllerUpdatePassword = asyncHandler(async (req, res) => {
-   console.log(req.body);
    const { email, password } = req.body;
    const findEmail = await db.config.findOne({ where: { email } });
 
@@ -38,10 +38,11 @@ module.exports.controllerUpdatePassword = asyncHandler(async (req, res) => {
 
 module.exports.controllerRequestNewPassword = asyncHandler(async (req, res) => {
    const { email } = req.body;
+   const temPass = uuid();
    const findEmail = await db.config.findOne({ where: { email } });
 
    if (findEmail) {
-      const hashPassword = await bcrypt.hashSync(email, 10);
+      const hashPassword = await bcrypt.hashSync(temPass, 10);
       db.config.update({ password: hashPassword }, { where: { email } });
       const token = makeToken(findEmail.user_id);
       sendEmail(

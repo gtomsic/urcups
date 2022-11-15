@@ -16,7 +16,7 @@ const RegisterPage = () => {
    const [steps, setSteps] = useState('one');
    const [ageAllowed, setAgeAllowed] = useState(null);
    const [message, setMessage] = useState('');
-   const [ageLimit] = useState(18);
+   const [ageLimit] = useState(20);
    const y = new Date().toLocaleDateString().split('/')[2];
    const m = new Date().toLocaleDateString().split('/')[0];
    const d = new Date().toLocaleDateString().split('/')[1];
@@ -86,7 +86,7 @@ const RegisterPage = () => {
       } else {
          if (data?.dateOfBirth) {
             setAgeAllowed(false);
-            setMessage('Under 18 years old is not allowed.');
+            setMessage('Under 20 years old is not allowed.');
             return;
          } else {
             setAgeAllowed(false);

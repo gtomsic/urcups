@@ -1,5 +1,27 @@
 const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcryptjs');
 const db = require('../models');
+
+module.exports.controllerSettingsUpdatePassword = asyncHandler(
+   async (req, res) => {
+      const { oldPass, newPass, confirmNewPass } = req.body;
+      const config = await db.config.findOne({
+         where: { user_id: req.user.id },
+      });
+      const comparedPassword = bcrypt.compareSync(oldPass, config.password);
+      if (newPass !== confirmNewPass) throw new Error(`Password don't match.`);
+      if (comparedPassword) {
+         const hashPass = await bcrypt.hashSync(newPass, 10);
+         const response = await db.config.update(
+            { password: hashPass },
+            { where: { user_id: req.user.id } }
+         );
+         return res.status(200).json(response);
+      } else {
+         throw new Error(`Old password don't match.`);
+      }
+   }
+);
 
 module.exports.controllerGetSearchOptions = asyncHandler(async (req, res) => {
    const settings = await db.setting.findOne({

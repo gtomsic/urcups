@@ -89,12 +89,16 @@ const StoryItem = ({ story }) => {
             ></div>
          )}
          <div className='mt-3 min-h-[100px]'>
-            <h3>{story?.title}</h3>
+            <h3>
+               {story?.title.split('').length > 20
+                  ? story?.title.split('').splice(0, 20).join('') + '...'
+                  : story?.title}
+            </h3>
             <p>
                {story?.body?.split('').length > 60 ? (
                   <>
                      {newBody?.split('').splice(0, 60).join('')}
-                     <span className='text-secondary'> ...</span>
+                     <span>...</span>
                   </>
                ) : (
                   story?.body

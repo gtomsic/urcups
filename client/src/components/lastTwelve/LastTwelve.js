@@ -25,7 +25,7 @@ const LastTwelve = () => {
    }, []);
    return (
       <BorderedCard>
-         <div className='p-3'>
+         <div className='pb-3'>
             <h4>Last Connection</h4>
          </div>
          <div className='grid grid-cols-4 px-3 md:grid-cols-6 lg:grid-cols-4 gap-2 md:gap-4'>

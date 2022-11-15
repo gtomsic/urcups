@@ -44,12 +44,14 @@ const AccountStatus = () => {
                <div>
                   <h3>Free account</h3>
                   <ul>
-                     <li>All free account can enjoy unlimited chat.</li>
+                     <li>
+                        All free account can enjoy unlimited chat. ("Comming
+                        soon.")
+                     </li>
                      <li>You can views unlimited user profile.</li>
                      <li>Limited to 2 private messages a day.</li>
                      <li>Not allowed to view public photos.</li>
-                     <li>Not allowed to interact and view readers activity.</li>
-                     <li>Not allowed to block any users.</li>
+                     <li>Not allowed to comments or interact with stories.</li>
                   </ul>
                </div>
                <div>
@@ -63,10 +65,7 @@ const AccountStatus = () => {
                      </li>
                      <li>Supported member can view public photos.</li>
                      <li>Supported member can bookmark user profile.</li>
-                     <li>
-                        Supported member can view loves and comment to stories
-                        activity.
-                     </li>
+                     <li>Supported member can comment to stories activity.</li>
                   </ul>
                </div>
                <div className='grid grid-cols-2 lg:grid-cols-3 gap-5'>

@@ -41,13 +41,12 @@ import { useRef } from 'react';
 import { actionGetSearchOptionSettings } from './store/features/settings/settingsSlice';
 
 const App = () => {
-   const isFetch = useRef(false);
    const dispatch = useDispatch();
    const { user } = useSelector(selectUser);
    const { messages, messagesOffset, messagesLimit } =
       useSelector(selectAllMessages);
    useEffect(() => {
-      if (isFetch.current === false) {
+      if (user?.id) {
          dispatch(actionGetSearchOptionSettings({ token: user?.token }));
       }
       const timerId = setTimeout(() => {
@@ -57,7 +56,6 @@ const App = () => {
       }, 500);
       return () => {
          clearTimeout(timerId);
-         isFetch.current = true;
       };
    }, [user]);
 

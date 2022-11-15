@@ -25,6 +25,7 @@ import Messages from '../components/messages/Messages';
 import Avatar from '../components/Avatar';
 import { actionBells, countBells } from '../store/features/bells/bellsSlice';
 import { socket } from '../socket';
+import { serviceCountMessagePerday } from '../store/features/messages/serviceMessages';
 
 const MessagePage = () => {
    const isFetch = useRef(false);
@@ -32,9 +33,9 @@ const MessagePage = () => {
    const params = useParams();
    const navigate = useNavigate();
    const dispatch = useDispatch();
+   const [limitPerday, setLimitPerday] = useState(false);
    const [send, setSend] = useState(false);
    const [onInputFocus, setOnInputFocus] = useState(false);
-   const [openInput, setOpenInput] = useState(false);
    const [body, setBody] = useState('');
    const [attachment, setAttachment] = useState([]);
    const [userTyping, setUserTyping] = useState(false);
@@ -43,12 +44,28 @@ const MessagePage = () => {
    const { message, messageOffset, messageLimit } = useSelector(selectMessage);
 
    // USE EFFECT THAT MONITOR THE USER IF LOGIN OR NOT
-   if (!user?.id) {
-      localStorage.setItem('redirect', JSON.stringify(`/messages`));
-      navigate('/auth');
-   }
+   useEffect(() => {
+      if (!user?.id) {
+         localStorage.setItem('redirect', JSON.stringify(`/messages`));
+         navigate('/auth');
+      }
+   });
 
    useEffect(() => {
+      if (!user?.id) return;
+      const fetchCountPerday = async () => {
+         const response = await serviceCountMessagePerday({
+            token: user?.token,
+         });
+         setLimitPerday(response);
+      };
+      if (user?.id) {
+         fetchCountPerday();
+      }
+   }, [user, message]);
+
+   useEffect(() => {
+      if (!user?.id) return;
       const timerId = setTimeout(() => {
          socket.on(`${user?.id}/${params.id}/typing`, (data) => {
             setUserTyping(data.typing);
@@ -62,6 +79,7 @@ const MessagePage = () => {
    }, []);
 
    useEffect(() => {
+      if (!user?.id) return;
       let insedeTimer;
       if (!Boolean(body.trim())) return;
       const timerId = setTimeout(() => {
@@ -83,6 +101,7 @@ const MessagePage = () => {
    }, [body]);
 
    useEffect(() => {
+      if (!user?.id) return;
       let time = userProfile?.isOnline == false ? 0 : 60000 * 2;
       const timerId = setTimeout(() => {
          if (send === true) {
@@ -106,14 +125,15 @@ const MessagePage = () => {
    }, [send, message]);
    // USE EFFECT THAT CONTROL THE THE INPUT SHOW
    useEffect(() => {
-      setOpenInput(true);
+      if (!user?.id) return;
       return () => {
-         setOpenInput(false);
+         setLimitPerday(false);
          dispatch(clearRoomProfile());
       };
    }, []);
    // USE EFFECT THAT CONTROL THE AUTO SCROLL
    useEffect(() => {
+      if (!user?.id) return;
       scrollEnd.current?.scrollIntoView();
    }, [onInputFocus]);
 
@@ -121,6 +141,7 @@ const MessagePage = () => {
    // AND GETTING THE ROOM MESSAGES
    // COUNTING THE UNREAD MESSAGES DYNAMITICALLY
    useEffect(() => {
+      if (!user?.id) return;
       const fetchSync = async () => {
          if (isFetch.current === true) {
             await dispatch(
@@ -177,6 +198,7 @@ const MessagePage = () => {
       );
       await dispatch(setMessageOffset(messageOffset + 1));
    };
+   if (!user?.id) return;
    return (
       <div className='flex gap-8'>
          <div
@@ -221,24 +243,24 @@ const MessagePage = () => {
                      </div>
                   )}
                   {message?.rows?.map((content) => {
-                     if (content.user_id !== user.id) {
+                     if (content?.user_id !== user?.id) {
                         return (
                            <LeftMessage
-                              key={content.id}
+                              key={content?.id}
                               profile={userProfile}
                               message={content}
                            >
-                              {content.body}
+                              {content?.body}
                            </LeftMessage>
                         );
                      } else {
                         return (
                            <RightMessage
-                              key={content.id}
+                              key={content?.id}
                               profile={user}
                               message={content}
                            >
-                              {content.body}
+                              {content?.body}
                            </RightMessage>
                         );
                      }
@@ -252,6 +274,21 @@ const MessagePage = () => {
                      <span className='typing'></span>
                   </div>
                </LeftMessage>
+            ) : null}
+            {!limitPerday ? (
+               <AttentionMessage title={`Exceeded the limit.`}>
+                  <p>Your limit per day is done.</p>
+                  <p>If you like to unlimited access.</p>
+                  <p>Try supporting the site.</p>
+                  <br />
+                  <PrimaryButton
+                     onClick={() =>
+                        navigate(`/profile/${user?.username}/settings`)
+                     }
+                  >
+                     Support The Site
+                  </PrimaryButton>
+               </AttentionMessage>
             ) : null}
             <div ref={scrollEnd} />
          </div>
@@ -269,7 +306,7 @@ const MessagePage = () => {
                <Messages />
             </div>
          </div>
-         {!openInput ? null : (
+         {!limitPerday ? null : (
             <MessageFormInput
                onSubmit={onSendHandler}
                attachment={(item) =>

@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 const MoreInformation = ({ user }) => {
    return (
       <>
-         <h3>Details</h3>
+         <h3>Personal Details</h3>
          <div className='grid grid-cols-1 gap-1 md:grid-cols-2'>
             <div className='grid grid-cols-2'>
                <span>Marital Status:</span>
@@ -71,7 +71,7 @@ const MoreInformation = ({ user }) => {
             </div>
          </div>
       </>
-   )
-}
+   );
+};
 
-export default MoreInformation
+export default MoreInformation;

@@ -7,6 +7,7 @@ import {
    selectSearchOptionSettings,
 } from '../../store/features/settings/settingsSlice';
 import { selectUser } from '../../store/features/user/userSlice';
+import AttentionMessage from '../AttentionMessage';
 import BorderedCard from '../BorderedCard';
 import LabelValue from '../LabelValue';
 import SelectOptionBox from '../options/SelectOptionBox';
@@ -86,6 +87,7 @@ const SearchOptions = () => {
       dispatch(actionAddUpdateSearchOption({ ...data, token: user?.token }));
       setIsEdit(false);
    };
+
    return (
       <BorderedCard>
          <div className='flex flex-col gap-4'>
@@ -99,7 +101,7 @@ const SearchOptions = () => {
                      onChange={onChangeFromHandler}
                      label='Age From'
                      addClass='text-dark bg-white'
-                     data={[...ages]}
+                     data={[{ value: 19, label: 19 }, ...ages]}
                   ></SelectOptionBox>
                )}
                {!isEdit ? (
@@ -187,17 +189,34 @@ const SearchOptions = () => {
                   ></SelectOptionBox>
                )}
             </div>
-            <div className='col-span-1 md:col-span-2'>
-               {!isEdit ? (
-                  <PrimaryButton onClick={onEditHandler} add='w-full'>
-                     Edit
-                  </PrimaryButton>
-               ) : (
-                  <PrimaryButton onClick={onSaveOptionsHandler} add='w-full'>
-                     Save
-                  </PrimaryButton>
-               )}
-            </div>
+            {paid?.days < 1 ? (
+               <AttentionMessage title={`Supporters users features.`}>
+                  <p>Restricted to free users.</p>
+               </AttentionMessage>
+            ) : (
+               <div className='col-span-1 md:col-span-2'>
+                  {!isEdit ? (
+                     <PrimaryButton onClick={onEditHandler} add='w-full'>
+                        Edit
+                     </PrimaryButton>
+                  ) : (
+                     <div className='grid grid-cols-2 gap-2'>
+                        <PrimaryButton
+                           onClick={() => setIsEdit(false)}
+                           add='w-full from-dark to-gray hover:from-primary'
+                        >
+                           Cancel
+                        </PrimaryButton>
+                        <PrimaryButton
+                           onClick={onSaveOptionsHandler}
+                           add='w-full'
+                        >
+                           Save
+                        </PrimaryButton>
+                     </div>
+                  )}
+               </div>
+            )}
          </div>
       </BorderedCard>
    );

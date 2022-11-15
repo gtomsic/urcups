@@ -24,7 +24,7 @@ module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
          where: { user_id },
       });
       const ageGT =
-         Number(settings.ageFrom) !== 18 ? Number(settings.ageFrom) : 18;
+         Number(settings.ageFrom) !== 19 ? Number(settings.ageFrom) : 19;
       const ageLT =
          Number(settings.ageTo) !== 100 ? Number(settings.ageTo) : 100;
       let paidSexualOrientation;
@@ -50,11 +50,17 @@ module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
       if (!online && !settings.isOnline) {
          paidIsOnline = {};
       }
-      if (online) {
+      if (!online && settings.isOnline) {
+         paidIsOnline = { isOnline: settings.isOnline };
+      }
+      if (online && !settings.isOnline) {
          paidIsOnline = { isOnline: online };
       }
       if (settings.isOnline) {
          paidIsOnline = { isOnline: settings.isOnline };
+      }
+      if (online) {
+         paidIsOnline = { isOnline: online };
       }
 
       const isPaidUser =
@@ -70,6 +76,7 @@ module.exports.controllerGetUsersByLimit = asyncHandler(async (req, res) => {
               }
             : {
                  ...paidSexualOrientation,
+                 ...paidIsOnline,
                  age: {
                     [Op.gt]: ageGT,
                     [Op.lt]: ageLT,

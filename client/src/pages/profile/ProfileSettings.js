@@ -8,6 +8,7 @@ import AttentionMessage from '../../components/AttentionMessage';
 import BorderedCard from '../../components/BorderedCard';
 
 import Card from '../../components/Card';
+import ChangePassword from '../../components/ChangePassword';
 import LastTwelve from '../../components/lastTwelve/LastTwelve';
 import SelectOptionBox from '../../components/options/SelectOptionBox';
 import PaymentBadge from '../../components/PaymentBadge';
@@ -88,12 +89,11 @@ const ProfileSettings = () => {
                         </div>
                      </BorderedCard>
                      <LastTwelve />
+                     <ChangePassword />
                   </div>
 
-                  <div>
+                  <div className='flex flex-col gap-4'>
                      <SearchOptions />
-                  </div>
-                  <div>
                      {paid?.days > 0 ? (
                         <AttentionMessage title='Supporters Badge!'>
                            <PaymentBadge paid={paid} />
