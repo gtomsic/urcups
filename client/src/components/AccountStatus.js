@@ -89,11 +89,13 @@ const AccountStatus = () => {
             </div>
          ) : null}
          {!isOpen ? null : (
-            <PaypalPayment
-               support={supportValue}
-               onClose={() => setIsOpen(false)}
-               onSubmit={onSubmitPayment}
-            />
+            <>
+               <PaypalPayment
+                  support={supportValue}
+                  onClose={() => setIsOpen(false)}
+                  onSubmit={onSubmitPayment}
+               />
+            </>
          )}
       </>
    );

@@ -284,7 +284,7 @@ const MessagePage = () => {
                                     }
                                     src={url + content.attachment}
                                     alt={content?.attachment}
-                                    className='max-w-[300px] rounded-xl'
+                                    className='max-w-[200px] md:max-w-[300px] rounded-xl'
                                  />
                               )}
                               {content?.body}
@@ -307,7 +307,7 @@ const MessagePage = () => {
                                     }
                                     src={url + content.attachment}
                                     alt={content?.attachment}
-                                    className='max-w-[300px] rounded-xl'
+                                    className='max-w-[200px] md:max-w-[300px] rounded-xl'
                                  />
                               )}
                               {content?.body}

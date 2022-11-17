@@ -1,24 +1,13 @@
 import React from 'react';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import Modal from './Modal';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { serviceGetPaypalId } from '../store/features/payment/paymentService';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../store/features/user/userSlice';
 import AttentionMessage from './AttentionMessage';
 import { AiOutlineClose } from 'react-icons/ai';
 
 const PaypalPayment = ({ support, onClose, onSubmit }) => {
-   const [clientId, setClientId] = useState(null);
    const { user } = useSelector(selectUser);
-   useEffect(() => {
-      const fetPaypalId = async () => {
-         const response = await serviceGetPaypalId(user?.token);
-         setClientId(response);
-      };
-      fetPaypalId();
-   }, [support]);
    const onOrderHandler = (data, actions) => {
       return actions.order.create({
          purchase_units: [
@@ -44,7 +33,7 @@ const PaypalPayment = ({ support, onClose, onSubmit }) => {
          onSubmit(data);
       });
    };
-   if (!clientId) return;
+   if (!process.env.REACT_APP_PAYPAL_KEY) return;
    return (
       <Modal>
          <div className='relative md:max-w-[60%] w-full flex flex-col lg:flex-row h-screen lg:h-[70vh] overflow-y-scroll  text-white p-5 gap-5'>
@@ -62,7 +51,9 @@ const PaypalPayment = ({ support, onClose, onSubmit }) => {
             </div>
             <div className='flex-1'>
                <div className='rounded-md p-3 bg-white'>
-                  <PayPalScriptProvider options={{ 'client-id': clientId }}>
+                  <PayPalScriptProvider
+                     options={{ 'client-id': process.env.REACT_APP_PAYPAL_KEY }}
+                  >
                      <PayPalButtons
                         createOrder={onOrderHandler}
                         onApprove={onApproveHandler}
