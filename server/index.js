@@ -93,7 +93,7 @@ db.sequelize.sync().then(() => server);
 // db.sequelize.sync({ force: true }).then(() =>
 //    app.listen(PORT, async () => {
 //       console.log(
-//          `Server running on http://10.0.0.50:${PORT}`.yellow.bold.inverse
+//          `Server running on http://localhost:${PORT}`.yellow.bold.inverse
 //       );
 //       const orientation = ['Straight', 'Gay', 'Bi', 'Lesbian', 'Transgender'];
 //       const civilStatus = [
