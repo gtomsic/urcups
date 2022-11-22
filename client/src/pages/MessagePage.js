@@ -112,12 +112,12 @@ const MessagePage = () => {
             dispatch(
                actionBells({
                   subject: `New message from ${user?.username}`,
-                  title: `${user?.username} sent you message.`,
+                  title: `${user?.username} sent you message. 💬`,
                   link: `/messages/${user?.id}`,
                   user_id: userProfile?.id,
                   body: `Check ${
                      user?.sex === 'Male' ? 'his' : 'her'
-                  } message? 😄`,
+                  } message? 💬`,
                   token: user?.token,
                })
             );

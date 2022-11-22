@@ -1,0 +1,16 @@
+server/users/*
+!server/users/
+server/uploads/*
+!server/uploads/
+server/config/*
+!server/config/config.js
+
+node_modules
+/node_modules
+/node_modules/*
+
+.env
+.env.development
+.env.production
+.DS_Store
+.vscode

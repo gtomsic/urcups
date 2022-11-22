@@ -135,8 +135,8 @@ module.exports.viewedProfile = (data) => {
       </main>
    </body>
 </html>
-`
-}
+`;
+};
 
 module.exports.verifyEmail = (data) => {
    return `<!DOCTYPE html>
@@ -149,7 +149,7 @@ module.exports.verifyEmail = (data) => {
          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
          rel="stylesheet"
       />
-      <link rel="icon" href="http://10.0.0.50:8000/logo192.png" />
+      <link rel="icon" href="${process.env.SERVER_HOST}/logo192.png" />
       <title>Urcups Bells</title>
      <style>
       * {
@@ -259,14 +259,14 @@ module.exports.verifyEmail = (data) => {
    </head>
    <body>
       <div class="header">
-         <a href="http://10.0.0.50:3000">
-            <img src="http://10.0.0.50:8000/urcups256.png" alt="Urcups Logo" />
+         <a href="${process.env.WEB_HOST}">
+            <img src="${process.env.SERVER_HOST}/urcups256.png" alt="Urcups Logo" />
          </a>
       </div>
       <main>
          <div class="box">
             <div class="box-header">
-               <img src="http://10.0.0.50:8000/logo192.png" alt="Logo Icon" />
+               <img src="${process.env.SERVER_HOST}/logo192.png" alt="Logo Icon" />
             </div>
             <div class="box-content">
                <div class="box-content__body">
@@ -284,5 +284,5 @@ module.exports.verifyEmail = (data) => {
       </main>
    </body>
 </html>
-`
-}
+`;
+};

@@ -22,7 +22,7 @@ function UserCard({ user }) {
          }
       >
          <div
-            className='relative text-white rounded-2xl h-[300px] cursor-pointer overflow-hidden'
+            className='relative text-white rounded-2xl h-[200px] cursor-pointer overflow-hidden'
             style={{
                backgroundImage: `url(${url + user?.avatar})`,
                backgroundSize: 'cover',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { AiFillCamera } from 'react-icons/ai';
-import { IoSend } from 'react-icons/io5';
+import { IoSend, IoCloseSharp } from 'react-icons/io5';
 import DisplayPhotos from '../attachment/DisplayPhotos';
 
 const MessageFormInput = ({
@@ -25,7 +25,14 @@ const MessageFormInput = ({
          className='fixed z-40 bottom-0 bg-gradient-to-tr from-secondary bg-primary lg:rounded-xl w-full left-0 translate-x-0 lg:max-w-[40%] px-2 py-3 lg:left-[50%] lg:translate-x-[-50%]'
       >
          {!isPhoto ? null : (
-            <DisplayPhotos onClick={(image) => onSendImageHandler(image)} />
+            <DisplayPhotos onClick={(image) => onSendImageHandler(image)}>
+               <div
+                  onClick={() => setIsPhoto(false)}
+                  className='z-20 absolute top-0 right-0 p-3 border-spacing-2 text-lg lg:text-2xl text-white border-white border-l-2 border-b-2 rounded-bl-2xl bg-gradient-to-tr from-primary to-secondary cursor-pointer'
+               >
+                  <IoCloseSharp />
+               </div>
+            </DisplayPhotos>
          )}
          <form onSubmit={onSubmit} className='flex gap-1'>
             <div

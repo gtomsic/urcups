@@ -2,7 +2,10 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPrivatePhotos } from '../../store/features/privatePhotos/privatePhotosSlice';
+import {
+   getPrivatePhotos,
+   selectPrivatePhotos,
+} from '../../store/features/privatePhotos/privatePhotosSlice';
 import {
    getPublicPhotos,
    selectPublicPhotos,
@@ -11,13 +14,14 @@ import { selectUser } from '../../store/features/user/userSlice';
 import Modal from '../Modal';
 import PhotoImage from './PhotoImage';
 import './displayPhotos.css';
-const DisplayPhotos = ({ onClick }) => {
+const DisplayPhotos = ({ onClick, children }) => {
    const dispatch = useDispatch();
    const url = useSelector((state) => state.url);
    const { user } = useSelector(selectUser);
    const { publicPhotos, publicPhotosLimit, publicPhotosOffset } =
       useSelector(selectPublicPhotos);
-   const { privatePhotos } = useSelector(selectPrivatePhotos);
+   const { privatePhotos, privatePhotosOffset, privatePhotosLimit } =
+      useSelector(selectPrivatePhotos);
    useEffect(() => {
       dispatch(
          getPublicPhotos({
@@ -25,6 +29,14 @@ const DisplayPhotos = ({ onClick }) => {
             token: user?.token,
             offset: publicPhotosOffset,
             limit: publicPhotosLimit,
+         })
+      );
+      dispatch(
+         getPrivatePhotos({
+            user_id: user?.id,
+            token: user?.token,
+            offset: privatePhotosOffset,
+            limit: privatePhotosLimit,
          })
       );
    }, []);
@@ -46,6 +58,7 @@ const DisplayPhotos = ({ onClick }) => {
                   />
                ))}
             </div>
+            {children}
          </div>
       </Modal>
    );

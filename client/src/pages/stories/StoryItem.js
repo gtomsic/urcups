@@ -90,8 +90,8 @@ const StoryItem = ({ story }) => {
          )}
          <div className='mt-3 min-h-[100px]'>
             <h3>
-               {story?.title.split('').length > 20
-                  ? story?.title.split('').splice(0, 20).join('') + '...'
+               {story?.title?.split('').length > 20
+                  ? story?.title?.split('').splice(0, 20).join('') + '...'
                   : story?.title}
             </h3>
             <p>

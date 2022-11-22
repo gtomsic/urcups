@@ -400,12 +400,23 @@ module.exports.controllerRegisterUser = asyncHandler(async (req, res) => {
       about: '<br>',
    });
 
-   // CREATE ACCESS
-   await db.access.create({
-      granted: 'free',
-      membership: 'f',
-      user_id: id,
-   });
+   const countUser = await db.user.count({});
+
+   if (Number(countUser) < 1000) {
+      // CREATE ACCESS
+      await db.access.create({
+         granted: 'paid',
+         membership: 'a',
+         user_id: id,
+      });
+   } else {
+      // CREATE ACCESS
+      await db.access.create({
+         granted: 'free',
+         membership: 'f',
+         user_id: id,
+      });
+   }
 
    // CREATE DEFAULT SEARCH OPTIONS
    await db.setting.create({

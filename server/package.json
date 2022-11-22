@@ -23,13 +23,8 @@
       "mysql2": "^2.3.3",
       "nodemailer": "^6.8.0",
       "sequelize": "^6.24.0",
-      "sharp": "^0.31.0",
+      "sharp": "^0.31.2",
       "socket.io": "^4.5.2",
       "uuid": "^9.0.0"
-   },
-   "devDependencies": {
-      "node-sass": "^7.0.3",
-      "nodemon": "^2.0.20",
-      "sequelize-cli": "^6.4.1"
    }
 }

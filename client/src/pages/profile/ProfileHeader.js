@@ -205,7 +205,7 @@ const ProfileHeader = ({ profile }) => {
 
                   {/* Profile Info */}
                   <div className='flex-1 flex flex-col text-white'>
-                     <div className='flex-1 flex  flex-col justify-end pl-3 lg:pl-0 pb-3'>
+                     <div className='z-10 flex-1 flex  flex-col justify-end items-center lg:items-start pl-3 lg:pl-0 pb-3'>
                         <h3>
                            {profile.username} / {profile.age} /{' '}
                            {profile.sexualOrientation}
