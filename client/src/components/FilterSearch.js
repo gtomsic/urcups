@@ -3,6 +3,13 @@ import React from 'react';
 import SelectOptions from './forms/SelectOptions';
 import PrimaryButton from './PrimaryButton';
 
+const pages = [];
+
+for (let i = 25; i < 100; i++) {
+   pages.push({ name: i });
+   i = i + 4;
+}
+
 const FilterSearch = ({
    limit,
    onChange,
@@ -15,22 +22,23 @@ const FilterSearch = ({
    return (
       <div className='grid grid-cols-4 gap-1'>
          <SelectOptions
+            label='Limit'
             value={limit}
             onChange={onChange}
-            data={[{ name: 18 }, { name: 42 }, { name: 60 }, { name: 78 }]}
+            data={pages}
             bg='bg-white border border-gray text-dark py-0'
-            input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
+            label='On/Off'
             value={online ? 'Online' : 'All'}
             data={[{ name: 'All' }, { name: 'Online' }]}
             onChange={(e) =>
                setOnline(e.target.value === 'Online' ? true : false)
             }
             bg='bg-white border border-gray text-dark py-0'
-            input='py-[6px] md:py-[14px]'
          />
          <SelectOptions
+            label='SexOr'
             data={[
                { name: 'All' },
                { name: 'Straight', value: 'Straight' },
@@ -42,11 +50,10 @@ const FilterSearch = ({
             value={sexualOrientation ? sexualOrientation : 'All'}
             onChange={(e) => setSexualOrientation(e.target.value)}
             bg='bg-white border border-gray text-dark py-0'
-            input='py-[6px] md:py-[14px]'
          />
-         <div className='flex flex-col justify-center'>
-            <PrimaryButton onClick={onSaveFilter} add='py-[15px] md:p-[14px]'>
-               Close
+         <div className='flex flex-col justify-center pt-9'>
+            <PrimaryButton onClick={onSaveFilter} add='py-[13px] lg:py-[10px]'>
+               Save
             </PrimaryButton>
          </div>
       </div>

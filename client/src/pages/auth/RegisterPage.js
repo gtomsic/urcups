@@ -51,7 +51,7 @@ const RegisterPage = () => {
          setData({
             username: '',
             email: '',
-            dateOfBirth: '',
+            dateOfBirth: 'mm/dd/yyyy',
             sex: '',
             city: '',
             stateProvince: '',
@@ -174,6 +174,7 @@ const RegisterPage = () => {
                      type='date'
                      name='date'
                      label='Date of Birth'
+                     title='mm/dd/yyyy'
                   />
                   <SelectOptions
                      value={data.maritalStatus}
@@ -223,16 +224,9 @@ const RegisterPage = () => {
                      </p>
                   </div>
 
-                  <div
-                     onClick={onNextHandler}
-                     className={`p-[18px] mt-5 rounded-md  text-white duration-300 cursor-pointer text-center ${
-                        !ageAllowed
-                           ? 'bg-gray'
-                           : 'bg-gradient-to-tr from-primary bg-secondary text-white hover:from-warning duration-300 cursor-pointer'
-                     }`}
-                  >
+                  <PrimaryButton onClick={onNextHandler} add='w-full'>
                      Next
-                  </div>
+                  </PrimaryButton>
                </div>
             ) : (
                <div>

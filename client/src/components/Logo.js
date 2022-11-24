@@ -23,12 +23,12 @@ const Logo = () => {
       <>
          <div>
             {isTrue ? (
-               <PrimaryButton
+               <div
                   onClick={onBackHandler}
-                  add='bg-secondary hover:from-primary'
+                  className='bg-gradient-to-tr from-primary to-secondary hover:to-danger p-2 rounded-full text-white'
                >
                   <IoChevronBack />
-               </PrimaryButton>
+               </div>
             ) : (
                <>
                   <div

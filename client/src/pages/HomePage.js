@@ -60,7 +60,7 @@ const HomePage = () => {
          {/* Auto scroll to view */}
          <div ref={scrollView} />
          {isShowFilter ? (
-            <div className=' z-20 sticky top-[70px] rounded-2xl mb-5 px-2 py-0 m-2 bg-gradient-to-tr from-secondary bg-primary'>
+            <div className='z-20 sticky mb-3 top-[70px]  rounded-lg px-2 bg-gradient-to-tr from-danger bg-primary'>
                <FilterSearch
                   limit={limit}
                   online={online}
@@ -74,7 +74,7 @@ const HomePage = () => {
                />
             </div>
          ) : (
-            <div className='sticky z-20 top-[70px] ml-3 inline-block mb-5'>
+            <div className='fixed z-20 top-[70px] lg:top-[100px] ml-5 mb-3 inline-block'>
                <PrimaryButton onClick={() => setIsShowFilter(true)}>
                   <BiFilterAlt /> Filter
                </PrimaryButton>

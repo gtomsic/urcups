@@ -1,5 +1,20 @@
 import React from 'react';
 
+const date = new Date().toLocaleDateString();
+const min =
+   date.split('/')[2] -
+   100 +
+   '-' +
+   date.split('/')[0] +
+   '-' +
+   (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
+const max =
+   date.split('/')[2] +
+   '-' +
+   date.split('/')[0] +
+   '-' +
+   (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
+
 const TextInput = ({
    value,
    onChange,
@@ -11,24 +26,10 @@ const TextInput = ({
    required,
    disabled,
 }) => {
-   const date = new Date().toLocaleDateString();
-   const min =
-      date.split('/')[2] -
-      100 +
-      '-' +
-      date.split('/')[0] +
-      '-' +
-      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
-   const max =
-      date.split('/')[2] +
-      '-' +
-      date.split('/')[0] +
-      '-' +
-      (date.split('/')[1] <= 9 ? `0${date.split('/')[1]}` : date.split('/')[1]);
    return (
       <div className='flex flex-col gap-2 text-lg my-2'>
          {label ? (
-            <label htmlFor='input' className='px-4 text-light'>
+            <label htmlFor='input' className='px-2 text-light'>
                {label}
             </label>
          ) : null}
@@ -46,7 +47,7 @@ const TextInput = ({
                id={name}
                type={type}
                placeholder={title}
-               className='w-full px-4 py-3 block h-[60px]'
+               className='w-full px-2 py-[10px] block'
                required={required}
                min={min}
                max={max}
