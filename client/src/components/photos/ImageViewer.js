@@ -63,12 +63,12 @@ const ImageViewer = ({ images, index, onClose }) => {
             </div>
          ) : (
             <>
-               {!images[imageIndex]?.fileName ? (
+               {!images[imageIndex]?.fileName && images?.length > 1 ? (
                   <img
                      src={
                         images[index].includes('thumbnail')
-                           ? images[index].replace('thumbnail', 'public')
-                           : images[index]
+                           ? url + images[index].replace('thumbnail', 'public')
+                           : url + images[index]
                      }
                      alt={images[index]}
                      className='w-full h-auto xl:w-auto xl:h-full'
@@ -76,9 +76,9 @@ const ImageViewer = ({ images, index, onClose }) => {
                ) : (
                   <img
                      src={
-                        url + images[index].includes('thumbnail')
-                           ? images[index].replace('thumbnail', 'public')
-                           : images[index]
+                        images[index].includes('thumbnail')
+                           ? url + images[index].replace('thumbnail', 'public')
+                           : url + images[index]
                      }
                      alt={images[imageIndex]?.fileName}
                      className='w-full h-auto xl:w-auto xl:h-full'

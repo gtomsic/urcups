@@ -37,7 +37,6 @@ import { socketUpdateUser } from './store/features/users/usersSlice';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import NewPassword from './pages/auth/NewPassword';
 import { actionGetAccessStatus } from './store/features/payment/paymentSlice';
-import { useRef } from 'react';
 import { actionGetSearchOptionSettings } from './store/features/settings/settingsSlice';
 
 const App = () => {

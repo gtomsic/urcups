@@ -39,6 +39,13 @@ io.on('connection', (socket, req) => {
       });
    });
 
+   // Delete  messages
+   socket.on('message/deleted', (message) => {
+      io.emit(`${message.path}`, {
+         ...message,
+      });
+   });
+
    // Bells
    socket.on('stories', (data) => {
       io.emit(`/stories${data.path}`, data);

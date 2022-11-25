@@ -1,5 +1,16 @@
 import axios from '../../../apis/axios';
 
+export const serviceDeleteMessage = async (data) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/json',
+         Authorization: `Bearer ${data.token}`,
+      },
+   };
+   const response = await axios.delete(`/api/messages/${data.roomId}`, config);
+   return response.data;
+};
+
 export const serviceCountMessagePerday = async (data) => {
    const config = {
       headers: {

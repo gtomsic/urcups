@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import PrimaryButton from '../components/PrimaryButton';
 import MessageFormInput from '../components/messages/MessageFormInput';
@@ -16,6 +16,7 @@ import {
    selectMessage,
    selectMessageUserProfile,
    sendMessage,
+   setDeletedRoomMessages,
    setMessageOffset,
 } from '../store/features/messages/messagesSlice';
 import { selectUser } from '../store/features/user/userSlice';
@@ -33,6 +34,7 @@ const MessagePage = () => {
    const isFetch = useRef(false);
    const scrollEnd = useRef(null);
    const params = useParams();
+   const location = useLocation();
    const navigate = useNavigate();
    const dispatch = useDispatch();
    const [image, setImage] = useState([]);
@@ -53,7 +55,15 @@ const MessagePage = () => {
          localStorage.setItem('redirect', JSON.stringify(`/messages`));
          navigate('/auth');
       }
-   });
+      if (isFetch.current === false) {
+         socket.on(`${location.pathname}/${user?.id}`, (data) => {
+            dispatch(setDeletedRoomMessages(data));
+         });
+      }
+      return () => {
+         isFetch.current = true;
+      };
+   }, []);
 
    useEffect(() => {
       if (!user?.id) return;
@@ -147,30 +157,26 @@ const MessagePage = () => {
    useEffect(() => {
       if (!user?.id) return;
       const fetchSync = async () => {
-         if (isFetch.current === true) {
-            await dispatch(
-               getMessageUserProfile({ user_id: params.id, token: user?.token })
-            );
-            await dispatch(
-               getRoomMessages({
-                  offset: 0,
-                  limit: messageLimit,
-                  token: user?.token,
-                  user_id: params.id,
-               })
-            );
-            await dispatch(
-               countAllUnreadMessages({ token: user?.token, user_id: user.id })
-            );
-            dispatch(countBells({ token: user?.token }));
-            scrollEnd.current?.scrollIntoView();
-         }
+         await dispatch(
+            getMessageUserProfile({ user_id: params.id, token: user?.token })
+         );
+         await dispatch(
+            countAllUnreadMessages({ token: user?.token, user_id: user.id })
+         );
+         await dispatch(
+            getRoomMessages({
+               offset: 0,
+               limit: messageLimit,
+               token: user?.token,
+               user_id: params.id,
+            })
+         );
+         await dispatch(countBells({ token: user?.token }));
+         scrollEnd.current?.scrollIntoView();
       };
+
       fetchSync();
-      return () => {
-         isFetch.current = true;
-      };
-   }, [params, user, dispatch]);
+   }, [params]);
 
    // ON SEND MESSAGE HANDLER IN CHARGE OF SENDING MESSAGE
    const onSendHandler = async (e) => {
@@ -222,6 +228,7 @@ const MessagePage = () => {
       setImage([image]);
       setIsImageOpen(true);
    };
+
    if (!user?.id) return;
    return (
       <div className='flex gap-8'>
@@ -277,10 +284,7 @@ const MessagePage = () => {
                               {!content?.attachment ? null : (
                                  <img
                                     onClick={(e) =>
-                                       onImageOpenViewer(
-                                          e,
-                                          url + content.attachment
-                                       )
+                                       onImageOpenViewer(e, content.attachment)
                                     }
                                     src={url + content.attachment}
                                     alt={content?.attachment}
@@ -300,10 +304,7 @@ const MessagePage = () => {
                               {!content?.attachment ? null : (
                                  <img
                                     onClick={(e) =>
-                                       onImageOpenViewer(
-                                          e,
-                                          url + content.attachment
-                                       )
+                                       onImageOpenViewer(e, content.attachment)
                                     }
                                     src={url + content.attachment}
                                     alt={content?.attachment}

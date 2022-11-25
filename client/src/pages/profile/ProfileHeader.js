@@ -104,7 +104,7 @@ const ProfileHeader = ({ profile }) => {
       const isInclude = profile.avatar.includes('/avatar.jpg');
       if (isInclude) return;
       const newLink = profile.avatar.replace('avatar', 'public');
-      setImages([`${url + newLink}`]);
+      setImages([`${newLink}`]);
       setIsOpen(true);
    };
    const viewProfileWallpaper = (e) => {
@@ -112,7 +112,7 @@ const ProfileHeader = ({ profile }) => {
       const isInclude = profile.wallpaper.includes('/wallpaper.jpg');
       if (isInclude) return;
       const newLink = profile.wallpaper.replace('wallpaper', 'public');
-      setImages([`${url + newLink}`]);
+      setImages([`${newLink}`]);
       setIsOpen(true);
    };
    const stopPropagationHandler = (e) => {

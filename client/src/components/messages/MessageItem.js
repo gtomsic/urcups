@@ -6,13 +6,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { serviceGetUserProfile } from '../../store/features/messages/serviceMessages';
 import { selectUser } from '../../store/features/user/userSlice';
 import {
+   actionDeleteMessage,
    getMessageUserProfile,
    getRoomMessages,
    selectMessage,
    updateIsReadMessage,
 } from '../../store/features/messages/messagesSlice';
+import { socket } from '../../socket';
 
-const MessageItem = ({ message, body, time }) => {
+const MessageItem = ({ message, body, time, isDelete }) => {
    const isFetch = useRef(false);
    const navigate = useNavigate();
    const dispatch = useDispatch();
@@ -39,6 +41,8 @@ const MessageItem = ({ message, body, time }) => {
    }, []);
    const onClickHandler = async (e) => {
       e.stopPropagation();
+      e.preventDefault();
+      await navigate(`/messages/${message.user_id}`);
       await dispatch(
          getMessageUserProfile({ user_id: message.user_id, token: user.token })
       );
@@ -46,22 +50,35 @@ const MessageItem = ({ message, body, time }) => {
          getRoomMessages({
             offset: messageOffset,
             limit: messageLimit,
-            token: user.token,
+            token: user?.token,
             user_id: message.user_id,
          })
       );
       dispatch(updateIsReadMessage(message.user_id));
-      navigate(`/messages/${message.user_id}`);
    };
-   const onDeleteMessageHandler = (e) => {
+   const onDeleteMessageHandler = async (e, data) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log(message.id);
+      const response = await dispatch(
+         actionDeleteMessage({ token: user?.token, roomId: data.roomId })
+      );
+      if (response.payload.roomId) {
+         const pathId = data.user_id != user?.id ? data.user_id : data.receiver;
+         socket.emit('message/deleted', {
+            ...data,
+            path: `/messages/${user?.id}/${pathId}`,
+            body: `${user?.username} deleted the conversation.`,
+            receiver: pathId,
+            user_id: user?.id,
+            attachment: '',
+            id: new Date(),
+         });
+      }
    };
    return (
       <div
          onClick={onClickHandler}
-         className={`relative h-[100px] rounded-3xl overflow-hidden ${
+         className={`relative h-[100px] rounded-3xl overflow-hidden mb-2 ${
             message.user_id === user.id
                ? true
                : message.isRead
@@ -106,12 +123,14 @@ const MessageItem = ({ message, body, time }) => {
             )}
             <small>{moment(time).fromNow()}</small>
          </div>
-         <div
-            onClick={onDeleteMessageHandler}
-            className='border-l h-[100px] border-white w-8 flex justify-center items-center text-white bg-primary hover:bg-danger duration-300'
-         >
-            <IoTrashOutline />
-         </div>
+         {isDelete ? (
+            <div
+               onClick={(e) => onDeleteMessageHandler(e, message)}
+               className='border-l h-[100px] border-white w-8 flex justify-center items-center text-white bg-primary hover:bg-danger duration-300'
+            >
+               <IoTrashOutline />
+            </div>
+         ) : null}
       </div>
    );
 };

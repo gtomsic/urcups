@@ -1,18 +1,18 @@
-import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
    getAllMessages,
    selectAllMessages,
-} from '../../store/features/messages/messagesSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import MessageItem from './MessageItem'
+} from '../../store/features/messages/messagesSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import MessageItem from './MessageItem';
 
 const Messages = () => {
-   const isFetch = useRef(false)
-   const dispatch = useDispatch()
-   const { user } = useSelector(selectUser)
+   const isFetch = useRef(false);
+   const dispatch = useDispatch();
+   const { user } = useSelector(selectUser);
    const { messages, messagesOffset, messagesLimit } =
-      useSelector(selectAllMessages)
+      useSelector(selectAllMessages);
 
    useEffect(() => {
       if (isFetch.current === false) {
@@ -23,14 +23,14 @@ const Messages = () => {
                token: user?.token,
                user_id: user?.id,
             })
-         )
+         );
       }
       return () => {
-         isFetch.current = true
-      }
-   }, [messagesLimit, messagesOffset, user])
+         isFetch.current = true;
+      };
+   }, [messagesLimit, messagesOffset]);
    return (
-      <div className='h-[480px] overflow-scroll flex flex-col gap-1'>
+      <div className='h-[480px] overflow-y-scroll'>
          {messages?.rows?.map((message) => (
             <MessageItem
                key={message.id}
@@ -43,7 +43,7 @@ const Messages = () => {
             />
          ))}
       </div>
-   )
-}
+   );
+};
 
-export default Messages
+export default Messages;

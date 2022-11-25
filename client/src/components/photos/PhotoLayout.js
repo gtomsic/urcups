@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { selectProfile } from '../../store/features/profile/profileSlice'
-import { selectUser } from '../../store/features/user/userSlice'
-import EditSaveAdd from '../EditSaveAdd'
-import Modal from '../Modal'
-import PreviousNext from '../PreviousNext'
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectProfile } from '../../store/features/profile/profileSlice';
+import { selectUser } from '../../store/features/user/userSlice';
+import EditSaveAdd from '../EditSaveAdd';
+import Modal from '../Modal';
+import PreviousNext from '../PreviousNext';
 
-import ImageItem from './ImageItem'
-import ImageViewer from './ImageViewer'
+import ImageItem from './ImageItem';
+import ImageViewer from './ImageViewer';
 
-import './photoLayout.css'
+import './photoLayout.css';
 const PhotoLayout = ({
    images,
    pages,
@@ -21,16 +21,16 @@ const PhotoLayout = ({
    onCancelHandler,
    onAddImages,
 }) => {
-   const [isOpen, setIsOpen] = useState(false)
-   const [photoIndex, setPhotoIndex] = useState(null)
-   const url = useSelector((state) => state.url)
-   const { user } = useSelector(selectUser)
-   const { profile } = useSelector(selectProfile)
+   const [isOpen, setIsOpen] = useState(false);
+   const [photoIndex, setPhotoIndex] = useState(null);
+   const url = useSelector((state) => state.url);
+   const { user } = useSelector(selectUser);
+   const { profile } = useSelector(selectProfile);
    const onClickHander = (e, index) => {
-      e.stopPropagation()
-      setPhotoIndex(index)
-      setIsOpen(true)
-   }
+      e.stopPropagation();
+      setPhotoIndex(index);
+      setIsOpen(true);
+   };
    return (
       <>
          <div
@@ -58,7 +58,7 @@ const PhotoLayout = ({
                   user?.wallpaper?.replace('wallpaper', 'public') ===
                      image.fileName
                )
-                  return null
+                  return null;
                return (
                   <ImageItem
                      key={image.id}
@@ -70,10 +70,10 @@ const PhotoLayout = ({
                      onDelete={addToDelete}
                      onRemove={removeToDelte}
                   />
-               )
+               );
             })}
          </div>
-         {!isOpen ? null : (
+         {!isOpen ? null : images.length > 1 ? (
             <Modal onClose={() => setIsOpen(false)}>
                <ImageViewer
                   images={images}
@@ -81,9 +81,17 @@ const PhotoLayout = ({
                   onClose={() => setIsOpen(false)}
                />
             </Modal>
+         ) : (
+            <Modal onClose={() => setIsOpen(false)}>
+               <ImageViewer
+                  images={[images[0].fileName]}
+                  index={0}
+                  onClose={() => setIsOpen(false)}
+               />
+            </Modal>
          )}
       </>
-   )
-}
+   );
+};
 
-export default PhotoLayout
+export default PhotoLayout;

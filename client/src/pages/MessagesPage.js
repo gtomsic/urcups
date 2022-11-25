@@ -82,6 +82,7 @@ const MessagesPage = () => {
                         body={message.body}
                         time={message.createdAt}
                         message={message}
+                        isDelete={true}
                      />
                   </div>
                ))}

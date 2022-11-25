@@ -4,6 +4,7 @@ import { socket } from '../../../socket';
 
 import {
    serviceCountAllUnreadMessages,
+   serviceDeleteMessage,
    serviceGetAllMessages,
    serviceGetMoreMessages,
    serviceGetRoomMessages,
@@ -54,6 +55,22 @@ const initialState = {
       isMessage: '',
    },
 };
+export const actionDeleteMessage = createAsyncThunk(
+   'user/actionDeleteMessage',
+   async (data, thunkApi) => {
+      try {
+         return await serviceDeleteMessage(data);
+      } catch (error) {
+         const message =
+            (error.response &&
+               error.response.data &&
+               error.response.data.message) ||
+            error.message ||
+            error.toString();
+         return thunkApi.rejectWithValue(message);
+      }
+   }
+);
 export const readRoomMessages = createAsyncThunk(
    'user/readRoomMessages',
    async (data, thunkApi) => {
@@ -72,6 +89,7 @@ export const readRoomMessages = createAsyncThunk(
       }
    }
 );
+
 export const countAllUnreadMessages = createAsyncThunk(
    'user/countAllUnreadMessages',
    async (data, thunkApi) => {
@@ -200,6 +218,10 @@ const messagesSlice = createSlice({
             messageLimit: 10,
             messageOffset: 0,
          };
+      },
+      setDeletedRoomMessages: (state, action) => {
+         state.message.message.rows = [action.payload];
+         state.message.message.count = 1;
       },
       setMessageOffset: (state, action) => {
          state.message.messageOffset = action.payload;
@@ -418,6 +440,26 @@ const messagesSlice = createSlice({
             state.readRoomMessages.isSucess = false;
             state.readRoomMessages.isError = true;
             state.readRoomMessages.isMessage = action.payload;
+         })
+         .addCase(actionDeleteMessage.pending, (state) => {
+            state.messages.messagesLoading = true;
+         })
+         .addCase(actionDeleteMessage.fulfilled, (state, action) => {
+            state.messages.messagesLoading = false;
+            state.messages.messagesSuccess = true;
+            state.messages.messagesError = false;
+            const updatedMessages = state.messages.messages.rows.filter(
+               (item) => item.roomId !== action.payload.roomId
+            );
+            const sortedMessages = _.orderBy(updatedMessages, 'id', 'asc');
+            state.messages.messages.rows = sortedMessages;
+            state.messages.messages.count = state.messages.messages.count - 1;
+         })
+         .addCase(actionDeleteMessage.rejected, (state, action) => {
+            state.messages.messagesLoading = false;
+            state.messages.messagesSuccess = false;
+            state.messages.messagesError = true;
+            state.messages.messagesMessage = action.payload;
          });
    },
 });
@@ -432,6 +474,7 @@ export const {
    clearRoomProfile,
    setMessageOffset,
    setMessagesOffset,
+   setDeletedRoomMessages,
 } = messagesSlice.actions;
 export default messagesSlice.reducer;
 

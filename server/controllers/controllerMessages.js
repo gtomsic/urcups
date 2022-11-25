@@ -3,6 +3,16 @@ const Op = require('sequelize').Op;
 const { v4: uuid } = require('uuid');
 const asyncHandler = require('express-async-handler');
 
+module.exports.controllerDeleteMessage = asyncHandler(async (req, res) => {
+   const roomId = req.params.room_id;
+   await db.message.destroy({ where: { roomId } });
+   const deleted = await db.room.destroy({ where: { id: roomId } });
+   if (deleted) {
+      return res.status(200).json({ roomId });
+   }
+   throw new Error('Something went wrong, try to refresh the site.');
+});
+
 module.exports.controllerGetMoreMessages = asyncHandler(async (req, res) => {
    const id = req.user.id;
    const { limit, offset } = req.body;
@@ -69,7 +79,7 @@ module.exports.controllerGetMessages = asyncHandler(async (req, res) => {
       },
    });
    if (!room) {
-      throw new Error('You have no communication with this user yet!');
+      throw new Error('You have no communication with this user.');
    }
    await db.message.update({ isRead: true }, { where: { roomId: room.id } });
    const messages = await db.message.findAndCountAll({
