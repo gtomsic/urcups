@@ -27,7 +27,7 @@ const ProfilePage = () => {
             JSON.stringify(`/profile/${params.username}`)
          );
       }
-   }, [params, dispatch, user?.id]);
+   }, [params?.username, user]);
 
    if (isLoading) return <Loader>Loading profile...</Loader>;
 

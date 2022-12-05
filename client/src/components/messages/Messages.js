@@ -32,15 +32,17 @@ const Messages = () => {
    return (
       <div className='h-[480px] overflow-y-scroll'>
          {messages?.rows?.map((message) => (
-            <MessageItem
-               key={message.id}
-               image={message.avatar}
-               isRead={message.isRead}
-               isOnline={message.isOnline}
-               body={message.body}
-               time={message.createdAt}
-               message={message}
-            />
+            <div className='mb-1'>
+               <MessageItem
+                  key={message.id}
+                  image={message.avatar}
+                  isRead={message.isRead}
+                  isOnline={message.isOnline}
+                  body={message.body}
+                  time={message.createdAt}
+                  message={message}
+               />
+            </div>
          ))}
       </div>
    );

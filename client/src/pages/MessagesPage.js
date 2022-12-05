@@ -67,7 +67,7 @@ const MessagesPage = () => {
                <p>Start browsing profile now!</p>
             </AttentionMessage>
          ) : (
-            <div className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2'>
+            <div className='relative grid grid-cols-1 gap-1 lg:gap-2 md:grid-cols-2'>
                {messages?.rows?.map((message) => (
                   <div
                      onClick={(e) => onClickHandler(e, message.user_id)}

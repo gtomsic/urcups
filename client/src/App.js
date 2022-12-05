@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import AuthLayout from './layouts/AuthLayout';
 import MainLayout from './layouts/MainLayout';
 import ProfileLayout from './layouts/ProfileLayout';
@@ -170,6 +170,7 @@ const App = () => {
                />
                <Route path='/auth/verify/:token' element={<VerifyPage />} />
             </Route>
+            <Route path='/*' element={<Navigate to='/' />} />
          </Routes>
       </div>
    );

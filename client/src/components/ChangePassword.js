@@ -66,9 +66,9 @@ const ChangePassword = () => {
          <TextInput
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
-            name='currentPassword'
-            label='Current Password'
-            title='Current Password'
+            name='oldPassword'
+            label='Old Password'
+            title='Old Password'
             type='password'
             bg='text-dark bg-light'
          />

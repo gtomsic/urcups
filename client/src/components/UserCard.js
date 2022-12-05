@@ -75,11 +75,7 @@ function UserCard({ user }) {
                   </div>
                ) : null}
                <div>
-                  <small>
-                     {`${user?.isOnline ? 'Online' : 'Offline'} ${moment(
-                        timeAgo.time
-                     ).fromNow()}`}{' '}
-                  </small>
+                  <small>{`${user?.isOnline ? 'Online' : 'Offline '} `}</small>
                </div>
             </div>
          </div>

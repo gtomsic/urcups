@@ -79,7 +79,7 @@ const BellsPage = () => {
             <Loader>Loading Bells...</Loader>
          ) : (
             <div
-               className='relative grid grid-cols-1 gap-1 lg:gap-4 xl:gap-3 md:grid-cols-2
+               className='relative grid grid-cols-1 gap-1 lg:gap-2 md:grid-cols-2
             '
             >
                {bells?.rows?.map((item) => (

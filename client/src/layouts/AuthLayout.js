@@ -1,8 +1,17 @@
-import React from 'react'
-import { Outlet, Link } from 'react-router-dom'
-import logo from '../assets/urcups256.png'
+import React, { useEffect } from 'react';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import logo from '../assets/urcups256.png';
+import { selectUser } from '../store/features/user/userSlice';
 
 const AuthLayout = () => {
+   const navigate = useNavigate();
+   const { user } = useSelector(selectUser);
+   useEffect(() => {
+      if (user?.id) {
+         navigate('/');
+      }
+   }, []);
    return (
       <div className='py-[100px] max-w-[500px] mx-auto overflow-hidden'>
          <Link to='/'>
@@ -14,7 +23,7 @@ const AuthLayout = () => {
             <Outlet />
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default AuthLayout
+export default AuthLayout;

@@ -13,10 +13,15 @@ module.exports = (sequelize, DataTypes) => {
          allowNull: false,
          defaultValue: false,
       },
+      // isSuppended: {
+      //    type: DataTypes.BOOLEAN,
+      //    allowNull: true,
+      //    defaultValue: false,
+      // },
       user_id: {
          type: DataTypes.UUID,
          allowNull: false,
       },
-   })
-   return config
-}
+   });
+   return config;
+};

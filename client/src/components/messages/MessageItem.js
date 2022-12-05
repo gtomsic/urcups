@@ -78,7 +78,7 @@ const MessageItem = ({ message, body, time, isDelete }) => {
    return (
       <div
          onClick={onClickHandler}
-         className={`relative h-[100px] rounded-3xl overflow-hidden mb-2 ${
+         className={`relative h-[100px] rounded-3xl overflow-hidden ${
             message.user_id === user.id
                ? true
                : message.isRead
@@ -108,9 +108,7 @@ const MessageItem = ({ message, body, time, isDelete }) => {
          </div>
          <div className='flex flex-col flex-1 mr-3 py-3'>
             <div className='flex justify-between items-center text-white'>
-               <p className='text-xl lg:text-lg'>
-                  {profile?.username} / {profile?.age}
-               </p>
+               <p className='text-xl lg:text-lg'>{profile?.username}</p>
             </div>
             {!body ? (
                <p className='text-lg lg:text-lg text-light'>Image 🏞️</p>
